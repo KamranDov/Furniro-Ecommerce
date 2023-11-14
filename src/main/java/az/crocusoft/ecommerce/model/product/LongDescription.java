@@ -20,7 +20,7 @@ public class LongDescription {
     @Column(name = "long_description_id")
     private Long id;
 
-    @Column(length = 2000)
+    @Column(columnDefinition = "LONGTEXT")
     private String content;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)

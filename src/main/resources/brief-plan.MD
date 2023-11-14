@@ -1,6 +1,6 @@
 # Brief Plan
 
-## Shop page
+## Main page
 ### List view (products)
 
 #### As a product DTO
@@ -21,7 +21,10 @@
 
 ### Product designations (Dining, Living, Bedroom, etc.)
 - Name
-- 
+- Image (thumbnail)
+
+
+
 
 **GET** `/api/v1/products?page=1&size=10`
 

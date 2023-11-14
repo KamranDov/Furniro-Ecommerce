@@ -25,7 +25,6 @@ public class Customer {
     @JoinColumn(name = "user_id")
     private User user;
 
-
     private String firstName;
     private String lastName;
 

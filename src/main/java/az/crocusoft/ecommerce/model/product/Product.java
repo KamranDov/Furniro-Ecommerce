@@ -71,7 +71,6 @@ public class Product {
         tag.getProducts().remove(this);
     }
 
-
     public Double getProductRating() {
         if (reviews == null || reviews.isEmpty())
             return null;
