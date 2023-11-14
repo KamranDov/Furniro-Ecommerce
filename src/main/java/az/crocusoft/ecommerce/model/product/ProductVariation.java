@@ -35,7 +35,11 @@ public class ProductVariation {
     private Integer stockQuantity;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "variation_id")
+    @JoinTable(
+            name = "product_variation_images",
+            joinColumns = @JoinColumn(name = "variation_id"),
+            inverseJoinColumns = @JoinColumn(name = "image_id")
+    )
     private Set<Image> images = new HashSet<>();
 
 
@@ -45,4 +49,7 @@ public class ProductVariation {
         return price - (price * discount / 100);
     }
 
+    public boolean isDiscounted() {
+        return discount != null && discount > 0;
+    }
 }

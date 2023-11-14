@@ -20,23 +20,34 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "product_id")
     private Long id;
+
     private String name;
+    private String title;
 
     @Column(length = 255)
     private String description;
 
-    @Column(name = "long_description", length = 2000)
-    private String longDescription;
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "long_description_id", referencedColumnName = "long_description_id")
+    private LongDescription longDescription;
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "main_image_id", referencedColumnName = "image_id")
+    @JoinColumn(name = "main_image_id")
     private Image mainImage;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<ProductVariation> variations;
 
-    @ManyToOne
-    @JoinColumn(name = "category_id", nullable = false)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+    @JoinTable(
+            name = "product_designations",
+            joinColumns = @JoinColumn(name = "product_id"),
+            inverseJoinColumns = @JoinColumn(name = "designation_id")
+    )
+    private Set<FurnitureDesignation> furnitureDesignations = new HashSet<>();
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "category_id")
     private Category category;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -78,6 +89,15 @@ public class Product {
                 .mapToDouble(ProductVariation::getPrice)
                 .min()
                 .getAsDouble();
+    }
+
+    //If any of the variations is discounted, then the product is discounted
+    public Boolean isDiscounted() {
+        if (variations == null || variations.isEmpty())
+            return false;
+        return variations
+                .stream()
+                .anyMatch(ProductVariation::isDiscounted);
     }
 
     public Double getSpecialPrice() {

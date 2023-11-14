@@ -7,7 +7,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "categories")
@@ -21,11 +23,11 @@ public class Category {
     @Column(name = "category_id")
     private Long id;
 
-    @NotBlank
-    @Size(min = 3, message = "Category name must contain at least 5 characters")
+    @NotBlank(message = "Category name must not be blank")
+    @Size(min = 4, message = "Category name must contain at least 4 characters")
     private String name;
 
-    @OneToMany(mappedBy = "category", cascade =  CascadeType.ALL, fetch = FetchType.LAZY )
-    private List<Product> products;
+    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<Product> products = new HashSet<>();
 
 }

@@ -14,11 +14,13 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Autowired
     CategoryRepository categoryRepository;
+
     @Autowired
     ModelMapper modelMapper;
 
     @Override
     public CategoryDTO addCategory(Category category) {
+        //checking if category with the same name exists in the db
         if (categoryRepository.existsByName(category.getName()))
             throw new EntityExistsException("Category with the name " + category.getName() + " already exists!");
 

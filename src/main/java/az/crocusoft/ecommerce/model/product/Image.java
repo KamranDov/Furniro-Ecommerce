@@ -19,13 +19,4 @@ public class Image {
     @Column(name = "image_url")
     private String imageUrl;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "variation_id")
-    private ProductVariation productVariation;
-
-    @OneToOne(mappedBy = "mainImage", fetch = FetchType.LAZY)
-    private Product product;
-
-
-
 }
