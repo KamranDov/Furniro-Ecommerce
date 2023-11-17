@@ -1,12 +1,15 @@
 package az.crocusoft.ecommerce.model.product;
 
 import jakarta.persistence.*;
+import jdk.jfr.Timestamp;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -55,7 +58,7 @@ public class Product {
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Review> reviews;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+    @ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
     @JoinTable(
             name = "product_tags",
             joinColumns = @JoinColumn(name = "product_id"),
@@ -120,5 +123,11 @@ public class Product {
                 .max()
                 .getAsDouble();
     }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, title); // include only essential, non-collection fields
+    }
+
 
 }

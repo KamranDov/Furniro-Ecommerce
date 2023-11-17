@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -26,5 +27,10 @@ public class Tag {
 
     public Tag(String tagName) {
         this.name = tagName;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name); // include only essential, non-collection fields
     }
 }

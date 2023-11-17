@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -33,4 +34,9 @@ public class FurnitureDesignation {
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "image_id")
     private Image image;
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name); // include only essential, non-collection fields
+    }
 }

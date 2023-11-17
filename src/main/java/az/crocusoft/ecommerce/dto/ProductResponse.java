@@ -4,19 +4,17 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-import java.util.Set;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductVariationDTO {
+public class ProductResponse {
     private Long id;
-    private String color;
-    private String size;
-    private Integer quantity;
+    private String name;
+    private String title;
+    private boolean isNew;
     private Double price;
     private Double discount;
-    private Double specialPrice;
-    private Set<String> imageUrls;
+    private Double discountPrice;
+    private String imageURL;
+
 }

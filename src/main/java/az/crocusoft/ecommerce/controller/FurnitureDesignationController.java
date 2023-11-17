@@ -24,14 +24,14 @@ public class FurnitureDesignationController {
     @Autowired
     ModelMapper modelMapper;
 
-    @PostMapping("/add")
-    public ResponseEntity<FurnitureDesignationDTO> addFurnitureDesignation(
-            @ModelAttribute AddFurnitureDesignationDTO addFurnitureDesignationDTO,
+    @PostMapping(consumes = {"multipart/form-data"})
+    @ResponseStatus(HttpStatus.CREATED)
+    public void addFurnitureDesignation(
+            AddFurnitureDesignationDTO addFurnitureDesignationDTO,
             @RequestParam("image") MultipartFile image) throws IOException {
 
         var furnitureDesignationDTO = furnitureDesignationService
                 .addFurnitureDesignation(addFurnitureDesignationDTO, image);
-        return new ResponseEntity<FurnitureDesignationDTO>(furnitureDesignationDTO, HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")
