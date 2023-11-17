@@ -24,12 +24,14 @@ public class Product {
     private String name;
     private String title;
 
+    private boolean isPublished;
+    private boolean isNew;
+
     @Column(length = 255)
     private String description;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "long_description_id", referencedColumnName = "long_description_id")
-    private LongDescription longDescription;
+    @Column(columnDefinition = "TEXT")
+    private String longDescription;
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "main_image_id")

@@ -30,3 +30,17 @@
 
 
 ## Single product page
+
+
+## Product add page (admin)
+### Add productDTO
+- Product Name
+- Product Title
+- Is Product New
+- Is Product Published
+- Product Description
+- Product Long Description
+- Product Main Image
+- Product Designations
+- Product Category
+- Product Tags
