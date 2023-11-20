@@ -1,9 +1,7 @@
 package az.crocusoft.ecommerce.controller;
 
-import az.crocusoft.ecommerce.dto.AddCategoryDTO;
-import az.crocusoft.ecommerce.dto.CategoryDTO;
-import az.crocusoft.ecommerce.model.product.Category;
-import az.crocusoft.ecommerce.repository.CategoryRepository;
+import az.crocusoft.ecommerce.dto.request.CategoryRequest;
+import az.crocusoft.ecommerce.dto.response.CategoryResponse;
 import az.crocusoft.ecommerce.service.CategoryService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +17,13 @@ public class CategoryController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void addCategory(@Valid @RequestBody AddCategoryDTO category) {
+    public void addCategory(@Valid @RequestBody CategoryRequest category) {
           categoryService.addCategory(category);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<CategoryResponse> getCategory(@PathVariable Long id) {
+        CategoryResponse category = categoryService.getCategory(id);
+        return ResponseEntity.ok(category);
     }
 }

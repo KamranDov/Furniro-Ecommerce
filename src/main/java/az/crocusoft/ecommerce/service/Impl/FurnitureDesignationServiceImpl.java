@@ -1,6 +1,6 @@
 package az.crocusoft.ecommerce.service.Impl;
 
-import az.crocusoft.ecommerce.dto.AddFurnitureDesignationDTO;
+import az.crocusoft.ecommerce.dto.request.FurnitureDesignationRequest;
 import az.crocusoft.ecommerce.dto.FurnitureDesignationDTO;
 import az.crocusoft.ecommerce.exception.EntityExistsException;
 import az.crocusoft.ecommerce.model.product.FurnitureDesignation;
@@ -29,26 +29,22 @@ public class FurnitureDesignationServiceImpl implements FurnitureDesignationServ
     private FileService fileService;
 
     @Override
-    public FurnitureDesignationDTO addFurnitureDesignation(AddFurnitureDesignationDTO addFurnitureDesignationDTO, MultipartFile image) throws IOException {
+    public void addFurnitureDesignation(FurnitureDesignationRequest furnitureDesignationRequest, MultipartFile image) throws IOException {
         FurnitureDesignation furnitureDesignation = new FurnitureDesignation();
         if (furnitureDesignationRepository
-                .existsByName(addFurnitureDesignationDTO
+                .existsByName(furnitureDesignationRequest
                         .getFurnitureDesignationName())
         )
             throw new EntityExistsException("Furniture designation with the name "
-                    + addFurnitureDesignationDTO.getFurnitureDesignationName() + " already exists!");
+                    + furnitureDesignationRequest.getFurnitureDesignationName() + " already exists!");
 
         String uploadedImageURL = fileService.uploadImage(image, FURNITURE_DESIGNATION_IMAGES_FOLDER_NAME);
         Image uploadedImage = new Image(uploadedImageURL);
 
-        furnitureDesignation.setName(addFurnitureDesignationDTO.getFurnitureDesignationName());
-        furnitureDesignation.setDescription(addFurnitureDesignationDTO.getDescription());
+        furnitureDesignation.setName(furnitureDesignationRequest.getFurnitureDesignationName());
+        furnitureDesignation.setDescription(furnitureDesignationRequest.getDescription());
         furnitureDesignation.setImage(uploadedImage);
         FurnitureDesignation savedFurnitureDesignation = furnitureDesignationRepository.save(furnitureDesignation);
-
-        FurnitureDesignationDTO furnitureDesignationDTO = modelMapper.map(savedFurnitureDesignation, FurnitureDesignationDTO.class);
-
-        return furnitureDesignationDTO;
     }
 
     @Override

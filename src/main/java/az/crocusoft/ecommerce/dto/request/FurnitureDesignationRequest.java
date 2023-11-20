@@ -1,6 +1,5 @@
-package az.crocusoft.ecommerce.dto;
+package az.crocusoft.ecommerce.dto.request;
 
-import az.crocusoft.ecommerce.model.product.Image;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class AddFurnitureDesignationDTO {
+public class FurnitureDesignationRequest {
     private String furnitureDesignationName;
     private String description;
 }

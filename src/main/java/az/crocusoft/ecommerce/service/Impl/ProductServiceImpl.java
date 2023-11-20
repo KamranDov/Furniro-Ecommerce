@@ -1,18 +1,15 @@
 package az.crocusoft.ecommerce.service.Impl;
 
-import az.crocusoft.ecommerce.dto.*;
-import az.crocusoft.ecommerce.mapper.ProductVariationMapper;
+import az.crocusoft.ecommerce.dto.request.ProductRequest;
+import az.crocusoft.ecommerce.dto.request.ProductVariationRequest;
+import az.crocusoft.ecommerce.dto.response.ProductResponse;
+import az.crocusoft.ecommerce.dto.response.SingleProductResponse;
+import az.crocusoft.ecommerce.mapper.ProductMapper;
 import az.crocusoft.ecommerce.model.product.*;
-import az.crocusoft.ecommerce.repository.CategoryRepository;
-import az.crocusoft.ecommerce.repository.FurnitureDesignationRepository;
-import az.crocusoft.ecommerce.repository.ProductRepository;
-import az.crocusoft.ecommerce.repository.TagRepository;
+import az.crocusoft.ecommerce.repository.*;
 import az.crocusoft.ecommerce.service.ProductService;
 import jakarta.persistence.EntityNotFoundException;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -20,106 +17,113 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService {
-    @Autowired
+
     private final CategoryRepository categoryRepository;
-    @Autowired
     private final ProductRepository productRepository;
-    @Autowired
-    private FurnitureDesignationRepository furnitureDesignationRepository;
-    @Autowired
-    private TagRepository tagRepository;
-    @Autowired
-    private FileService fileService;
+    private final FurnitureDesignationRepository furnitureDesignationRepository;
+    private final TagRepository tagRepository;
+    private final FileService fileService;
+    private final ProductVariationRepository productVariationRepository;
     private static final String PRODUCT_IMAGES_FOLDER_NAME = "Product-images";
 
-    private final ProductVariationMapper productVariationMapper;
-    private final ModelMapper modelMapper;
+    private final ProductMapper productMapper;
 
     @Override
-    public Product addProduct(AddProductDTO addProductDTO, MultipartFile image) throws IOException {
+    public void addProduct(ProductRequest productRequest, MultipartFile image) throws IOException {
         Product product = new Product();
-        product.setName(addProductDTO.getName());
-        product.setTitle(addProductDTO.getTitle());
-        product.setPublished(addProductDTO.isPublished());
-        product.setNew(addProductDTO.isNew());
-        product.setDescription(addProductDTO.getDescription());
-        product.setLongDescription(addProductDTO.getLongDescription());
+        product.setName(productRequest.getName());
+        product.setTitle(productRequest.getTitle());
+        product.setPublished(productRequest.isPublished());
+        product.setNew(productRequest.isNew());
+        product.setDescription(productRequest.getDescription());
+        product.setLongDescription(productRequest.getLongDescription());
 
         String uploadedImageURL = fileService.uploadImage(image, PRODUCT_IMAGES_FOLDER_NAME);
         Image uploadedImage = new Image(uploadedImageURL);
         product.setMainImage(uploadedImage);
 
         Set<Tag> tags = new HashSet<>();
-        for (String tagName : addProductDTO.getTagNames().split(" ")) {
+        for (String tagName : productRequest.getTagNames().split(" ")) {
             Tag tag = tagRepository.findByName(tagName)
                     .orElse(new Tag(tagName));
             tags.add(tag);
         }
         product.setTags(tags);
 
-        if (addProductDTO.getCategoryId() != null) {
-            Category category = categoryRepository.findById(addProductDTO.getCategoryId())
-                    .orElseThrow(() -> new EntityNotFoundException("Category not found with id: " + addProductDTO.getCategoryId()));
+        if (productRequest.getCategoryId() != null) {
+            Category category = categoryRepository.findById(productRequest.getCategoryId())
+                    .orElseThrow(() -> new EntityNotFoundException("Category not found with id: " + productRequest.getCategoryId()));
             product.setCategory(category);
         }
 
-        if (addProductDTO.getFurnitureDesignationIds() != null && !addProductDTO.getFurnitureDesignationIds().isEmpty()) {
+        if (productRequest.getFurnitureDesignationIds() != null && !productRequest.getFurnitureDesignationIds().isEmpty()) {
             Set<FurnitureDesignation> furnitureDesignations = new HashSet<>();
-            for (Long id : addProductDTO.getFurnitureDesignationIds()) {
+            for (Long id : productRequest.getFurnitureDesignationIds()) {
                 FurnitureDesignation fd = furnitureDesignationRepository.findById(id)
                         .orElseThrow(() -> new EntityNotFoundException("FurnitureDesignation not found with id: " + id));
                 furnitureDesignations.add(fd);
             }
             product.setFurnitureDesignations(furnitureDesignations);
         }
-
-        Product savedProduct = productRepository.save(product);
-
-
-        return savedProduct;
+        productRepository.save(product);
     }
+
+    public void addVariationToProduct(Long productId, ProductVariationRequest productVariationRequest, List<MultipartFile> images) throws IOException {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new EntityNotFoundException("Product not found" ));
+        ProductVariation productVariation = ProductVariation.builder()
+                .product(product)
+                .sku(productVariationRequest.getSku())
+                .color(productVariationRequest.getColor())
+                .size(productVariationRequest.getSize())
+                .price(productVariationRequest.getPrice())
+                .discount(productVariationRequest.getDiscount())
+                .stockQuantity(productVariationRequest.getStockQuantity())
+                .build();
+        System.out.println(productVariationRequest.getPrice());
+        Set<Image> productVarImages = new HashSet<>();
+
+        for (MultipartFile image : images) {
+            String uploadedImageURL = fileService.uploadImage(image, PRODUCT_IMAGES_FOLDER_NAME);
+            Image uploadedImage = new Image(uploadedImageURL);
+            productVarImages.add(uploadedImage);
+        }
+        productVariation.setImages(productVarImages);
+        productVariationRepository.save(productVariation);
+    }
+
 
     @Override
     public List<ProductResponse> getAllPublishedProducts() {
-        return productRepository.findAllByIsPublishedTrue();
+        return productRepository.findAllByIsPublishedTrue()
+                .stream()
+                .map(productMapper::convertToProductResponse)
+                .toList();
     }
 
     @Override
     public SingleProductResponse getProductById(Long id) {
         Product product = productRepository.findProductById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Product is currently not available"));
-        SingleProductResponse productResponse = new SingleProductResponse();
-        productResponse.setId(product.getId());
-        productResponse.setName(product.getName());
-        productResponse.setTitle(product.getTitle());
-        productResponse.setCategoryName(product.getCategory().getName());
-        productResponse.setTags(product.getTags().stream().map(Tag::getName).toList());
-        productResponse.setProductReviews(product.getReviews()
-                .stream()
-                .map(review -> {
-                    ReviewDTO reviewDTO = new ReviewDTO();
-                    modelMapper.map(review, reviewDTO);
-                    return reviewDTO;
-                })
-                .toList());
-        productResponse.setRating(product.getProductRating());
-        productResponse.setDescription(product.getDescription());
-        productResponse.setLongDescription(product.getLongDescription());
-        productResponse.setProductVariations(product.getVariations()
-                .stream()
-                .map(variation -> {
-                    ProductVariationDTO productVariationDTO = productVariationMapper.toProductVariationDTO(variation);
-                    return productVariationDTO;
-                })
-                .toList());
-        System.out.println("asdasdasd");
-        System.out.println(product.getTags().size());
-
+        SingleProductResponse productResponse = SingleProductResponse.builder()
+                .id(product.getId())
+                .name(product.getName())
+                .title(product.getTitle())
+                .categoryName(product.getCategory().getName())
+                .tags(product.getTags().stream().map(Tag::getName).toList())
+                .reviewCount(product.getReviews().size())
+                .rating(product.getProductRating())
+                .description(product.getDescription())
+                .longDescription(product.getLongDescription())
+                .productVariations(product.getVariations()
+                        .stream()
+                        .map(productMapper::toProductVariationDTO)
+                        .toList())
+                .build();
         return productResponse;
     }
 

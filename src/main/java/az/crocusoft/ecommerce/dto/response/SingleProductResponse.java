@@ -1,5 +1,7 @@
-package az.crocusoft.ecommerce.dto;
+package az.crocusoft.ecommerce.dto.response;
 
+import az.crocusoft.ecommerce.dto.ProductVariationDTO;
+import az.crocusoft.ecommerce.dto.ReviewDTO;
 import az.crocusoft.ecommerce.model.product.ProductVariation;
 import az.crocusoft.ecommerce.model.product.Review;
 import az.crocusoft.ecommerce.model.product.Tag;
@@ -21,7 +23,7 @@ public class SingleProductResponse {
     private String title;
     private String categoryName;
     private List<String> tags;
-    private List<ReviewDTO> productReviews;
+    private int reviewCount;
     private Double rating;
     private String description;
     private String longDescription;

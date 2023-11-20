@@ -1,7 +1,9 @@
 package az.crocusoft.ecommerce.controller;
 
-import az.crocusoft.ecommerce.dto.*;
-import az.crocusoft.ecommerce.model.product.Product;
+import az.crocusoft.ecommerce.dto.request.ProductRequest;
+import az.crocusoft.ecommerce.dto.request.ProductVariationRequest;
+import az.crocusoft.ecommerce.dto.response.ProductResponse;
+import az.crocusoft.ecommerce.dto.response.SingleProductResponse;
 import az.crocusoft.ecommerce.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,11 +24,18 @@ public class ProductController {
     @PostMapping(consumes = {"multipart/form-data"})
     @ResponseStatus(HttpStatus.CREATED)
     public void addProduct(
-            AddProductDTO addProductDTO,
+            ProductRequest productRequest,
             @RequestParam("image") MultipartFile image) throws IOException {
+       productService.addProduct(productRequest, image);
+    }
 
-        Product product = productService.addProduct(addProductDTO, image);
-
+    @PostMapping(path = "/{productId}/variations", consumes = {"multipart/form-data"})
+    @ResponseStatus(HttpStatus.CREATED)
+    public void addProductVariation(
+            @PathVariable Long productId,
+            ProductVariationRequest productVariationRequest,
+            @RequestParam("images") List<MultipartFile> images) throws IOException {
+        productService.addVariationToProduct(productId, productVariationRequest, images);
     }
 
     @GetMapping("/{id}")
@@ -40,7 +49,6 @@ public class ProductController {
         List<ProductResponse> publishedProducts = productService.getAllPublishedProducts();
         return ResponseEntity.ok(publishedProducts);
     }
-
 
 
 }

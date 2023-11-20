@@ -1,11 +1,28 @@
 package az.crocusoft.ecommerce.mapper;
 
+import az.crocusoft.ecommerce.dto.response.ProductResponse;
 import az.crocusoft.ecommerce.dto.ProductVariationDTO;
+import az.crocusoft.ecommerce.model.product.Product;
 import az.crocusoft.ecommerce.model.product.ProductVariation;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ProductVariationMapper {
+public class ProductMapper {
+
+    public ProductResponse convertToProductResponse(Product product) {
+        ProductResponse productResponse = ProductResponse.builder()
+                .id(product.getId())
+                .name(product.getName())
+                .title(product.getTitle())
+                .isNew(product.isNew())
+                .price(product.getPrice())
+                .discount(product.getDiscount())
+                .discountPrice(product.getSpecialPrice())
+                .imageURL(product.getMainImage().getImageUrl())
+                .build();
+        return productResponse;
+    }
+
 
     public ProductVariationDTO toProductVariationDTO(ProductVariation variation) {
         ProductVariationDTO productVariationDTO = new ProductVariationDTO();

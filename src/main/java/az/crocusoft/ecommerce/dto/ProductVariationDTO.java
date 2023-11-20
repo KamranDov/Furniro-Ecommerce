@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -18,5 +19,5 @@ public class ProductVariationDTO {
     private Double price;
     private Double discount;
     private Double specialPrice;
-    private Set<String> imageUrls;
+    private Set<String> imageUrls = new HashSet<>();
 }

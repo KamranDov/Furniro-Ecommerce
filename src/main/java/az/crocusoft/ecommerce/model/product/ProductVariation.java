@@ -2,6 +2,7 @@ package az.crocusoft.ecommerce.model.product;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -13,12 +14,13 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
+@Builder
 public class ProductVariation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "product_variation_id")
     private Long id;
-    private String SKU;
+    private String sku;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id", nullable = false)
@@ -27,11 +29,10 @@ public class ProductVariation {
     private String color;
     private String size;
 
-    @Column(nullable = false)
     private Double price;
     private Double discount;
 
-    @Column(name = "stock_quantity", nullable = false)
+    @Column(name = "stock_quantity")
     private Integer stockQuantity;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)

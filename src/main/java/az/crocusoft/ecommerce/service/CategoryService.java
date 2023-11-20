@@ -1,12 +1,12 @@
 package az.crocusoft.ecommerce.service;
 
-import az.crocusoft.ecommerce.dto.AddCategoryDTO;
-import az.crocusoft.ecommerce.dto.CategoryDTO;
-import az.crocusoft.ecommerce.model.product.Category;
-import org.springframework.stereotype.Service;
+import az.crocusoft.ecommerce.dto.request.CategoryRequest;
+import az.crocusoft.ecommerce.dto.response.CategoryResponse;
 
 public interface CategoryService {
-    CategoryDTO addCategory(AddCategoryDTO category);
+    void addCategory(CategoryRequest category);
+    CategoryResponse getCategory(Long categoryId);
+
 
 
 }

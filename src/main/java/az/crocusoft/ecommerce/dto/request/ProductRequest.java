@@ -1,4 +1,4 @@
-package az.crocusoft.ecommerce.dto;
+package az.crocusoft.ecommerce.dto.request;
 
 
 import lombok.AllArgsConstructor;
@@ -10,7 +10,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class AddProductDTO {
+public class ProductRequest {
 
     private String name;
     private String title;
