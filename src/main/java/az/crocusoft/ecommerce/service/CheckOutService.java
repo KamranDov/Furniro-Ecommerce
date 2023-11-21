@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface CheckOutService {
 
-    CheckOutDto createAddress(CheckOutDto checkOutDto);
+    CheckOutDto createAddress(  CheckOutDto checkOutDto , Long userId);
 
 
     CheckOutDto getAddress(Integer address_id);

@@ -18,7 +18,8 @@ import lombok.RequiredArgsConstructor;
 public class CheckOut {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer address_id;
+    @Column(name = "address_id")
+    private Integer Id;
     private String firstName;
     private String lastName;
 
@@ -31,6 +32,10 @@ public class CheckOut {
     private String phone;
     private String email;
     private  String information;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
 
 

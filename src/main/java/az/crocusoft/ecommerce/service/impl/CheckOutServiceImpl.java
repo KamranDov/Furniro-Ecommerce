@@ -4,8 +4,11 @@ import az.crocusoft.ecommerce.dto.CheckOutDto;
 import az.crocusoft.ecommerce.exception.APIException;
 import az.crocusoft.ecommerce.exception.ResourceNotFoundException;
 import az.crocusoft.ecommerce.model.CheckOut;
+import az.crocusoft.ecommerce.model.User;
 import az.crocusoft.ecommerce.repository.CheckOutRepository;
+import az.crocusoft.ecommerce.repository.UserRepository;
 import az.crocusoft.ecommerce.service.CheckOutService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,62 +25,30 @@ public class CheckOutServiceImpl implements CheckOutService {
     private CheckOutDto checkOutDto;
     @Autowired
     private CheckOutRepository checkOutRepository;
+    @Autowired
+    private UserRepository userRepository;
 
 
     @Autowired
     private ModelMapper modelMapper;
 
     @Override
-    public CheckOutDto createAddress(CheckOutDto checkOutDto) {
+    public CheckOutDto createAddress( CheckOutDto checkOutDto , Long userId) {
+        // CheckOutDto'dan CheckOut nesnesi oluştur
+        CheckOut newCheckOut = modelMapper.map(checkOutDto, CheckOut.class);
 
+        User user = userRepository.findById(userId).orElseThrow(() ->
+                new EntityNotFoundException("User not found with id: " + userId));
 
-        String firstName =checkOutDto.getFirstName();
-        String lastName = checkOutDto.getLastName();
-        String companyHome = checkOutDto.getCompanyHome();
-        String country = checkOutDto.getCountry();
-        String streetAddress = checkOutDto.getStreetAddress();
-        String city = checkOutDto.getCity();
-        String province = checkOutDto.getProvince();
-        String zipcode = checkOutDto.getZipcode();
-        String phone = checkOutDto.getPhone();
-        String email = checkOutDto.getEmail();
-        String information = checkOutDto.getInformation();
+        // Oluşturulan CheckOut nesnesine ilgili kullanıcıyı ata
+        newCheckOut.setUser(user);
 
-        CheckOut checkOutFromDB =checkOutRepository.
-                findByFirstNameAndLastNameAndCompanyHomeAndCountryAndStreetAddressAndCityAndProvinceAndZipcodeAndPhoneAndEmailAndInformation(
-                firstName,
-                lastName,
-                companyHome,
-                country,
-                streetAddress,
-                city,
-                province,
-                zipcode,
-                phone,
-                email ,
-                        information);
+        // Oluşturulan CheckOut nesnesini repository'e kaydet
+        CheckOut savedCheckOut = checkOutRepository.save(newCheckOut);
 
-        // private String firstName;
-//    private String lastName;
-//
-//    private String companyHome;
-//    private String country;
-//    private String streetAddress;
-//    private String city;
-//    private String province;
-//    private String zipcode;
-//    private String phone;
-//    private String email;
-//    private  String information;
+        // Kaydedilen CheckOut nesnesini CheckOutDto'ya dönüştür ve geri döndür
 
-        if (checkOutFromDB != null) {
-            throw new APIException("Address already exists with addressId: "
-                    + checkOutFromDB.getAddress_id());
-        }
-
-        CheckOut checkOut =modelMapper.map(checkOutDto, CheckOut.class);
-        CheckOut saveCheckOut =checkOutRepository.save(checkOut);
-        return modelMapper.map(saveCheckOut,CheckOutDto.class);
+        return modelMapper.map(savedCheckOut,CheckOutDto.class);
     }
 
 
