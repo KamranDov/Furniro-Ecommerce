@@ -94,42 +94,33 @@ public class CheckOutServiceImpl implements CheckOutService {
     }
 
     @Override
-    public CheckOutDto updateAddress(Integer address_id, CheckOut checkOut) {
-        CheckOut checkOutFromDB = checkOutRepository.
-                findByFirstNameAndLastNameAndCompanyHomeAndCountryAndStreetAddressAndCityAndProvinceAndZipcodeAndPhoneAndEmailAndInformation(
-                        checkOut.getFirstName(),
-                        checkOut.getLastName(),
-                        checkOut.getCompanyHome(),
-                        checkOut.getEmail(),
-                        checkOut.getCountry(),
-                        checkOut.getStreetAddress(),
-                        checkOut.getCity(),
-                        checkOut.getZipcode(),checkOut.getPhone(),
-                        checkOut.getEmail(),
-                        checkOut.getInformation());
-        if (checkOutFromDB == null) {
-            checkOutFromDB = checkOutRepository.findById(address_id)
-                    .orElseThrow(() -> new ResourceNotFoundException
-                            ("Address", "addressId", address_id));
+    public CheckOutDto updateAddress(Integer address_id, CheckOutDto checkOutDto) {
+        Optional<CheckOut> checkOutFromDBOptional = checkOutRepository.findById(address_id);
+
+        if (checkOutFromDBOptional.isPresent()) {
+            CheckOut checkOutFromDB = checkOutFromDBOptional.get();
 
 
-            checkOutFromDB.setFirstName(checkOut.getFirstName());
-            checkOutFromDB.setLastName(checkOut.getLastName());
-            checkOutFromDB.setCompanyHome(checkOut.getCompanyHome());
-            checkOutFromDB.setCountry(checkOut.getCountry());
-            checkOutFromDB.setStreetAddress(checkOut.getStreetAddress());
-            checkOutFromDB.setCity(checkOut.getCity());
-            checkOutFromDB.setProvince(checkOut.getProvince());
-            checkOutFromDB.setZipcode(checkOut.getZipcode());
-            checkOutFromDB.setPhone(checkOut.getPhone());
-            checkOutFromDB.setEmail(checkOut.getEmail());
-            checkOutFromDB.setInformation(checkOut.getInformation());
+            checkOutFromDB.setFirstName(checkOutDto.getFirstName());
+            checkOutFromDB.setLastName(checkOutDto.getLastName());
+            checkOutFromDB.setCompanyHome(checkOutDto.getCompanyHome());
+            checkOutFromDB.setCountry(checkOutDto.getCountry());
+            checkOutFromDB.setStreetAddress(checkOutDto.getStreetAddress());
+            checkOutFromDB.setCity(checkOutDto.getCity());
+            checkOutFromDB.setProvince(checkOutDto.getProvince());
+            checkOutFromDB.setZipcode(checkOutDto.getZipcode());
+            checkOutFromDB.setPhone(checkOutDto.getPhone());
+            checkOutFromDB.setEmail(checkOutDto.getEmail());
+            checkOutFromDB.setInformation(checkOutDto.getInformation());
 
             CheckOut updatedAddress = checkOutRepository.save(checkOutFromDB);
 
             return modelMapper.map(updatedAddress, CheckOutDto.class);
         }
+        else {
+            throw new ResourceNotFoundException("Address", "addressId", address_id);
+
+        }
 
 
-        return checkOutDto;
     }}

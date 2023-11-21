@@ -12,7 +12,7 @@ public interface CheckOutService {
 
     CheckOutDto getAddress(Integer address_id);
 
-    CheckOutDto updateAddress(Integer address_id, CheckOut checkOut);
+    CheckOutDto updateAddress(Integer address_id, CheckOutDto checkOutDto);
 
 
 }

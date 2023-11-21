@@ -37,8 +37,11 @@ public class CheckOutController {
 
     @PutMapping("/update/{address_id}")
     public  ResponseEntity<CheckOutDto> updateAddress(@PathVariable Integer address_id,
-                                                      @RequestBody CheckOut checkOut){
-        CheckOutDto checkOutDto= checkOutService.updateAddress(address_id,checkOut);
-        return new ResponseEntity<CheckOutDto>(checkOutDto,HttpStatus.OK);
+                                                      @RequestBody CheckOutDto checkOutDto){
+        CheckOutDto updatedCheckOutDto= checkOutService.updateAddress(address_id,checkOutDto);
+        return new ResponseEntity<CheckOutDto>(updatedCheckOutDto,HttpStatus.OK);
     }
+
+
+
 }
