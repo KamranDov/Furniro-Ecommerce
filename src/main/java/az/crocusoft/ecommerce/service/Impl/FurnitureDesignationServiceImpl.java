@@ -1,32 +1,29 @@
 package az.crocusoft.ecommerce.service.Impl;
 
-import az.crocusoft.ecommerce.dto.request.FurnitureDesignationRequest;
 import az.crocusoft.ecommerce.dto.FurnitureDesignationDTO;
+import az.crocusoft.ecommerce.dto.request.FurnitureDesignationRequest;
 import az.crocusoft.ecommerce.exception.EntityExistsException;
 import az.crocusoft.ecommerce.model.product.FurnitureDesignation;
 import az.crocusoft.ecommerce.model.product.Image;
 import az.crocusoft.ecommerce.repository.FurnitureDesignationRepository;
 import az.crocusoft.ecommerce.service.FurnitureDesignationService;
 import jakarta.persistence.EntityNotFoundException;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class FurnitureDesignationServiceImpl implements FurnitureDesignationService {
 
-    @Autowired
     private final ModelMapper modelMapper;
 
-    @Autowired
     private final FurnitureDesignationRepository furnitureDesignationRepository;
     private static final String FURNITURE_DESIGNATION_IMAGES_FOLDER_NAME = "Furniture-designation-images";
-    private FileService fileService;
+    private final FileService fileService;
 
     @Override
     public void addFurnitureDesignation(FurnitureDesignationRequest furnitureDesignationRequest, MultipartFile image) throws IOException {

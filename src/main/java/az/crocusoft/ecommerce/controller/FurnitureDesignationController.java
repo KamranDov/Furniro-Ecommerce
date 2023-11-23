@@ -1,10 +1,9 @@
 package az.crocusoft.ecommerce.controller;
 
-import az.crocusoft.ecommerce.dto.request.FurnitureDesignationRequest;
 import az.crocusoft.ecommerce.dto.FurnitureDesignationDTO;
+import az.crocusoft.ecommerce.dto.request.FurnitureDesignationRequest;
 import az.crocusoft.ecommerce.service.FurnitureDesignationService;
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,11 +13,10 @@ import java.io.IOException;
 
 @RestController
 @RequestMapping("api/v1/designation")
+@RequiredArgsConstructor
 public class FurnitureDesignationController {
-    @Autowired
-    FurnitureDesignationService furnitureDesignationService;
-    @Autowired
-    ModelMapper modelMapper;
+
+    private final FurnitureDesignationService furnitureDesignationService;
 
     @PostMapping(consumes = {"multipart/form-data"})
     @ResponseStatus(HttpStatus.CREATED)

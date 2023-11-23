@@ -1,10 +1,10 @@
 package az.crocusoft.ecommerce.service.Impl;
 
+import az.crocusoft.ecommerce.dto.ProductVariationDTO;
 import az.crocusoft.ecommerce.dto.request.ProductRequest;
 import az.crocusoft.ecommerce.dto.request.ProductVariationRequest;
 import az.crocusoft.ecommerce.dto.response.ProductResponse;
 import az.crocusoft.ecommerce.dto.response.SingleProductResponse;
-import az.crocusoft.ecommerce.mapper.ProductMapper;
 import az.crocusoft.ecommerce.model.product.*;
 import az.crocusoft.ecommerce.repository.*;
 import az.crocusoft.ecommerce.service.ProductService;
@@ -30,10 +30,10 @@ public class ProductServiceImpl implements ProductService {
     private final ProductVariationRepository productVariationRepository;
     private static final String PRODUCT_IMAGES_FOLDER_NAME = "Product-images";
 
-    private final ProductMapper productMapper;
 
     @Override
-    public void addProduct(ProductRequest productRequest, MultipartFile image) throws IOException {
+    public void addProduct(ProductRequest productRequest,
+                           MultipartFile image) throws IOException {
         Product product = new Product();
         product.setName(productRequest.getName());
         product.setTitle(productRequest.getTitle());
@@ -55,8 +55,10 @@ public class ProductServiceImpl implements ProductService {
         product.setTags(tags);
 
         if (productRequest.getCategoryId() != null) {
-            Category category = categoryRepository.findById(productRequest.getCategoryId())
-                    .orElseThrow(() -> new EntityNotFoundException("Category not found with id: " + productRequest.getCategoryId()));
+            Category category = categoryRepository
+                    .findById(productRequest.getCategoryId())
+                    .orElseThrow(() -> new EntityNotFoundException
+                            ("Category not found with id: " + productRequest.getCategoryId()));
             product.setCategory(category);
         }
 
@@ -64,7 +66,8 @@ public class ProductServiceImpl implements ProductService {
             Set<FurnitureDesignation> furnitureDesignations = new HashSet<>();
             for (Long id : productRequest.getFurnitureDesignationIds()) {
                 FurnitureDesignation fd = furnitureDesignationRepository.findById(id)
-                        .orElseThrow(() -> new EntityNotFoundException("FurnitureDesignation not found with id: " + id));
+                        .orElseThrow(() -> new EntityNotFoundException
+                                ("FurnitureDesignation not found with id: " + id));
                 furnitureDesignations.add(fd);
             }
             product.setFurnitureDesignations(furnitureDesignations);
@@ -72,9 +75,11 @@ public class ProductServiceImpl implements ProductService {
         productRepository.save(product);
     }
 
-    public void addVariationToProduct(Long productId, ProductVariationRequest productVariationRequest, List<MultipartFile> images) throws IOException {
-        Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new EntityNotFoundException("Product not found" ));
+    public void addVariationToProduct(Long productId,
+                                      ProductVariationRequest productVariationRequest,
+                                      List<MultipartFile> images) throws IOException {
+        Product product = findProductById(productId);
+
         ProductVariation productVariation = ProductVariation.builder()
                 .product(product)
                 .sku(productVariationRequest.getSku())
@@ -101,30 +106,135 @@ public class ProductServiceImpl implements ProductService {
     public List<ProductResponse> getAllPublishedProducts() {
         return productRepository.findAllByIsPublishedTrue()
                 .stream()
-                .map(productMapper::convertToProductResponse)
+                .map(this::convertToProductResponse)
                 .toList();
     }
 
     @Override
     public SingleProductResponse getProductById(Long id) {
-        Product product = productRepository.findProductById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Product is currently not available"));
+        Product product = findProductById(id);
+        SingleProductResponse singleProductResponse = convertToSingleProductResponse(product);
+        return singleProductResponse;
+    }
+
+    private SingleProductResponse convertToSingleProductResponse(Product product) {
         SingleProductResponse productResponse = SingleProductResponse.builder()
                 .id(product.getId())
                 .name(product.getName())
                 .title(product.getTitle())
                 .categoryName(product.getCategory().getName())
-                .tags(product.getTags().stream().map(Tag::getName).toList())
+                .tags(product.getTags()
+                        .stream()
+                        .map(Tag::getName)
+                        .toList())
                 .reviewCount(product.getReviews().size())
-                .rating(product.getProductRating())
+                .rating(getProductRating(product.getId()))
                 .description(product.getDescription())
                 .longDescription(product.getLongDescription())
                 .productVariations(product.getVariations()
                         .stream()
-                        .map(productMapper::toProductVariationDTO)
+                        .map(this::toProductVariationDTO)
                         .toList())
                 .build();
         return productResponse;
+    }
+
+    public Double getProductPrice(Long productId) {
+        Product product = findProductById(productId);
+        List<ProductVariation> variations = product.getVariations();
+        if (variations == null || variations.isEmpty())
+            return null;
+        return variations
+                .stream()
+                .mapToDouble(ProductVariation::getPrice)
+                .min()
+                .getAsDouble();
+    }
+
+    public Double getProductRating(Long ProductId) {
+        Product product = findProductById(ProductId);
+        List<Review> reviews = product.getReviews();
+        if (reviews == null || reviews.isEmpty())
+            return null;
+        return reviews
+                .stream()
+                .mapToDouble(Review::getRating)
+                .sum() / reviews.size();
+    }
+
+    public Double getProductSpecialPrice(Long productId) {
+        Product product = findProductById(productId);
+        List<ProductVariation> variations = product.getVariations();
+        if (variations == null || variations.isEmpty())
+            return null;
+        return variations
+                .stream()
+                .mapToDouble(this::getProductVariationSpecialPrice)
+                .min()
+                .getAsDouble();
+    }
+
+    public Double getProductDiscount(Long productId) {
+        Product product = findProductById(productId);
+        List<ProductVariation> variations = product.getVariations();
+        if (variations == null || variations.isEmpty())
+            return null;
+        return variations
+                .stream()
+                .mapToDouble(ProductVariation::getDiscount)
+                .max()
+                .getAsDouble();
+    }
+
+    public Boolean isProductDiscounted(Long productId) {
+        Product product = findProductById(productId);
+        List<ProductVariation> variations = product.getVariations();
+        if (variations == null || variations.isEmpty())
+            return false;
+        return variations
+                .stream()
+                .anyMatch(variation -> variation.getDiscount() != null && variation.getDiscount() > 0);
+    }
+
+    private Double getProductVariationSpecialPrice(ProductVariation variation){
+        Double discount = variation.getDiscount();
+        Double price = variation.getPrice();
+        if (discount == null || discount == 0)
+            return price;
+        return price - (price * discount / 100);
+    }
+
+    private Product findProductById(Long id) {
+        return productRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Product is currently not available"));
+    }
+
+
+    private ProductResponse convertToProductResponse(Product product) {
+        ProductResponse productResponse = ProductResponse.builder()
+                .id(product.getId())
+                .name(product.getName())
+                .title(product.getTitle())
+                .isNew(product.isNew())
+                .price(getProductPrice(product.getId()))
+                .discount(getProductDiscount(product.getId()))
+                .discountPrice(getProductSpecialPrice(product.getId()))
+                .imageURL(product.getMainImage().getImageUrl())
+                .build();
+        return productResponse;
+    }
+
+    private ProductVariationDTO toProductVariationDTO(ProductVariation variation) {
+        ProductVariationDTO productVariationDTO = new ProductVariationDTO();
+        productVariationDTO.setId(variation.getId());
+        productVariationDTO.setPrice(variation.getPrice());
+        productVariationDTO.setDiscount(variation.getDiscount());
+        productVariationDTO.setQuantity(variation.getStockQuantity());
+        productVariationDTO.setSpecialPrice(getProductVariationSpecialPrice(variation));
+        productVariationDTO.setColor(variation.getColor());
+        productVariationDTO.setSize(variation.getSize());
+        variation.getImages().forEach(image -> productVariationDTO.getImageUrls().add(image.getImageUrl()));
+        return productVariationDTO;
     }
 
 

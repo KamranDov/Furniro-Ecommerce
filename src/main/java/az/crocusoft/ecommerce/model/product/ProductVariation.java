@@ -43,14 +43,4 @@ public class ProductVariation {
     )
     private Set<Image> images = new HashSet<>();
 
-
-    public Double getSpecialPrice() {
-        if (discount == null || discount == 0)
-            return price;
-        return price - (price * discount / 100);
-    }
-
-    public boolean isDiscounted() {
-        return discount != null && discount > 0;
-    }
 }

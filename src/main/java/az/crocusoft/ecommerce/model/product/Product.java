@@ -63,67 +63,9 @@ public class Product {
     )
     private Set<Tag> tags = new HashSet<>();
 
-    public void addTag(Tag tag) {
-        tags.add(tag);
-        tag.getProducts().add(this);
-    }
-
-    public void removeTag(Tag tag) {
-        tags.remove(tag);
-        tag.getProducts().remove(this);
-    }
-
-    public Double getProductRating() {
-        if (reviews == null || reviews.isEmpty())
-            return null;
-        return reviews
-                .stream()
-                .mapToDouble(Review::getRating)
-                .sum() / reviews.size();
-    }
-
-    public Double getPrice() {
-        if (variations == null || variations.isEmpty())
-            return null;
-        return variations
-                .stream()
-                .mapToDouble(ProductVariation::getPrice)
-                .min()
-                .getAsDouble();
-    }
-
-    //If any of the variations is discounted, then the product is discounted
-    public Boolean isDiscounted() {
-        if (variations == null || variations.isEmpty())
-            return false;
-        return variations
-                .stream()
-                .anyMatch(ProductVariation::isDiscounted);
-    }
-
-    public Double getSpecialPrice() {
-        if (variations == null || variations.isEmpty())
-            return null;
-        return variations
-                .stream()
-                .mapToDouble(ProductVariation::getSpecialPrice)
-                .min()
-                .getAsDouble();
-    }
-
-    public Double getDiscount() {
-        if (variations == null || variations.isEmpty())
-            return null;
-        return variations
-                .stream()
-                .mapToDouble(ProductVariation::getDiscount)
-                .max()
-                .getAsDouble();
-    }
-
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, title); // include only essential, non-collection fields
+        return Objects.hash(id, name, title);
     }
 
 

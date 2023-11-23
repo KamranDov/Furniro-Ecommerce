@@ -8,7 +8,6 @@ import java.util.Optional;
 
 public interface ProductRepository extends JpaRepository<Product, Long> {
     List<Product> findAllByIsPublishedTrue();
-    Optional<Product> findProductById(Long id);
 
 
 }
