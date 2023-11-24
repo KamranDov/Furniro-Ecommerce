@@ -46,7 +46,7 @@ public class CountryServiceImpl {
 
         List<CountryDto> countryDtos = new ArrayList<>();
         for (Country country : countries) {
-            countryDtos.add(new CountryDto(country.getCountry_id(), country.getCountry()));
+            countryDtos.add(new CountryDto(country.getCountry_id(), country.getName()));
         }
 
 

@@ -9,19 +9,13 @@ import java.util.List;
 
 public interface OrderService {
 
-    AddressDto createAddress(AddressDto addressDto, Long userId);
+
 
 
     @Transactional
     Order placeOrder(OrderDto orderDto);
 
-    AddressDto getAddress(Integer address_id);
 
-    AddressDto updateAddress(Integer address_id, AddressDto addressDto);
-
-
-    String deleteAddressById(Integer address_id);
-    public List<AddressDto> getAddressByUserId(Long userId);
 
 
 

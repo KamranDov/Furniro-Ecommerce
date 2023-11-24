@@ -36,29 +36,11 @@ public class OrderServiceImpl implements OrderService {
 
 
 
-    OrderStatusValues orderStatusValues;
 
     @Autowired
     private ModelMapper modelMapper;
 
-    @Override
-    public AddressDto createAddress(AddressDto addressDto, Long userId) {
-        // CheckOutDto'dan CheckOut nesnesi oluştur
-        Address newAddress = modelMapper.map(addressDto, Address.class);
 
-        User user = userRepository.findById(userId).orElseThrow(() ->
-                new EntityNotFoundException("User not found with id: " + userId));
-
-        // Oluşturulan CheckOut nesnesine ilgili kullanıcıyı ata
-        newAddress.setUser(user);
-
-        // Oluşturulan CheckOut nesnesini repository'e kaydet
-        Address savedAddress = addressRepository.save(newAddress);
-
-        // Kaydedilen CheckOut nesnesini CheckOutDto'ya dönüştür ve geri döndür
-
-        return modelMapper.map(savedAddress, AddressDto.class);
-    }
 
     @Transactional
     @Override
@@ -75,63 +57,15 @@ public class OrderServiceImpl implements OrderService {
     }
 
 
-    @Override
-    public AddressDto getAddress(Integer address_id) {
-        Address address = addressRepository.findById(address_id)
-                .orElseThrow(() -> new ResourceNotFoundException("Address", "addressId", address_id));
-
-        return modelMapper.map(address, AddressDto.class);
-    }
-
-    @Override
-    @Transactional
-    public AddressDto updateAddress(Integer address_id, AddressDto addressDto) {
-
-        Address existingAddress = addressRepository.findById(address_id)
-                .orElseThrow(() -> new ResourceNotFoundException("Address", "addressId", address_id));
-
-        modelMapper.map(addressDto, existingAddress);
-
-        Address updatedAddress = addressRepository.save(existingAddress);
-
-        return modelMapper.map(updatedAddress, AddressDto.class);
 
 
-    }
-
-    @Override
-    @Transactional
-    public String deleteAddressById(Integer address_id) {
-        addressRepository.deleteById(address_id);
-
-        return "Address deleted succesfully with addressId: " + address_id;
 
 
-    }
 
-    @Override
-    public List<AddressDto> getAddressByUserId(Long userId) {
-        Optional<User> userOptional = userRepository.findById(userId);
 
-        if (userOptional.isPresent()) {
-            User user = userOptional.get();
-            List<Address> addresses = user.getAddressList();
-            System.out.println("Addresses: " + addresses);
-            return addresses.stream()
-                    .map(this::convertToDto)
-                    .collect(Collectors.toList());
-        } else {
-            System.out.println("Kullanıcı bulunamadı");
-            return Collections.emptyList();
-        }
 
-    }
 
-    private AddressDto convertToDto(Address address) {
-        AddressDto addressDto1 = modelMapper.map(address, AddressDto.class);
-        addressDto1.setUsername(address.getUser().getUsername());
-        return addressDto1;
-    }
+
     private void clearCart(User user) {
         // Sepeti temizle
         // Sepetin içindeki ürünleri veritabanından silme veya işaretleme işlemini gerçekleştirin
