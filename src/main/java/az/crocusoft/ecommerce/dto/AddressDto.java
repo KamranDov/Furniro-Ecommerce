@@ -12,8 +12,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CheckOutDto {
-    private Integer address_id;
+public class AddressDto {
     @Column(nullable = false)
     @Pattern(regexp = "^[a-zA-Z]*$", message = "First Name must not contain numbers or special characters")
     private String firstName;
@@ -39,5 +38,9 @@ public class CheckOutDto {
     @Column(unique = true, nullable = false)
     private String email;
     private  String information;
+
+
+    private Long userId;
+    private String username;
 
 }

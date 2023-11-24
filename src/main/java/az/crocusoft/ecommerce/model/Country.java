@@ -18,7 +18,7 @@ public class Country {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer country_id;
 
-    private String country;
+    private String name;
     private String abbreviation;
 
 }

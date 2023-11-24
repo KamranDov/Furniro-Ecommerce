@@ -2,9 +2,6 @@ package az.crocusoft.ecommerce.model;
 
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -15,11 +12,11 @@ import lombok.RequiredArgsConstructor;
 @AllArgsConstructor
 @RequiredArgsConstructor
 @Data
-public class CheckOut {
+public class Address {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "address_id")
-    private Integer Id;
+    @Column(name = "address_Id")
+    private Integer id;
     private String firstName;
     private String lastName;
 
@@ -36,6 +33,16 @@ public class CheckOut {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+
+    @Override
+    public String toString() {
+        return "CheckOut{" +
+                "Id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", user=" + (user != null ? user.getUsername() : "null") +
+                '}';
+    }
 
 
 
