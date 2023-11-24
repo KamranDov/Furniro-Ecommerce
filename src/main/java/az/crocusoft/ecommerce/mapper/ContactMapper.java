@@ -8,5 +8,5 @@ import org.mapstruct.Mapper;
 @Mapper(componentModel = "spring")
 public interface ContactMapper {
 
-    public Contact dtoToEntity(ContactDto contactDto);
+      Contact dtoToEntity(ContactDto contactDto);
 }
