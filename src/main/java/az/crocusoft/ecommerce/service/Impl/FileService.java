@@ -13,7 +13,7 @@ import java.nio.file.StandardCopyOption;
 import java.util.UUID;
 
 @Service
-public class FileService  {
+public class FileService {
 
     private final Path rootLocation; // The path to the directory where files will be saved
 
@@ -48,6 +48,9 @@ public class FileService  {
 
         // Return the path or URL to access the file
         return "/images/" + subDirectoryName + "/" + fileName;
-
     }
+
+//    public MultipartFile downloadImage(String fileName) throws IOException {
+//
+//    }
 }

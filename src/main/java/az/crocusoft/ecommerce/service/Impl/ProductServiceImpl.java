@@ -128,7 +128,7 @@ public class ProductServiceImpl implements ProductService {
                         .map(Tag::getName)
                         .toList())
                 .reviewCount(product.getReviews().size())
-                .rating(getProductRating(product.getId()))
+                .rating(getProductRating(product))
                 .description(product.getDescription())
                 .longDescription(product.getLongDescription())
                 .productVariations(product.getVariations()
@@ -139,8 +139,7 @@ public class ProductServiceImpl implements ProductService {
         return productResponse;
     }
 
-    public Double getProductPrice(Long productId) {
-        Product product = findProductById(productId);
+    public Double getProductPrice(Product product) {
         List<ProductVariation> variations = product.getVariations();
         if (variations == null || variations.isEmpty())
             return null;
@@ -151,8 +150,7 @@ public class ProductServiceImpl implements ProductService {
                 .getAsDouble();
     }
 
-    public Double getProductRating(Long ProductId) {
-        Product product = findProductById(ProductId);
+    public Double getProductRating(Product product) {
         List<Review> reviews = product.getReviews();
         if (reviews == null || reviews.isEmpty())
             return null;
@@ -162,8 +160,7 @@ public class ProductServiceImpl implements ProductService {
                 .sum() / reviews.size();
     }
 
-    public Double getProductSpecialPrice(Long productId) {
-        Product product = findProductById(productId);
+    public Double getProductSpecialPrice(Product product) {
         List<ProductVariation> variations = product.getVariations();
         if (variations == null || variations.isEmpty())
             return null;
@@ -174,8 +171,7 @@ public class ProductServiceImpl implements ProductService {
                 .getAsDouble();
     }
 
-    public Double getProductDiscount(Long productId) {
-        Product product = findProductById(productId);
+    public Double getProductDiscount(Product product) {
         List<ProductVariation> variations = product.getVariations();
         if (variations == null || variations.isEmpty())
             return null;
@@ -186,8 +182,7 @@ public class ProductServiceImpl implements ProductService {
                 .getAsDouble();
     }
 
-    public Boolean isProductDiscounted(Long productId) {
-        Product product = findProductById(productId);
+    public Boolean isProductDiscounted(Product product) {
         List<ProductVariation> variations = product.getVariations();
         if (variations == null || variations.isEmpty())
             return false;
@@ -216,9 +211,9 @@ public class ProductServiceImpl implements ProductService {
                 .name(product.getName())
                 .title(product.getTitle())
                 .isNew(product.isNew())
-                .price(getProductPrice(product.getId()))
-                .discount(getProductDiscount(product.getId()))
-                .discountPrice(getProductSpecialPrice(product.getId()))
+                .price(getProductPrice(product))
+                .discount(getProductDiscount(product))
+                .discountPrice(getProductSpecialPrice(product))
                 .imageURL(product.getMainImage().getImageUrl())
                 .build();
         return productResponse;
