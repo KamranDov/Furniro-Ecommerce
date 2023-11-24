@@ -19,7 +19,9 @@ import java.util.List;
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long orderId;
+    @Column(name = "order_Id")
+
+    private Long id;
     private Double totalAmount;
 
     @NotNull
