@@ -1,0 +1,39 @@
+package az.crocusoft.ecommerce.model;
+
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.time.LocalDate;
+import java.util.Date;
+import java.util.List;
+
+@Entity
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+public class Blog {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long pid;
+    private String title;
+    private Date date;
+    @Column(columnDefinition = "text")
+    private String content;
+    private String imageName;
+
+    @ManyToOne
+    @JoinColumn(name = "cid")
+    private Category category;
+    @ManyToOne
+    @JoinColumn(name = "uid")
+    private User user;
+
+    @OneToMany(mappedBy ="blogPost",cascade = CascadeType.ALL)
+    private List<Comment> comments;
+
+
+}
