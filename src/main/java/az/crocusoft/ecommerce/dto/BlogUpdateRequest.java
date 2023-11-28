@@ -19,7 +19,7 @@ public class BlogUpdateRequest {
     private String content;
     private String imageName;
     private Date date;
-    private String categoryName;
+    private Integer categoryId;
     private Long userId;
     private List<Long> commentIdList;
 }

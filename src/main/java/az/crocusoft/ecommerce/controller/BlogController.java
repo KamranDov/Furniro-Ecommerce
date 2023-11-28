@@ -45,7 +45,9 @@ public class BlogController {
     }
 
     @PutMapping(path = "/{pid}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public BlogUpdateRequest updateBlog(@RequestPart("blog") BlogUpdateRequest blog, @PathVariable("pid") Long blogId, @RequestPart("image") MultipartFile image) {
+    public BlogUpdateRequest updateBlog(@RequestPart("blog") BlogUpdateRequest blog,
+                                        @PathVariable("pid") Long blogId,
+                                        @RequestPart("image") MultipartFile image) {
         return blogService.updateBlog(blog, blogId, image);
     }
 

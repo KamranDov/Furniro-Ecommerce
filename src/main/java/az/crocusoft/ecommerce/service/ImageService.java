@@ -4,6 +4,7 @@ import az.crocusoft.ecommerce.model.ImageUpload;
 import az.crocusoft.ecommerce.repository.ImageRepository;
 
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Service;
@@ -17,17 +18,18 @@ import java.nio.file.Paths;
 
 
 @Service
-@AllArgsConstructor
-@ConfigurationProperties(prefix = "file")
+@RequiredArgsConstructor
+//@AllArgsConstructor
+//@ConfigurationProperties(prefix = "file")
 public class ImageService {
 
     private final ImageRepository imageRepository;
 
-//    @Value("${file.downloadPath")
-//     String downloadPath;
-//
-//    @Value("${file.uploadPath")
-//    String uploadPath;
+    @Value("${file.downloadPath}")
+     String downloadPath;
+
+    @Value("${file.uploadPath}")
+    String uploadPath;
 
 
 //    String FILE_PATH = "C:\\Users\\Admin\\Pictures\\Screenshots\\";

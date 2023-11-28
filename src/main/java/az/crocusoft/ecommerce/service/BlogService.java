@@ -7,9 +7,11 @@ import az.crocusoft.ecommerce.dto.BlogUpdateRequest;
 import az.crocusoft.ecommerce.exception.CustomException;
 import az.crocusoft.ecommerce.model.Blog;
 import az.crocusoft.ecommerce.model.Category;
+import az.crocusoft.ecommerce.model.ImageUpload;
 import az.crocusoft.ecommerce.repository.BlogRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -33,8 +35,14 @@ public class BlogService {
 
     String FILE_PATH = "C:\\Users\\Admin\\Pictures\\Screenshots\\";
 
+    @Value("${file.downloadPath}")
+    String downloadPath;
 
-    public Blog creatBlog(BlogDto blogDto) {
+    @Value("${file.uploadPath}")
+    String uploadPath;
+
+
+    public BlogDto creatBlog(BlogDto blogDto) {
         Category category = categoryService.getCategoryById(blogDto.getCategoryId());
         Blog blog = new Blog();
         String imageName;
@@ -48,28 +56,29 @@ public class BlogService {
         blog.setCategory(category);
         blog.setDate(new Date());
         blog.setImageName(imageName);
-        return blogRepository.save(blog);
+        blogRepository.save(blog);
+        return blogDto;
     }
 
 
+    public BlogUpdateRequest updateBlog(BlogUpdateRequest newBlog, Long blogId, MultipartFile newImage) {
 
-    public BlogUpdateRequest updateBlog(BlogUpdateRequest newBlog, Long blogId, MultipartFile image) {
-        Category category = categoryService.getCategoryByName(newBlog.getCategoryName());
+        Category category = categoryService.getCategoryById(newBlog.getCategoryId());
+        ImageUpload image;
+        try {
+            image = imageService.saveFile(newImage);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
         Blog blog = blogRepository.findById(blogId)
                 .orElseThrow(() -> new CustomException("Blog not found with id :" + blogId, HttpStatus.NOT_FOUND));
-
-
         blog.setTitle(newBlog.getTitle());
         blog.setContent(newBlog.getContent());
         blog.setCategory(category);
         blog.setDate(new Date());
-        try {
-//            blog.setImageUrl(imageService.saveImage(image));
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        blog.setImageName(image.getFileName());
         blogRepository.save(blog);
-        newBlog.setPid(blogId);
+
         newBlog.setDate(new Date());
         newBlog.setImageName(blog.getImageName());
 
@@ -80,6 +89,7 @@ public class BlogService {
     public ResponseEntity deletePostById(Long blogId) {
         Blog blog = blogRepository.findById(blogId)
                 .orElseThrow(() -> new CustomException("Blog not found with id :" + blogId, HttpStatus.NOT_FOUND));
+        imageService.delete(blog.getImageName());
         blogRepository.delete(blog);
         return ResponseEntity.ok(blog);
     }
