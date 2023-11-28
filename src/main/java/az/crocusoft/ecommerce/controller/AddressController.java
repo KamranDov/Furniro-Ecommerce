@@ -2,8 +2,6 @@ package az.crocusoft.ecommerce.controller;
 
 import az.crocusoft.ecommerce.dto.AddressDto;
 import az.crocusoft.ecommerce.service.AddressService;
-import az.crocusoft.ecommerce.service.impl.AddressServiceImpl;
-import az.crocusoft.ecommerce.service.impl.OrderServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -15,7 +13,7 @@ import java.util.List;
 @Slf4j
 @RestController
 
-@RequestMapping
+@RequestMapping("/address")
 @RequiredArgsConstructor
 public class AddressController {
 
@@ -25,15 +23,12 @@ public class AddressController {
     private final AddressService addressService;
 
 
-    @PostMapping("/user/{user_id}/address")
+    @PostMapping("/create/{user_id}")
     public ResponseEntity<AddressDto> createAddressForUser(
             @RequestBody AddressDto addressDto, @PathVariable(name = "user_id") Long userId) {
         AddressDto createdAddress = addressService.createAddress(addressDto, userId);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdAddress);
         }
-
-
-
     @GetMapping("/{address_id}")
     public ResponseEntity<AddressDto> getAddress(@PathVariable Integer address_id){
         AddressDto addressDto =addressService.getAddress(address_id);
@@ -47,13 +42,13 @@ public class AddressController {
         return new ResponseEntity<AddressDto>(updatedAddressDto,HttpStatus.OK);
     }
 
-    @DeleteMapping("/{addres_id}")
+    @DeleteMapping("/delete/{addres_id}")
     public ResponseEntity<String> deleteAddressById(@PathVariable Integer addres_id){
         String status = addressService.deleteAddressById(addres_id);
         return new ResponseEntity<String>(status,HttpStatus.OK);
     }
 
-    @GetMapping("/{userId}/address")
+    @GetMapping("/{userId}")
     public ResponseEntity<List<AddressDto>> getUserAddresses(@PathVariable Long userId) {
         List<AddressDto> addresses = addressService.getAddressByUserId(userId);
         return ResponseEntity.ok(addresses);

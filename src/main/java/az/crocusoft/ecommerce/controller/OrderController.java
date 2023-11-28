@@ -5,31 +5,60 @@ import az.crocusoft.ecommerce.exception.OrderException;
 import az.crocusoft.ecommerce.model.Order;
 import az.crocusoft.ecommerce.service.OrderService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.security.auth.login.LoginException;
 import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping
+@RequestMapping("/order")
 public class OrderController {
 
-    private OrderService orderService;
+    private final OrderService orderService;
 
 
     @PostMapping("/placeOrder")
     public ResponseEntity<Order> placeOrder(@RequestBody OrderDto orderDto)
             throws LoginException, OrderException {
+        if (orderDto == null || orderDto.getAddressDto() == null) {
+            // Gerekli hata işlemlerini burada gerçekleştir, örneğin bir hata yanıtı döndür.
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
         Order placedOrder = orderService.placeOrder(orderDto);
         return ResponseEntity.ok(placedOrder);
     }
 
+    @GetMapping("/all")
+    public ResponseEntity<List<Order>> getAllOrders() {
+        List<Order> allOrders = orderService.getAllOrders();
+        return new ResponseEntity<>(allOrders, HttpStatus.OK);
+    }
+    @GetMapping("/{orderId}")
+    public ResponseEntity<Order> getOrderById(@PathVariable Long orderId) {
+        return orderService.getOrderById(orderId)
+                .map(order -> new ResponseEntity<>(order, HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
 
+    @PutMapping("/update/{orderId}")
+    public ResponseEntity<OrderDto> updateOrder(@PathVariable Long orderId, @RequestBody OrderDto updatedOrderDto) {
+        OrderDto updatedOrder = orderService.updateOrder(orderId, updatedOrderDto);
+        return new ResponseEntity<>(updatedOrder, HttpStatus.OK);
+    }
+    @DeleteMapping("/delete/{orderId}")
+    public ResponseEntity<Void> deleteOrder(@PathVariable Long orderId) {
+        orderService.deleteOrder(orderId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @GetMapping("/{userId}")
+    public ResponseEntity<List<OrderDto>> getOrdersByUserId(@PathVariable Long userId) {
+        List<OrderDto> userOrders = orderService.getOrdersByUserId(userId);
+        return new ResponseEntity<>(userOrders, HttpStatus.OK);
+    }
 
 
 }

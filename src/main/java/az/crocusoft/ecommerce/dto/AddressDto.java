@@ -8,10 +8,12 @@ import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.stereotype.Component;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Component
 public class AddressDto {
     @Column(nullable = false)
     @Pattern(regexp = "^[a-zA-Z]*$", message = "First Name must not contain numbers or special characters")

@@ -12,10 +12,9 @@ public class OrderItem {
      @GeneratedValue(strategy = GenerationType.AUTO)
      @Column(name = "orderItem_Id")
      private Long id;
-
-     @ManyToOne
-     @JoinColumn(name = "product_id")
-     private Product product;
+//     @ManyToOne
+//     @JoinColumn(name = "product_id")
+//     private Product product;
      private  int quantity;
 
      @ManyToOne

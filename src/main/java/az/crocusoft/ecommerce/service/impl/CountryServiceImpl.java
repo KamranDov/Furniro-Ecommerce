@@ -30,23 +30,23 @@ public class CountryServiceImpl {
 
     public List<CountryDto> getAllCountries() {
 
-            try {
-                ObjectMapper objectMapper = new ObjectMapper();
-                List<Country> countries = objectMapper.readValue(new File("src/main/resources/country.json"),
-                        new TypeReference<List<Country>>() {});
-
-                countryRepository.saveAll(countries);
-            } catch (IOException e) {
-                e.printStackTrace();
-                // Handle the exception if needed
-            }
+//            try {
+//                ObjectMapper objectMapper = new ObjectMapper();
+//                List<Country> countries = objectMapper.readValue(new File("src/main/resources/country.json"),
+//                        new TypeReference<List<Country>>() {});
+//
+//                countryRepository.saveAll(countries);
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//                // Handle the exception if needed
+//            }
 
 
         List<Country> countries = countryRepository.findAll();
 
         List<CountryDto> countryDtos = new ArrayList<>();
         for (Country country : countries) {
-            countryDtos.add(new CountryDto(country.getCountry_id(), country.getName()));
+            countryDtos.add(new CountryDto(country.getId(), country.getName()));
         }
 
 

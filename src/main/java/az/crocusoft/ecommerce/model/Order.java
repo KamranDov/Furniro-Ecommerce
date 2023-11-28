@@ -17,24 +17,22 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Order {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "order_Id")
-
     private Long id;
     private Double totalAmount;
-
     @NotNull
     @Enumerated(EnumType.STRING)
     private OrderStatusValues orderStatus;
-
+    private LocalDate orderDate;
     @JsonIgnore
-    @ManyToOne
-    @JoinColumn(name = "customer_id", referencedColumnName = "customerId")
+    @ManyToOne(cascade = CascadeType.ALL)//CascadeType.ALL means all operations (persist, remove, merge, refresh) will be cascaded
+    @JoinColumn(name = "UserId", referencedColumnName = "UserId")
     private User user;
-
-    @ManyToOne
-    @JoinColumn(name = "address_id", referencedColumnName = "addressId")
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "addressId", referencedColumnName = "addressId")
     private Address address;
 
 
