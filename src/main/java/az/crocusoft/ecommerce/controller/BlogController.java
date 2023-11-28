@@ -53,7 +53,13 @@ public class BlogController {
 
     @DeleteMapping("/{pid}")
     public ResponseEntity deleteBlog(@PathVariable("pid") Long blogId) {
-        return ResponseEntity.ok(blogService.deletePostById(blogId));
+        return ResponseEntity.ok(blogService.deleteBlogById(blogId));
+    }
+
+
+    @GetMapping("/{pid}")
+    public ResponseEntity<BlogMainDto> getBlogById(@PathVariable("pid") Long blogId) {
+        return ResponseEntity.ok(blogService.getBlogById(blogId));
     }
 
 }

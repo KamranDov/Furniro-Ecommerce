@@ -57,7 +57,10 @@ public class BlogService {
         blog.setDate(new Date());
         blog.setImageName(imageName);
         blogRepository.save(blog);
+
+
         return blogDto;
+
     }
 
 
@@ -86,10 +89,11 @@ public class BlogService {
     }
 
 
-    public ResponseEntity deletePostById(Long blogId) {
+    public ResponseEntity deleteBlogById(Long blogId) {
         Blog blog = blogRepository.findById(blogId)
                 .orElseThrow(() -> new CustomException("Blog not found with id :" + blogId, HttpStatus.NOT_FOUND));
-        imageService.delete(blog.getImageName());
+
+
         blogRepository.delete(blog);
         return ResponseEntity.ok(blog);
     }
@@ -125,6 +129,14 @@ public class BlogService {
                 .collect(Collectors.toList());
 
         return blogDtoList;
+    }
+
+
+    public BlogMainDto getBlogById(Long id){
+        Blog blog=blogRepository.findById(id)
+                .orElseThrow(() -> new CustomException("Blog not found with id :" + id, HttpStatus.NOT_FOUND));
+        BlogMainDto blogMainDto=modelMapper.map(blog,BlogMainDto.class);
+        return blogMainDto;
     }
 
 

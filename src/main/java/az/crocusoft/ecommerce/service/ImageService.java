@@ -34,7 +34,7 @@ public class ImageService {
 
 //    String FILE_PATH = "C:\\Users\\Admin\\Pictures\\Screenshots\\";
 
-    private final Path root = Paths.get("C:\\Users\\Admin\\Downloads\\");
+    private final Path root = Paths.get("C:\\Users\\Admin\\Pictures\\Screenshots\\");
 
     public boolean delete(String filename) {
         try {
