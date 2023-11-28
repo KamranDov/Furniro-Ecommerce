@@ -19,25 +19,5 @@ public class BlogResponseDto {
     private Boolean isLastPage;
 
 
-//    private Long pid;
-//    private String title;
-//    private String content;
-//    private String imageUrl;
-//    private LocalDate date;
-//    private Integer categoryId;
-//    private Long userId;
-//    private List<Long> commentIdList;
-//
-//    public BlogResponseDto(Blog post) {
-//
-//        this.pid = post.getPid();
-//        this.title = post.getTitle();
-//        this.content = post.getContent();
-//        this.imageUrl = post.getImageUrl();
-//        this.date = post.getDate();
-//        this.categoryId = post.getCategory().getCid();
-//
-//
-//    }
 
 }

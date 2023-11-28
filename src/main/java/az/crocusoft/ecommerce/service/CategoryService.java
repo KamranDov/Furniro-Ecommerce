@@ -23,7 +23,7 @@ public class CategoryService {
 
     public Category updateCategory(Category category, Integer id) {
         Category foundCategory = categoryRepository.findById(id)
-                .orElseThrow(()->new CustomException("Category not found with id :"+id, HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new CustomException("Category not found with id :" + id, HttpStatus.NOT_FOUND));
         foundCategory.setName(category.getName());
         foundCategory.setDescription(category.getDescription());
         return categoryRepository.save(foundCategory);
@@ -31,29 +31,28 @@ public class CategoryService {
 
     public void deleteCategory(Integer id) {
         categoryRepository.findById(id)
-                .orElseThrow(()->new CustomException("Category not found with id :"+id,HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new CustomException("Category not found with id :" + id, HttpStatus.NOT_FOUND));
         categoryRepository.deleteById(id);
     }
 
 
-
     public Category getCategoryById(Integer id) {
         Category foundCategory = categoryRepository
-                .findById(id).orElseThrow(()->new CustomException("Category not found with id :"+id,HttpStatus.NOT_FOUND));
-        return foundCategory;
-    }
-     public Category getCategoryByName(String name) {
-        Category foundCategory = categoryRepository
-                .findCategoryByName(name).orElseThrow(()->new CustomException("Category not found with name :"+name,HttpStatus.NOT_FOUND));
+                .findById(id).orElseThrow(() -> new CustomException("Category not found with id :" + id, HttpStatus.NOT_FOUND));
         return foundCategory;
     }
 
+    public Category getCategoryByName(String name) {
+        Category foundCategory = categoryRepository
+                .findCategoryByName(name).orElseThrow(() -> new CustomException("Category not found with name :" + name, HttpStatus.NOT_FOUND));
+        return foundCategory;
+    }
 
 
     public List<Category> getAllCategories() {
         List<Category> allCategories = categoryRepository.findAll();
-        if(allCategories.size()==0)
-            throw new CustomException("No Category found",HttpStatus.NOT_FOUND);
+        if (allCategories.size() == 0)
+            throw new CustomException("No Category found", HttpStatus.NOT_FOUND);
         return allCategories;
     }
 }
