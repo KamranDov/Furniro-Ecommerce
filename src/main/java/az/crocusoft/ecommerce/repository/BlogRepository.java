@@ -19,8 +19,7 @@ public interface BlogRepository extends JpaRepository<Blog,Long> {
 
 
     List<Blog> findByDateGreaterThanEqual(Date startDate);
-    List<Blog> findBlogPostByUser(User username);
-    List<Blog> findBlogPostByUser(User username, Sort sort);
+
     List<Blog> findBlogPostByCategory(Category category);
-    Page<Blog> findBlogPostByCategory(Category category, Pageable pageable);
+
 }
