@@ -42,7 +42,7 @@ public class BlogService {
     String uploadPath;
 
 
-    public BlogDto creatBlog(BlogDto blogDto) {
+    public BlogMainDto creatBlog(BlogDto blogDto) {
         Category category = categoryService.getCategoryById(blogDto.getCategoryId());
         Blog blog = new Blog();
         String imageName;
@@ -58,14 +58,12 @@ public class BlogService {
         blog.setImageName(imageName);
         blogRepository.save(blog);
 
-
-        return blogDto;
+        return generateResponse(blog);
 
     }
 
 
-    public BlogUpdateRequest updateBlog(BlogUpdateRequest newBlog, Long blogId, MultipartFile newImage) {
-
+    public BlogMainDto updateBlog(BlogUpdateRequest newBlog, Long blogId, MultipartFile newImage) {
         Category category = categoryService.getCategoryById(newBlog.getCategoryId());
         ImageUpload image;
         try {
@@ -81,11 +79,7 @@ public class BlogService {
         blog.setDate(new Date());
         blog.setImageName(image.getFileName());
         blogRepository.save(blog);
-
-        newBlog.setDate(new Date());
-        newBlog.setImageName(blog.getImageName());
-
-        return newBlog;
+        return generateResponse(blog);
     }
 
 

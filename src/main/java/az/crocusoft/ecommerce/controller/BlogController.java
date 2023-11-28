@@ -30,6 +30,11 @@ public class BlogController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    @GetMapping("/{pid}")
+    public ResponseEntity<BlogMainDto> getBlogById(@PathVariable("pid") Long blogId) {
+        return ResponseEntity.ok(blogService.getBlogById(blogId));
+    }
+
     @GetMapping("/recent/{months}")
     public List<BlogMainDto> getRecentBlogPosts(@PathVariable int months) {
         return blogService.getRecentPosts(months);
@@ -37,16 +42,16 @@ public class BlogController {
 
 
     @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity saveEmployee(@RequestPart BlogDto blog, @RequestPart MultipartFile image) {
+    public ResponseEntity<BlogMainDto> saveEmployee(@RequestPart BlogDto blog, @RequestPart MultipartFile image) {
         blog.setImage(image);
         blogService.creatBlog(blog);
         return ResponseEntity.ok().build();
     }
 
     @PutMapping(path = "/{pid}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public BlogUpdateRequest updateBlog(@RequestPart("blog") BlogUpdateRequest blog,
-                                        @PathVariable("pid") Long blogId,
-                                        @RequestPart("image") MultipartFile image) {
+    public BlogMainDto updateBlog(@RequestPart("blog") BlogUpdateRequest blog,
+                                  @PathVariable("pid") Long blogId,
+                                  @RequestPart("image") MultipartFile image) {
         return blogService.updateBlog(blog, blogId, image);
     }
 
@@ -55,10 +60,5 @@ public class BlogController {
         return ResponseEntity.ok(blogService.deleteBlogById(blogId));
     }
 
-
-    @GetMapping("/{pid}")
-    public ResponseEntity<BlogMainDto> getBlogById(@PathVariable("pid") Long blogId) {
-        return ResponseEntity.ok(blogService.getBlogById(blogId));
-    }
 
 }
