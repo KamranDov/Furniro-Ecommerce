@@ -10,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("api/v1/category")
 @RequiredArgsConstructor
@@ -28,4 +30,11 @@ public class CategoryController {
         CategoryResponse category = categoryService.getCategory(id);
         return ResponseEntity.ok(category);
     }
+
+    @GetMapping
+    public ResponseEntity<List<CategoryResponse>> getAllCategories() {
+        List<CategoryResponse> allCategories = categoryService.getAllCategories();
+        return ResponseEntity.ok(allCategories);
+    }
+
 }

@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class CategoryServiceImpl implements CategoryService {
@@ -35,5 +37,15 @@ public class CategoryServiceImpl implements CategoryService {
                 .orElseThrow(() -> new EntityExistsException("Category not found!"));
         CategoryResponse categoryResponse = modelMapper.map(category, CategoryResponse.class);
         return categoryResponse;
+    }
+
+    @Override
+    public List<CategoryResponse> getAllCategories() {
+        List<CategoryResponse> categories = categoryRepository
+                .findAll()
+                .stream()
+                .map(category -> modelMapper.map(category, CategoryResponse.class))
+                .toList();
+        return categories;
     }
 }
