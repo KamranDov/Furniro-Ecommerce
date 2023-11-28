@@ -7,8 +7,7 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
 @Entity
-@Table(name = "checkout")
-
+@Table(name = "addresses")
 @AllArgsConstructor
 @RequiredArgsConstructor
 @Data
@@ -19,7 +18,6 @@ public class Address {
     private Integer id;
     private String firstName;
     private String lastName;
-
     private String companyHome;
     private String country;
     private String streetAddress;
@@ -36,7 +34,7 @@ public class Address {
 
     @Override
     public String toString() {
-        return "CheckOut{" +
+        return "Order{" +
                 "Id=" + id +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
