@@ -105,7 +105,7 @@ public class BlogService {
         List<Blog> blogs = blogPages.getContent();
 
         List<BlogMainDto> blogDtoList = blogs.stream()
-                .map(blog -> modelMapper.map(blog, BlogMainDto.class))
+                .map(blog -> generateResponse(blog))
                 .collect(Collectors.toList());
 
         BlogResponseDto response = new BlogResponseDto();
@@ -125,18 +125,34 @@ public class BlogService {
         List<Blog> blogs = blogRepository.findByDateGreaterThanEqual(startDate);
 
         List<BlogMainDto> blogDtoList = blogs.stream()
-                .map(blog -> modelMapper.map(blog, BlogMainDto.class))
+                .map(blog -> generateResponse(blog))
                 .collect(Collectors.toList());
 
         return blogDtoList;
     }
 
 
-    public BlogMainDto getBlogById(Long id){
-        Blog blog=blogRepository.findById(id)
+    public BlogMainDto getBlogById(Long id) {
+        Blog blog = blogRepository.findById(id)
                 .orElseThrow(() -> new CustomException("Blog not found with id :" + id, HttpStatus.NOT_FOUND));
-        BlogMainDto blogMainDto=modelMapper.map(blog,BlogMainDto.class);
+        BlogMainDto blogMainDto = generateResponse(blog);
         return blogMainDto;
+    }
+
+
+    private BlogMainDto generateResponse(Blog blog) {
+        String imageUrl = uploadPath + blog.getImageName();
+        BlogMainDto blogMainDto = new BlogMainDto();
+        blogMainDto.setPid(blog.getPid());
+        blogMainDto.setTitle(blog.getTitle());
+        blogMainDto.setContent(blog.getContent());
+        blogMainDto.setDate(blog.getDate());
+        blogMainDto.setCategoryId(blog.getCategory().getCid());
+        blogMainDto.setImageUrl(imageUrl);
+        blogMainDto.setUserId(null);
+        blogMainDto.setCommentsId(null);
+        return blogMainDto;
+
     }
 
 

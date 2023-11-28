@@ -36,7 +36,6 @@ public class BlogController {
     }
 
 
-
     @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity saveEmployee(@RequestPart BlogDto blog, @RequestPart MultipartFile image) {
         blog.setImage(image);

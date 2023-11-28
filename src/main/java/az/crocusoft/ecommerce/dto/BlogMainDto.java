@@ -16,9 +16,9 @@ public class BlogMainDto {
     private Long pid;
     private String title;
     private String content;
-    private String image;
+    private String imageUrl;
     private Date date;
-    private CategoryDto category;
-    private UserDto user;
-    private List<CommentDto> comments;
+    private Integer categoryId;
+    private Long userId;
+    private List<Long> commentsId;
 }
