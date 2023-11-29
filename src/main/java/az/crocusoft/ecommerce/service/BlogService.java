@@ -10,7 +10,6 @@ import az.crocusoft.ecommerce.model.Category;
 import az.crocusoft.ecommerce.model.ImageUpload;
 import az.crocusoft.ecommerce.repository.BlogRepository;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
