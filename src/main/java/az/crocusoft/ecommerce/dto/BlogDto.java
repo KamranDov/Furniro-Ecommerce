@@ -19,6 +19,6 @@ public class BlogDto {
     private MultipartFile image;
     private Date date;
     private Integer categoryId;
-    private UserDto user;
-    private List<CommentDto> comments;
+
+
 }

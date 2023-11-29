@@ -32,7 +32,6 @@ public class ImageService {
     String uploadPath;
 
 
-//    String FILE_PATH = "C:\\Users\\Admin\\Pictures\\Screenshots\\";
 
     private final Path root = Paths.get("C:\\Users\\Admin\\Pictures\\Screenshots\\");
 
@@ -64,30 +63,6 @@ public class ImageService {
     }
 
 
-//    public Image saveImage(MultipartFile file) throws Exception {
-//
-//        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
-//
-//        if (fileName.contains("..")) {
-//            throw new Exception("The file name is invalid: " + fileName);
-//        }
-//
-//        String downloadUrl = ServletUriComponentsBuilder
-//                .fromCurrentContextPath()
-//                .path("/download/")
-//                .path(UUID.randomUUID().toString())
-//                .toUriString();
-//
-//        return new Image(fileName, downloadUrl,file.getContentType());
-//    }
-//
-//
-//
-//
-//    public Image downloadFile(String imageId) throws Exception {
-//        return imageRepository.findById(imageId)
-//                .orElseThrow(() -> new Exception("A file with Id : "+ imageId + " could not be found"));
-//    }
 
 
 }
