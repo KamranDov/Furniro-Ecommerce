@@ -87,7 +87,7 @@ public class BlogService {
         Blog blog = blogRepository.findById(blogId)
                 .orElseThrow(() -> new CustomException("Blog not found with id :" + blogId, HttpStatus.NOT_FOUND));
 
-
+        imageService.delete(blog.getImageName());
         blogRepository.delete(blog);
         return ResponseEntity.ok(blog);
     }
