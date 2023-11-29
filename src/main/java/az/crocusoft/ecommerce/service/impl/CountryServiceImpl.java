@@ -29,18 +29,21 @@ public class CountryServiceImpl {
 
 
     public List<CountryDto> getAllCountries() {
+        List<Country> existingCountries = countryRepository.findAll();
 
-//            try {
-//                ObjectMapper objectMapper = new ObjectMapper();
-//                List<Country> countries = objectMapper.readValue(new File("src/main/resources/country.json"),
-//                        new TypeReference<List<Country>>() {});
-//
-//                countryRepository.saveAll(countries);
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//                // Handle the exception if needed
-//            }
+        if (existingCountries.isEmpty()) {
+            try {
+                ObjectMapper objectMapper = new ObjectMapper();
+                List<Country> countries = objectMapper.readValue(new File("src/main/resources/country.json"),
+                        new TypeReference<List<Country>>() {
+                        });
 
+                countryRepository.saveAll(countries);
+            } catch (IOException e) {
+                e.printStackTrace();
+                // Handle the exception if needed
+            }
+        }
 
         List<Country> countries = countryRepository.findAll();
 

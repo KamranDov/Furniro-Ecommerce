@@ -4,7 +4,6 @@ import az.crocusoft.ecommerce.exception.ResourceNotFoundException;
 import az.crocusoft.ecommerce.model.*;
 import az.crocusoft.ecommerce.repository.AddressRepository;
 import az.crocusoft.ecommerce.repository.OrderRepository;
-import az.crocusoft.ecommerce.repository.UserRepository;
 import az.crocusoft.ecommerce.service.OrderService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -34,9 +33,8 @@ public class OrderServiceImpl implements OrderService {
         if (orderDto == null || orderDto.getAddressDto() == null) {
             throw new IllegalArgumentException("OrderDto or AddressDto cannot be null");
         }
-        // OrderDTO'dan Order ve BillingDetails oluştur
         Order order = modelMapper.map(orderDto, Order.class);
-        order.setOrderStatus(OrderStatusValues.SUCCESS); // Varsayılan durum: Yeni sipariş
+        order.setOrderStatus(OrderStatusValues.SUCCESS);
         Address address =modelMapper.map(orderDto.getAddressDto(),Address.class);
         order.setUser(user);
        addressRepository.save(address);
