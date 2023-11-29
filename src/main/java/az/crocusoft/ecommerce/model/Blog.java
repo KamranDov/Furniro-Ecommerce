@@ -28,12 +28,7 @@ public class Blog {
     @ManyToOne
     @JoinColumn(name = "cid")
     private Category category;
-    @ManyToOne
-    @JoinColumn(name = "uid")
-    private User user;
 
-    @OneToMany(mappedBy ="blogPost",cascade = CascadeType.ALL)
-    private List<Comment> comments;
 
 
 }

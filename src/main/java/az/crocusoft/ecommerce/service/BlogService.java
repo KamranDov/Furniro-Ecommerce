@@ -33,7 +33,7 @@ public class BlogService {
     private final ImageService imageService;
     private final ModelMapper modelMapper;
 
-    String FILE_PATH = "C:\\Users\\Admin\\Pictures\\Screenshots\\";
+
 
     @Value("${file.downloadPath}")
     String downloadPath;
@@ -143,8 +143,7 @@ public class BlogService {
         blogMainDto.setDate(blog.getDate());
         blogMainDto.setCategoryId(blog.getCategory().getCid());
         blogMainDto.setImageUrl(imageUrl);
-        blogMainDto.setUserId(null);
-        blogMainDto.setCommentsId(null);
+
         return blogMainDto;
 
     }
