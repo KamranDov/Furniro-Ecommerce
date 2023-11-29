@@ -3,6 +3,7 @@ package az.crocusoft.ecommerce.service.Impl;
 import az.crocusoft.ecommerce.dto.ProductVariationDTO;
 import az.crocusoft.ecommerce.dto.request.ProductRequest;
 import az.crocusoft.ecommerce.dto.request.ProductVariationRequest;
+import az.crocusoft.ecommerce.dto.response.ProductPageResponse;
 import az.crocusoft.ecommerce.dto.response.ProductResponse;
 import az.crocusoft.ecommerce.dto.response.SingleProductResponse;
 import az.crocusoft.ecommerce.model.product.*;
@@ -10,6 +11,10 @@ import az.crocusoft.ecommerce.repository.*;
 import az.crocusoft.ecommerce.service.ProductService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -38,7 +43,7 @@ public class ProductServiceImpl implements ProductService {
         product.setName(productRequest.getName());
         product.setTitle(productRequest.getTitle());
         product.setPublished(productRequest.isPublished());
-        product.setNew(productRequest.isNew());
+        product.setNewProduct(productRequest.isNew());
         product.setDescription(productRequest.getDescription());
         product.setLongDescription(productRequest.getLongDescription());
 
@@ -102,12 +107,31 @@ public class ProductServiceImpl implements ProductService {
     }
 
 
-    @Override
-    public List<ProductResponse> getAllPublishedProducts() {
-        return productRepository.findAllByIsPublishedTrue()
+    public ProductPageResponse getAllPublishedProducts(int pageNumber, int pageSize,
+                                                       String sortBy, String sortOrder) {
+
+        Page<Product> allProducts;
+        Sort sort = Sort.by(Sort.Direction.fromString(sortOrder), sortBy);
+        Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
+        if ("price".equals(sortBy)) {
+            switch (sortOrder.toUpperCase()) {
+                case "ASC":
+                    allProducts = productRepository.findProductsWithMinPriceAscOrder(PageRequest.of(pageNumber, pageSize));
+                    break;
+                case "DESC":
+                    allProducts = productRepository.findProductsWithMinPriceDescOrder(PageRequest.of(pageNumber, pageSize));
+                    break;
+                default:
+                    allProducts = productRepository.findProductsWithMinPriceDescOrder(PageRequest.of(pageNumber, pageSize));
+            }
+        }
+        else {
+            allProducts = productRepository.findAllByPublishedIsTrue(pageable);
+        }
+        return new ProductPageResponse(allProducts.getContent()
                 .stream()
                 .map(this::convertToProductResponse)
-                .toList();
+                .toList(), allProducts.getTotalPages(), allProducts.getTotalElements(), allProducts.hasNext());
     }
 
     @Override
@@ -210,7 +234,7 @@ public class ProductServiceImpl implements ProductService {
                 .id(product.getId())
                 .name(product.getName())
                 .title(product.getTitle())
-                .isNew(product.isNew())
+                .isNew(product.isNewProduct())
                 .price(getProductPrice(product))
                 .discount(getProductDiscount(product))
                 .discountPrice(getProductSpecialPrice(product))

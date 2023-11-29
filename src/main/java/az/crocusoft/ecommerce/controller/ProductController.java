@@ -1,12 +1,15 @@
 package az.crocusoft.ecommerce.controller;
 
+import az.crocusoft.ecommerce.constants.PaginationConstants;
 import az.crocusoft.ecommerce.dto.request.ProductRequest;
 import az.crocusoft.ecommerce.dto.request.ProductVariationRequest;
+import az.crocusoft.ecommerce.dto.response.ProductPageResponse;
 import az.crocusoft.ecommerce.dto.response.ProductResponse;
 import az.crocusoft.ecommerce.dto.response.SingleProductResponse;
 import az.crocusoft.ecommerce.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -46,10 +49,13 @@ public class ProductController {
     }
 
     @GetMapping("/public")
-    public ResponseEntity<List<ProductResponse>> getPublishedProducts() {
-        List<ProductResponse> publishedProducts = productService.getAllPublishedProducts();
-        return ResponseEntity.ok(publishedProducts);
-    }
+    public ResponseEntity<ProductPageResponse> getAllProducts(
+            @RequestParam(name = "pageNumber", defaultValue = PaginationConstants.PAGE_NUMBER) Integer page,
+            @RequestParam(name = "pageSize", defaultValue = PaginationConstants.PAGE_SIZE) Integer size,
+            @RequestParam(name = "sortBy", defaultValue = PaginationConstants.SORT_DIRECTION) String sortBy,
+            @RequestParam(name = "sortOrder", defaultValue = PaginationConstants.SORT_BY) String sortOrder) {
 
+        return ResponseEntity.ok(productService.getAllPublishedProducts(page, size, sortBy, sortOrder));
+    }
 
 }

@@ -1,12 +1,10 @@
 package az.crocusoft.ecommerce.model.product;
 
 import jakarta.persistence.*;
-import jdk.jfr.Timestamp;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
 import java.util.*;
 
 @Entity
@@ -24,8 +22,9 @@ public class Product {
     private String name;
     private String title;
 
-    private boolean isPublished;
-    private boolean isNew;
+    private boolean published;
+    @Column(name = "new_product")
+    private boolean newProduct;
 
     @Column(length = 255)
     private String description;
