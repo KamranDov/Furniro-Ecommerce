@@ -6,7 +6,7 @@ import az.crocusoft.ecommerce.dto.BlogResponseDto;
 import az.crocusoft.ecommerce.dto.BlogUpdateRequest;
 import az.crocusoft.ecommerce.exception.CustomException;
 import az.crocusoft.ecommerce.model.Blog;
-import az.crocusoft.ecommerce.model.Category;
+import az.crocusoft.ecommerce.model.BlogCategory;
 import az.crocusoft.ecommerce.model.ImageUpload;
 import az.crocusoft.ecommerce.repository.BlogRepository;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class BlogService {
     private final BlogRepository blogRepository;
-    private final CategoryService categoryService;
+    private final BlogCategoryService categoryService;
     private final ImageService imageService;
 
 
@@ -40,7 +40,7 @@ public class BlogService {
 
 
     public BlogMainDto creatBlog(BlogDto blogDto) {
-        Category category = categoryService.getCategoryById(blogDto.getCategoryId());
+        BlogCategory category = categoryService.getCategoryById(blogDto.getCategoryId());
         Blog blog = new Blog();
 
         MultipartFile image = blogDto.getImage();
@@ -63,7 +63,7 @@ public class BlogService {
 
 
     public BlogMainDto updateBlog(BlogUpdateRequest newBlog, Long blogId, MultipartFile newImage) {
-        Category category = categoryService.getCategoryById(newBlog.getCategoryId());
+        BlogCategory category = categoryService.getCategoryById(newBlog.getCategoryId());
         ImageUpload image;
         try {
             image = imageService.saveFile(newImage);

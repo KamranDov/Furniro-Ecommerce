@@ -1,7 +1,7 @@
 package az.crocusoft.ecommerce.repository;
 
 import az.crocusoft.ecommerce.model.Blog;
-import az.crocusoft.ecommerce.model.Category;
+import az.crocusoft.ecommerce.model.BlogCategory;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -20,6 +20,6 @@ public interface BlogRepository extends JpaRepository<Blog,Long> {
     Integer countByCategoryId(@Param("categoryId") Integer categoryId);
 
 
-    List<Blog> findBlogPostByCategory(Category category);
+    List<Blog> findBlogPostByCategory(BlogCategory category);
 
 }

@@ -7,7 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class CategoryDto {
+public class BlogCategoryDto {
     private Integer cid;
     private String name;
     private String description;

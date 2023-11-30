@@ -6,9 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
 import java.util.Date;
-import java.util.List;
 
 @Entity
 @Data
@@ -27,7 +25,7 @@ public class Blog {
 
     @ManyToOne
     @JoinColumn(name = "cid")
-    private Category category;
+    private BlogCategory category;
 
 
 

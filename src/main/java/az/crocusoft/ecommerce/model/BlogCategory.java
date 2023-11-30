@@ -11,7 +11,7 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Category {
+public class BlogCategory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer cid;

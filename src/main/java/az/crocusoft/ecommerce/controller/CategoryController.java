@@ -1,15 +1,12 @@
 package az.crocusoft.ecommerce.controller;
 
-import az.crocusoft.ecommerce.dto.CategoryDto;
+import az.crocusoft.ecommerce.dto.BlogCategoryDto;
 import az.crocusoft.ecommerce.exception.ApiResponse;
-import az.crocusoft.ecommerce.mapper.ModelMapperBean;
-import az.crocusoft.ecommerce.model.Category;
-import az.crocusoft.ecommerce.service.CategoryService;
+import az.crocusoft.ecommerce.model.BlogCategory;
+import az.crocusoft.ecommerce.service.BlogCategoryService;
 import jakarta.validation.Valid;
-import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,12 +20,12 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class CategoryController {
 
-    private final CategoryService categoryService;
+    private final BlogCategoryService categoryService;
     private final ModelMapper modelMapper;
 
     @PostMapping()
-    public CategoryDto createCategory(@Valid @RequestBody CategoryDto categoryDto) {
-        Category category = new Category();
+    public BlogCategoryDto createCategory(@Valid @RequestBody BlogCategoryDto categoryDto) {
+        BlogCategory category = new BlogCategory();
         category.setName(categoryDto.getName());
         category.setDescription(categoryDto.getDescription());
         categoryService.createCategory(category);
@@ -36,23 +33,23 @@ public class CategoryController {
     }
 
     @GetMapping()
-    public ResponseEntity<List<CategoryDto>> getAllCategories() {
-        List<CategoryDto> allCategories = categoryService.getAllCategories()
-                .stream().map(category -> modelMapper.map(category, CategoryDto.class)).collect(Collectors.toList());
+    public ResponseEntity<List<BlogCategoryDto>> getAllCategories() {
+        List<BlogCategoryDto> allCategories = categoryService.getAllCategories()
+                .stream().map(category -> modelMapper.map(category, BlogCategoryDto.class)).collect(Collectors.toList());
         return new ResponseEntity<>(allCategories, HttpStatus.OK);
     }
 
     @GetMapping("/{cid}")
-    public ResponseEntity<CategoryDto> getCategoryById(@PathVariable("cid") Integer cid) {
-        Category category = categoryService.getCategoryById(cid);
-        return new ResponseEntity<>(modelMapper.map(category, CategoryDto.class), HttpStatus.OK);
+    public ResponseEntity<BlogCategoryDto> getCategoryById(@PathVariable("cid") Integer cid) {
+        BlogCategory category = categoryService.getCategoryById(cid);
+        return new ResponseEntity<>(modelMapper.map(category, BlogCategoryDto.class), HttpStatus.OK);
     }
 
     @PutMapping("/{cid}")
-    public ResponseEntity<CategoryDto> updateCategoryById(@PathVariable("cid") Integer cid,
-                                                          @Valid @RequestBody Category category) {
-        Category updatedCategory = categoryService.updateCategory(category, cid);
-        return new ResponseEntity<>(modelMapper.map(updatedCategory, CategoryDto.class), HttpStatus.OK);
+    public ResponseEntity<BlogCategoryDto> updateCategoryById(@PathVariable("cid") Integer cid,
+                                                              @Valid @RequestBody BlogCategory category) {
+        BlogCategory updatedCategory = categoryService.updateCategory(category, cid);
+        return new ResponseEntity<>(modelMapper.map(updatedCategory, BlogCategoryDto.class), HttpStatus.OK);
     }
 
     @DeleteMapping("/{cid}")
