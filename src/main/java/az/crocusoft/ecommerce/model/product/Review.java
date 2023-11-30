@@ -1,7 +1,6 @@
 package az.crocusoft.ecommerce.model.product;
 
-import az.crocusoft.ecommerce.model.customer.Customer;
-import az.crocusoft.ecommerce.model.user.User;
+import az.crocusoft.ecommerce.model.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -26,8 +25,8 @@ public class Review {
     private Product product;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "customer_id")
-    private Customer customer;
+    @JoinColumn(name = "user_id")
+    private User user;
 
     private Integer rating;
     @Column(length = 1000)

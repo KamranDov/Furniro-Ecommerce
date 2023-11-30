@@ -1,17 +1,12 @@
 package az.crocusoft.ecommerce.dto.response;
 
 import az.crocusoft.ecommerce.dto.ProductVariationDTO;
-import az.crocusoft.ecommerce.dto.ReviewDTO;
-import az.crocusoft.ecommerce.model.product.ProductVariation;
-import az.crocusoft.ecommerce.model.product.Review;
-import az.crocusoft.ecommerce.model.product.Tag;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
-import java.util.Set;
 
 @Data
 @NoArgsConstructor

@@ -28,7 +28,7 @@ public class Order {
     private OrderStatusValues orderStatus;
     private LocalDate orderDate;
     @JsonIgnore
-    @ManyToOne(cascade = CascadeType.ALL)//CascadeType.ALL means all operations (persist, remove, merge, refresh) will be cascaded
+    @ManyToOne(cascade = CascadeType.ALL) //CascadeType.ALL means all operations (persist, remove, merge, refresh) will be cascaded
     @JoinColumn(name = "UserId", referencedColumnName = "UserId")
     private User user;
     @ManyToOne(cascade = CascadeType.ALL)

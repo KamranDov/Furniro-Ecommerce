@@ -1,8 +1,5 @@
 package az.crocusoft.ecommerce.dto;
 
-import az.crocusoft.ecommerce.model.customer.Customer;
-import az.crocusoft.ecommerce.model.product.Product;
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
