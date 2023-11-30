@@ -2,13 +2,12 @@ server:
   port: 8088
 
 spring:
-  config:
-    import: classpath:env.properties
+
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://${DB_DATABASE}
-    username: ${DB_USER}
-    password: ${DB_PASSWORD}
+    url: jdbc:mysql://localhost:3306/ecommercedb
+    username: root
+    password: ozlam2002
   jpa:
     properties:
       hibernate:
@@ -20,8 +19,8 @@ spring:
   mail:
     host: smtp.gmail.com
     port: 587
-    username: ulviguluzada@gmail.com
-    password: awixhfnipncbcxhj
+    username: root
+    password: ozlam2002
     properties:
       mail:
         smtp:
@@ -32,7 +31,7 @@ spring:
 
 
 file:
-  upload-dir: C:/Users/Ulvi/Desktop/crocusoft-project/ecommerce-images
+  upload-dir: C:\Users\User\OneDrive\Pictures
 
 application:
   security:
