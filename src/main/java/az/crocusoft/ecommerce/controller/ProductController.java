@@ -52,8 +52,8 @@ public class ProductController {
     public ResponseEntity<ProductPageResponse> getAllProducts(
             @RequestParam(name = "pageNumber", defaultValue = PaginationConstants.PAGE_NUMBER) Integer page,
             @RequestParam(name = "pageSize", defaultValue = PaginationConstants.PAGE_SIZE) Integer size,
-            @RequestParam(name = "sortBy", defaultValue = PaginationConstants.SORT_DIRECTION) String sortBy,
-            @RequestParam(name = "sortOrder", defaultValue = PaginationConstants.SORT_BY) String sortOrder) {
+            @RequestParam(name = "sortBy", defaultValue = PaginationConstants.SORT_BY) String sortBy,
+            @RequestParam(name = "sortOrder", defaultValue = PaginationConstants.SORT_DIRECTION) String sortOrder) {
 
         return ResponseEntity.ok(productService.getAllPublishedProducts(page, size, sortBy, sortOrder));
     }

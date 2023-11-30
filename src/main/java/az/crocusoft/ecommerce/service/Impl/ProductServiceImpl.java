@@ -1,5 +1,7 @@
 package az.crocusoft.ecommerce.service.Impl;
 
+import az.crocusoft.ecommerce.constants.FilteringConstants;
+import az.crocusoft.ecommerce.constants.PaginationConstants;
 import az.crocusoft.ecommerce.dto.ProductVariationDTO;
 import az.crocusoft.ecommerce.dto.request.ProductRequest;
 import az.crocusoft.ecommerce.dto.request.ProductVariationRequest;
@@ -19,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -110,28 +113,39 @@ public class ProductServiceImpl implements ProductService {
     public ProductPageResponse getAllPublishedProducts(int pageNumber, int pageSize,
                                                        String sortBy, String sortOrder) {
 
+        List<String> sortFields = Arrays.asList(FilteringConstants.fields);
+        if (!sortFields.contains(sortBy.toLowerCase())) {
+            sortBy = PaginationConstants.SORT_BY;
+        }
+        List<String> orders = Arrays.asList(FilteringConstants.order);
+        if (!orders.contains(sortOrder.toUpperCase())) {
+            sortOrder = PaginationConstants.SORT_BY;
+        }
+
         Page<Product> allProducts;
         Sort sort = Sort.by(Sort.Direction.fromString(sortOrder), sortBy);
         Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
-        if ("price".equals(sortBy)) {
+        if ("price".equalsIgnoreCase(sortBy)) {
             switch (sortOrder.toUpperCase()) {
-                case "ASC":
-                    allProducts = productRepository.findProductsWithMinPriceAscOrder(PageRequest.of(pageNumber, pageSize));
-                    break;
                 case "DESC":
-                    allProducts = productRepository.findProductsWithMinPriceDescOrder(PageRequest.of(pageNumber, pageSize));
+                    allProducts = productRepository
+                            .findProductsWithMinPriceDescOrder(PageRequest.of(pageNumber, pageSize));
                     break;
                 default:
-                    allProducts = productRepository.findProductsWithMinPriceDescOrder(PageRequest.of(pageNumber, pageSize));
+                    allProducts = productRepository
+                            .findProductsWithMinPriceAscOrder(PageRequest.of(pageNumber, pageSize));
             }
-        }
-        else {
+        } else {
             allProducts = productRepository.findAllByPublishedIsTrue(pageable);
         }
+
         return new ProductPageResponse(allProducts.getContent()
                 .stream()
                 .map(this::convertToProductResponse)
-                .toList(), allProducts.getTotalPages(), allProducts.getTotalElements(), allProducts.hasNext());
+                .toList(),
+                allProducts.getTotalPages(),
+                allProducts.getTotalElements(),
+                allProducts.hasNext());
     }
 
     @Override
@@ -223,7 +237,7 @@ public class ProductServiceImpl implements ProductService {
         return price - (price * discount / 100);
     }
 
-    private Product findProductById(Long id) {
+    public Product findProductById(Long id) {
         return productRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Product is currently not available"));
     }

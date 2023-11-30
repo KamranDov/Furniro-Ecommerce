@@ -16,6 +16,6 @@ public interface ProductService {
     void addVariationToProduct(Long productId, ProductVariationRequest addProductDTO, List<MultipartFile> images) throws IOException;
     SingleProductResponse getProductById(Long id);
     ProductPageResponse getAllPublishedProducts(int pageNumber, int pageSize,
-                                                       String sortBy, String sortOrder);
+                                                String sortBy, String sortOrder);
 
 }
