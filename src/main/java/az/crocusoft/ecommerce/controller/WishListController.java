@@ -1,6 +1,7 @@
 package az.crocusoft.ecommerce.controller;
 
 import az.crocusoft.ecommerce.dto.WishListDTO;
+import az.crocusoft.ecommerce.dto.request.ProductRequest;
 import az.crocusoft.ecommerce.model.product.Product;
 import az.crocusoft.ecommerce.model.wishlist.WishList;
 import az.crocusoft.ecommerce.service.WishListService;
@@ -17,13 +18,14 @@ import java.util.List;
 public class WishListController {
     private final WishListService wishListService;
     @GetMapping("/list")
-    public List<WishList> getWishListByUserId(Long userId){
+    public List<WishListDTO> getWishListByUserId(Long userId){
         return wishListService.getWishListByUserId(userId);
     }
 
     @PostMapping("/add")
-    public ResponseEntity<WishListDTO> add(@RequestParam Product product){
-        return ResponseEntity.ok(wishListService.add(product));
+    public ResponseEntity<ProductRequest> add(@RequestParam ProductRequest product){
+        wishListService.add(product);
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/delete/{id}")

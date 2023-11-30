@@ -1,17 +1,19 @@
 package az.crocusoft.ecommerce.service;
 
 import az.crocusoft.ecommerce.dto.WishListDTO;
+import az.crocusoft.ecommerce.dto.request.ProductRequest;
 import az.crocusoft.ecommerce.model.product.Product;
 import az.crocusoft.ecommerce.model.wishlist.WishList;
+import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
 public interface WishListService {
 
 
-    WishListDTO add(Product product);
+    void add(ProductRequest productRequest);
 
     void delete(Long wishListId);
 
-    List<WishList> getWishListByUserId(Long userId);
+    List<WishListDTO> getWishListByUserId(Long userId);
 }

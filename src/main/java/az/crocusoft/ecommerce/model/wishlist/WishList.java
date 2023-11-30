@@ -1,7 +1,7 @@
 package az.crocusoft.ecommerce.model.wishlist;
 
+import az.crocusoft.ecommerce.model.User;
 import az.crocusoft.ecommerce.model.product.Product;
-import az.crocusoft.ecommerce.model.user.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
