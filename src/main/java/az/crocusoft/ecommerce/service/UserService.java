@@ -2,8 +2,6 @@ package az.crocusoft.ecommerce.service;
 
 
 import az.crocusoft.ecommerce.dto.UserDto;
-import az.crocusoft.ecommerce.dto.UserRequest;
-import az.crocusoft.ecommerce.dto.UserRespons;
 import az.crocusoft.ecommerce.dto.UserResponse;
 import az.crocusoft.ecommerce.enums.Role;
 import az.crocusoft.ecommerce.model.User;
@@ -24,19 +22,18 @@ public class UserService {
 
     private final PasswordEncoder passwordEncoder;
 
-    public UserRespons getUser(Long id){
+    public UserResponse getUser(Long id){
 
 
         User u= userRepository.findById(id).orElseThrow(()->new RuntimeException("not found"));
 
 
 
-
-        UserRespons user = UserRespons.builder()
+        UserResponse user = UserResponse.builder()
                 .username(u.getUsername())
                 .name(u.getName())
                 .email(u.getEmail())
-                .surName(u.getSurName())
+                .surName(u.getUsername())
                 .role(u.getRole()).build();
 
         return user;
@@ -48,17 +45,16 @@ public class UserService {
 
 
 
-    public UserResponse createUser(UserDto userDto){
+    public void createUser(UserDto userDto){
 
 
-        return service.save(userDto);
-
+         service.save(userDto);
 
 
     }
 
 
-    public UserRespons updateUser( Long id,UserDto userDto){
+    public void updateUser( Long id,UserDto userDto){
 
         getUser(id);
 
@@ -68,22 +64,14 @@ public class UserService {
                 .password(passwordEncoder.encode(userDto.getPassword()))
                 .name(userDto.getName())
                 .email(userDto.getEmail())
-                .surName(userDto.getSurName())
+                .surname(userDto.getSurname())
                 .role(Role.USER).build();
 
 
 
         userRepository.save(user);
 
-        UserRespons response = UserRespons.builder()
-                .username(userDto.getUsername())
-                .password(userDto.getPassword())
-                .email(userDto.getEmail())
-                .name(userDto.getName())
-                .surName(userDto.getSurName())
-                .role(Role.USER).build();
 
-        return response ;
 
     }
 

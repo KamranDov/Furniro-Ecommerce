@@ -27,7 +27,7 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-    private String surName;
+    private String surname;
     private String username;
     private String password;
     @Column(unique = true)
@@ -38,6 +38,8 @@ public class User implements UserDetails {
     private List<Address> addressList =new ArrayList<>();
     @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
     private List<Order> orders = new ArrayList<>();
+
+
     @OneToMany(mappedBy ="user" ,cascade = CascadeType.REMOVE
     )
     private List<Token> tokenList;
@@ -49,7 +51,7 @@ public class User implements UserDetails {
                 "role=" + role +
                 ", id=" + id +
                 ", name='" + name + '\'' +
-                ", surName='" + surName + '\'' +
+                ", surName='" + surname + '\'' +
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
                 '}';

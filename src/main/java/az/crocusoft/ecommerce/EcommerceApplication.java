@@ -37,8 +37,8 @@ public class EcommerceApplication  implements CommandLineRunner   {
 
 
 
-/*
 
+/*
 
 	@Bean
 	public CommandLineRunner commandLineRunner(
@@ -47,7 +47,7 @@ public class EcommerceApplication  implements CommandLineRunner   {
 		return args -> {
 			var admin = UserDto.builder()
 					.name("Admin")
-					.surName("Admin")
+					.surname("Admin")
 					.username("AdminA")
 					.password("password")
 					.email("admin@gmail.com")
@@ -60,7 +60,7 @@ public class EcommerceApplication  implements CommandLineRunner   {
 
 			var manager = UserDto.builder()
 					.name("Admin")
-					.surName("Admin")
+					.surname("Admin")
 					.username("ManagerM")
 					.password("password")
 					.email("manager@gmail.com")
@@ -69,8 +69,8 @@ public class EcommerceApplication  implements CommandLineRunner   {
 			System.out.println("Manager token: " + service.save(manager).getAccessToken());
 
 		};
-	}
-*/
+	}*/
+
 
 
 }

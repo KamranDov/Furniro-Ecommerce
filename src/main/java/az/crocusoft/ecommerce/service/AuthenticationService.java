@@ -2,7 +2,7 @@ package az.crocusoft.ecommerce.service;
 
 import az.crocusoft.ecommerce.dto.UserDto;
 import az.crocusoft.ecommerce.dto.UserRequest;
-import az.crocusoft.ecommerce.dto.UserResponse;
+import az.crocusoft.ecommerce.dto.AuthResponse;
 import az.crocusoft.ecommerce.enums.Role;
 import az.crocusoft.ecommerce.exception.EmailAlreadyExistsException;
 import az.crocusoft.ecommerce.exception.UserNameAlreadyExistsException;
@@ -38,7 +38,7 @@ public class AuthenticationService {
 
     private final PasswordEncoder passwordEncoder;
 
-    public UserResponse save(UserDto userDto) {
+    public AuthResponse save(UserDto userDto) {
 
 
                  User user = User.builder()
@@ -47,7 +47,7 @@ public class AuthenticationService {
                 .password(passwordEncoder.encode(userDto.getPassword()))
                 .name(userDto.getName())
 
-                .surName(userDto.getSurName())
+                .surname(userDto.getSurname())
                 .role(Role.USER).build();
 
         boolean isEmailExists = userRepository.existsByEmail(userDto.getEmail());
@@ -68,7 +68,7 @@ public class AuthenticationService {
       saveUserToken(saveUser, token);
 
 
-        return UserResponse.builder().
+        return AuthResponse.builder().
                 userId(saveUser.getId())
                 .accessToken(token)
                         .refreshToken(refreshToken)
@@ -77,7 +77,7 @@ public class AuthenticationService {
     }
 
 
-    public UserResponse auth(UserRequest userRequest) {
+    public AuthResponse auth(UserRequest userRequest) {
    Authentication authentication= authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userRequest.getUsername(), userRequest.getPassword()));
 
    if(authentication.isAuthenticated()){
@@ -86,7 +86,7 @@ public class AuthenticationService {
        var refreshToken=jwtService.generateRefreshToken(user);
        revokeAllUserTokens(user);
        saveUserToken(user,token);
-       return UserResponse.builder().
+       return AuthResponse.builder().
                userId(user.getId())
                .accessToken(token).refreshToken(refreshToken)
                .build();
@@ -143,7 +143,7 @@ public class AuthenticationService {
                     var accessToken = jwtService.generateToken(user);
                     revokeAllUserTokens(user);
                     saveUserToken(user, accessToken);
-                    var authResponse = UserResponse.builder()
+                    var authResponse = AuthResponse.builder()
                             .accessToken(accessToken)
                             .refreshToken(refreshToken)
                             .build();

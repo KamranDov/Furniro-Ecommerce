@@ -21,7 +21,7 @@ public class UserDto {
 
 
     private String name;
-    private String surName;
+    private String surname;
 
     @NotBlank(message = "Username is required")
     private String username;
