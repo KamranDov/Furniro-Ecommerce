@@ -31,16 +31,11 @@ public class AuthenticationService {
 
     private final UserRepository userRepository;
     private  final TokenRepository tokenRepository;
-
     private final JwtService jwtService;
-
     private final AuthenticationManager authenticationManager;
-
     private final PasswordEncoder passwordEncoder;
 
     public AuthResponse save(UserDto userDto) {
-
-
                  User user = User.builder()
                 .username(userDto.getUsername())
                          .email(userDto.getEmail())
@@ -49,10 +44,8 @@ public class AuthenticationService {
 
                 .surname(userDto.getSurname())
                 .role(Role.USER).build();
-
         boolean isEmailExists = userRepository.existsByEmail(userDto.getEmail());
         boolean isUserNameExists = userRepository.existsByUsername(userDto.getUsername());
-
 
         if (isEmailExists) {
             throw new EmailAlreadyExistsException("Email already exists");
@@ -61,13 +54,10 @@ public class AuthenticationService {
             throw new UserNameAlreadyExistsException("Username already exists");
         }
 
-
         User saveUser= userRepository.save(user);
         var token = jwtService.generateToken(user);
         var refreshToken=jwtService.generateRefreshToken(user);
       saveUserToken(saveUser, token);
-
-
         return AuthResponse.builder().
                 userId(saveUser.getId())
                 .accessToken(token)

@@ -21,10 +21,9 @@ import java.util.List;
 public class FurnitureDesignationServiceImpl implements FurnitureDesignationService {
 
     private final ModelMapper modelMapper;
-
     private final FurnitureDesignationRepository furnitureDesignationRepository;
-    private static final String FURNITURE_DESIGNATION_IMAGES_FOLDER_NAME = "Furniture-designation-images";
     private final FileService fileService;
+    private static final String FURNITURE_DESIGNATION_IMAGES_FOLDER_NAME = "Furniture-designation-images";
 
     @Override
     public void addFurnitureDesignation(FurnitureDesignationRequest furnitureDesignationRequest, MultipartFile image) throws IOException {

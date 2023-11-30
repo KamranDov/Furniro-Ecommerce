@@ -2,6 +2,7 @@ package az.crocusoft.ecommerce.dto;
 
 
 import az.crocusoft.ecommerce.enums.Role;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
