@@ -17,4 +17,6 @@ public class GeneralExceptionHandler {
                 , HttpStatus.INTERNAL_SERVER_ERROR
                 , exception.getMessage());
     }
+
+
 }
