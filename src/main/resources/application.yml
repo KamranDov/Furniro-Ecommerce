@@ -2,20 +2,37 @@ server:
   port: 8088
 
 spring:
+  config:
+    import: classpath:env.properties
   datasource:
-    password: root
-    username: root
-    url: jdbc:mysql://localhost:3306/wheather
     driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://${DB_DATABASE}
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
   jpa:
-    hibernate:
-      ddl-auto: update
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQLDialect
+    hibernate:
+      ddl-auto: update
+    generate-ddl: true
+    show-sql: true
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ulviguluzada@gmail.com
+    password: awixhfnipncbcxhj
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
 
 
 
+file:
+  upload-dir: C:/Users/Ulvi/Desktop/crocusoft-project/ecommerce-images
 
 application:
   security:

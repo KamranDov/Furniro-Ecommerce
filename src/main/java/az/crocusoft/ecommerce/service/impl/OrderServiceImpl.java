@@ -1,9 +1,11 @@
-package az.crocusoft.ecommerce.service.impl;
+package az.crocusoft.ecommerce.service.Impl;
+
 import az.crocusoft.ecommerce.dto.OrderDto;
 import az.crocusoft.ecommerce.exception.ResourceNotFoundException;
 import az.crocusoft.ecommerce.model.*;
 import az.crocusoft.ecommerce.repository.AddressRepository;
 import az.crocusoft.ecommerce.repository.OrderRepository;
+import az.crocusoft.ecommerce.repository.UserRepository;
 import az.crocusoft.ecommerce.service.OrderService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +23,7 @@ public class OrderServiceImpl implements OrderService {
 
     private final AddressRepository addressRepository;
 
-//    private final UserRepository userRepository;
+    private final UserRepository userRepository;
     private final OrderRepository orderRepository;
 
     private final ModelMapper modelMapper;

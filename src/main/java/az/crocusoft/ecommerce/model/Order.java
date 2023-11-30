@@ -29,7 +29,7 @@ public class Order {
     private LocalDate orderDate;
     @JsonIgnore
     @ManyToOne(cascade = CascadeType.ALL) //CascadeType.ALL means all operations (persist, remove, merge, refresh) will be cascaded
-    @JoinColumn(name = "UserId", referencedColumnName = "UserId")
+    @JoinColumn(name = "user_id", referencedColumnName = "user_id")
     private User user;
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "addressId", referencedColumnName = "addressId")

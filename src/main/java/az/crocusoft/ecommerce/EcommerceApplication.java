@@ -1,34 +1,26 @@
 package az.crocusoft.ecommerce;
 
 
-
-import az.crocusoft.ecommerce.dto.UserDto;
-import az.crocusoft.ecommerce.model.User;
 import az.crocusoft.ecommerce.repository.UserRepository;
-import az.crocusoft.ecommerce.service.AuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
-
-import static az.crocusoft.ecommerce.enums.Role.ADMIN;
-import static az.crocusoft.ecommerce.enums.Role.MANAGER;
 
 
 @SpringBootApplication
-public class EcommerceApplication  implements CommandLineRunner   {
+public class EcommerceApplication  {
 
 	public static void main(String[] args) {
 		SpringApplication.run(EcommerceApplication.class, args);
 	}
 
 
-	@Autowired
-	UserRepository userRepository;
-	@Override
-	public void run(String... args) throws Exception {
-
+//	@Autowired
+//	UserRepository userRepository;
+//	@Override
+//	public void run(String... args) throws Exception {
+//
 
 
 	}
@@ -73,4 +65,4 @@ public class EcommerceApplication  implements CommandLineRunner   {
 
 
 
-}
+
