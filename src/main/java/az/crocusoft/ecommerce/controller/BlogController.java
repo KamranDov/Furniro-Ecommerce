@@ -39,6 +39,10 @@ public class BlogController {
     public List<BlogMainDto> getRecentBlogPosts(@PathVariable int months) {
         return blogService.getRecentPosts(months);
     }
+    @GetMapping("/count/{categoryId}")
+    public Integer getRecentBlogPosts(@PathVariable Integer categoryId) {
+        return blogService.countBlogsByCategory(categoryId);
+    }
 
 
     @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})

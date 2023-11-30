@@ -27,19 +27,12 @@ public class ImageService {
     String uploadPath;
 
 
-    private final Path root = Paths.get("C:\\Users\\Admin\\Pictures\\Screenshots\\");
+    private final Path path = Paths.get("C:\\Users\\Admin\\Pictures\\Screenshots\\");// path static
 
-    public boolean delete(String filename) {
-        try {
-            Path file = root.resolve(filename);
-            return Files.deleteIfExists(file);
-        } catch (IOException e) {
-            throw new RuntimeException("Error: " + e.getMessage());
-        }
-    }
 
     public ImageUpload saveFile(MultipartFile file) throws Exception {
         String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+
         try {
             if (fileName.contains("..")) {
                 throw new Exception("The file name is invalid" + fileName);
@@ -50,6 +43,17 @@ public class ImageService {
             throw new Exception("File could not be save");
         }
     }
+
+    public boolean delete(String filename) {
+        try {
+            Path url = path.resolve(filename);
+            return Files.deleteIfExists(url);
+        } catch (IOException e) {
+            throw new RuntimeException("Error: " + e.getMessage());
+        }
+    }
+
+
 
     public ImageUpload downloadFile(String fileId) throws Exception {
         return imageRepository.findById(fileId)

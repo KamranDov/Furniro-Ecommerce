@@ -13,6 +13,8 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class BlogDto {
+
+
     private Long pid;
     private String title;
     private String content;

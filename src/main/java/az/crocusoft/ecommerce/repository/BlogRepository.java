@@ -17,7 +17,7 @@ public interface BlogRepository extends JpaRepository<Blog,Long> {
     List<Blog> findByDateGreaterThanEqual(Date startDate);
 
     @Query(value = "SELECT COUNT(b.title) FROM Blog b WHERE b.category.id = :categoryId")
-    Long countByCategoryId(@Param("categoryId") Integer categoryId);
+    Integer countByCategoryId(@Param("categoryId") Integer categoryId);
 
 
     List<Blog> findBlogPostByCategory(Category category);

@@ -32,8 +32,6 @@ public class BlogService {
     private final ImageService imageService;
 
 
-
-
     @Value("${file.downloadPath}")
     String downloadPath;
 
@@ -44,6 +42,8 @@ public class BlogService {
     public BlogMainDto creatBlog(BlogDto blogDto) {
         Category category = categoryService.getCategoryById(blogDto.getCategoryId());
         Blog blog = new Blog();
+
+        MultipartFile image = blogDto.getImage();
         String imageName;
         try {
             imageName = imageService.saveFile(blogDto.getImage()).getFileName();
@@ -144,7 +144,11 @@ public class BlogService {
         blogMainDto.setImageUrl(imageUrl);
 
         return blogMainDto;
+    }
 
+    public Integer countBlogsByCategory(Integer categoryId) {
+        categoryService.getCategoryById(categoryId);
+        return blogRepository.countByCategoryId(categoryId);
     }
 
 
