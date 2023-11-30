@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class ContactService {
 
-    @Value("${spring.mail.username}")
+    @Value("git${spring.mail.username}")
     private String mailSenderUsername;
 
     private final JavaMailSender javaMailSender;
