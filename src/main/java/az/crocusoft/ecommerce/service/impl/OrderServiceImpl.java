@@ -21,7 +21,7 @@ public class OrderServiceImpl implements OrderService {
 
     private final AddressRepository addressRepository;
 
-    private final UserRepository userRepository;
+//    private final UserRepository userRepository;
     private final OrderRepository orderRepository;
 
     private final ModelMapper modelMapper;
