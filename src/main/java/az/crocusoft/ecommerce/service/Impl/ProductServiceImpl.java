@@ -1,6 +1,5 @@
 package az.crocusoft.ecommerce.service.Impl;
 
-import az.crocusoft.ecommerce.constants.FilteringConstants;
 import az.crocusoft.ecommerce.constants.PaginationConstants;
 import az.crocusoft.ecommerce.dto.ProductVariationDTO;
 import az.crocusoft.ecommerce.dto.request.ProductRequest;
@@ -113,11 +112,11 @@ public class ProductServiceImpl implements ProductService {
     public ProductPageResponse getAllPublishedProducts(int pageNumber, int pageSize,
                                                        String sortBy, String sortOrder) {
 
-        List<String> sortFields = Arrays.asList(FilteringConstants.fields);
+        List<String> sortFields = Arrays.asList(PaginationConstants.fields);
         if (!sortFields.contains(sortBy.toLowerCase())) {
             sortBy = PaginationConstants.SORT_BY;
         }
-        List<String> orders = Arrays.asList(FilteringConstants.order);
+        List<String> orders = Arrays.asList(PaginationConstants.orders);
         if (!orders.contains(sortOrder.toUpperCase())) {
             sortOrder = PaginationConstants.SORT_BY;
         }
