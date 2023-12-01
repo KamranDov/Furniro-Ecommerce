@@ -26,7 +26,7 @@ public class Address {
     private String zipcode;
     private String phone;
     private String email;
-    private  String information;
+    private String information;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -41,9 +41,6 @@ public class Address {
                 ", user=" + (user != null ? user.getUsername() : "null") +
                 '}';
     }
-
-
-
 
 
 }

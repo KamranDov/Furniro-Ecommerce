@@ -20,7 +20,7 @@ public class Country {
 
     private Integer id;
 
-    private String name;
+    private String country;
     private String abbreviation;
 
 

@@ -49,7 +49,7 @@ public class CountryServiceImpl {
 
         List<CountryDto> countryDtos = new ArrayList<>();
         for (Country country : countries) {
-            countryDtos.add(new CountryDto(country.getId(), country.getName()));
+            countryDtos.add(new CountryDto(country.getCountry()));
         }
 
 
