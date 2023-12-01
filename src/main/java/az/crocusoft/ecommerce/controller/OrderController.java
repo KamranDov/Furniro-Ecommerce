@@ -28,7 +28,7 @@ public class OrderController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
         Order placedOrder = orderService.placeOrder(orderDto);
-        return ResponseEntity.ok(placedOrder);
+        return null;
     }
 
     @GetMapping("/all")

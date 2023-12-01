@@ -12,7 +12,6 @@ import java.util.List;
 @AllArgsConstructor
 public class OrderDto {
 
-    private Long id;
     private Double totalAmount;
     private LocalDate orderDate;
     private Long userId;

@@ -16,10 +16,10 @@ import org.springframework.stereotype.Component;
 @Component
 public class AddressDto {
     @Column(nullable = false)
-    @Pattern(regexp = "^[a-zA-Z]*$", message = "First Name must not contain numbers or special characters")
+   // @Pattern(regexp = "^[a-zA-Z]*$", message = "First Name must not contain numbers or special characters")
     private String firstName;
     @Column(nullable = false)
-    @Pattern(regexp = "^[a-zA-Z]*$", message = "First Name must not contain numbers or special characters")
+   // @Pattern(regexp = "^[a-zA-Z]*$", message = "First Name must not contain numbers or special characters")
     private String lastName;
     private String companyHome;
     @Column(nullable = false)
