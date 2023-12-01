@@ -20,7 +20,7 @@ public class Order {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "order_Id")
+    @Column(name = "order_id")
     private Long id;
     private Double totalAmount;
     @NotNull
@@ -32,7 +32,7 @@ public class Order {
     @JoinColumn(name = "user_id", referencedColumnName = "user_id")
     private User user;
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "addressId", referencedColumnName = "addressId")
+    @JoinColumn(name = "address_id", referencedColumnName = "address_id")
     private Address address;
 
 

@@ -1,4 +1,4 @@
-package az.crocusoft.ecommerce.service.impl;
+package az.crocusoft.ecommerce.service.Impl;
 
 import az.crocusoft.ecommerce.dto.AddressDto;
 import az.crocusoft.ecommerce.exception.ResourceNotFoundException;
@@ -9,6 +9,7 @@ import az.crocusoft.ecommerce.repository.UserRepository;
 import az.crocusoft.ecommerce.service.AddressService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
+import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -36,8 +37,14 @@ public class AddressServiceImpl implements AddressService {
         User user = userRepository.findById(userId).orElseThrow(() ->
                 new EntityNotFoundException("User not found with id: " + userId));
         newAddress.setUser(user);
+
         Address savedAddress = addressRepository.save(newAddress);
         return modelMapper.map(savedAddress, AddressDto.class);
+    }
+    private AddressDto convertToDto(Address address) {
+        AddressDto addressDto1 = modelMapper.map(address, AddressDto.class);
+
+        return addressDto1;
     }
 
     @Override
@@ -53,6 +60,7 @@ public class AddressServiceImpl implements AddressService {
         Address existingAddress = addressRepository.findById(address_id)
                 .orElseThrow(() -> new ResourceNotFoundException("Address", "addressId", address_id));
         modelMapper.map(addressDto, existingAddress);
+
         Address updatedAddress = addressRepository.save(existingAddress);
         return modelMapper.map(updatedAddress, AddressDto.class);
     }
@@ -82,9 +90,5 @@ public class AddressServiceImpl implements AddressService {
 
     }
 
-    private AddressDto convertToDto(Address address) {
-        AddressDto addressDto1 = modelMapper.map(address, AddressDto.class);
-        addressDto1.setUsername(address.getUser().getUsername());
-        return addressDto1;
-    }
+
 }

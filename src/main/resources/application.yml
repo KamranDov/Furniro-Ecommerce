@@ -29,8 +29,6 @@ spring:
           starttls:
             enable: true
 
-file:
-  upload-dir: C:\Users\User\OneDrive\Pictures\Saved Pictures
 
   spring:
     mail:
@@ -47,6 +45,10 @@ file:
 
 file:
   upload-dir: C:\Users\officemanager\OneDrive\Desktop\img
+  downloadPath: C:\Users\officemanager\OneDrive\Desktop\img
+  uploadPath: C:\Users\officemanager\OneDrive\Desktop\img
+
+
 
 application:
   security:

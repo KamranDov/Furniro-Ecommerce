@@ -23,7 +23,9 @@ public class FurnitureDesignationServiceImpl implements FurnitureDesignationServ
 
     private final ModelMapper modelMapper;
     private final FurnitureDesignationRepository furnitureDesignationRepository;
-    private final FileService fileService;
+    private final
+
+    FileService fileService;
     private static final String FURNITURE_DESIGNATION_IMAGES_FOLDER_NAME = "Furniture-designation-images";
 
     @Override
