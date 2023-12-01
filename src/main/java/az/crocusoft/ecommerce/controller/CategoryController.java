@@ -5,7 +5,6 @@ import az.crocusoft.ecommerce.dto.response.CategoryResponse;
 import az.crocusoft.ecommerce.service.CategoryService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -30,7 +29,7 @@ public class CategoryController {
         CategoryResponse category = categoryService.getCategory(id);
         return ResponseEntity.ok(category);
     }
-
+//
     @GetMapping
     public ResponseEntity<List<CategoryResponse>> getAllCategories() {
         List<CategoryResponse> allCategories = categoryService.getAllCategories();
