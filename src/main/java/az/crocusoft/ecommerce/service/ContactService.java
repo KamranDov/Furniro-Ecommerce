@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class ContactService {
 
-    @Value("git${spring.mail.username}")
     private String mailSenderUsername;
 
     private final JavaMailSender javaMailSender;
@@ -35,7 +34,7 @@ public class ContactService {
     private void sendMail(ContactDto contactDto) {
         try {
             SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
-            simpleMailMessage.setFrom(mailSenderUsername);
+            simpleMailMessage.setFrom("myemail@gmail.com");
             simpleMailMessage.setTo(contactDto.getEmail());
             simpleMailMessage.setSubject(contactDto.getSubject());
             simpleMailMessage.setText(contactDto.getMessage());

@@ -17,14 +17,14 @@ import java.util.List;
 @RequiredArgsConstructor
 public class WishListController {
     private final WishListService wishListService;
-    @GetMapping("/list")
-    public List<WishListDTO> getWishListByUserId(Long userId){
+    @GetMapping("/list/{id}")
+    public List<WishListDTO> getWishListByUserId(@PathVariable("id") Long userId){
         return wishListService.getWishListByUserId(userId);
     }
 
     @PostMapping("/add")
-    public ResponseEntity<ProductRequest> add(@RequestParam ProductRequest product){
-        wishListService.add(product);
+    public ResponseEntity<WishListDTO> add(@RequestBody WishListDTO wishListDTO){
+        wishListService.add(wishListDTO);
         return ResponseEntity.ok().build();
     }
 

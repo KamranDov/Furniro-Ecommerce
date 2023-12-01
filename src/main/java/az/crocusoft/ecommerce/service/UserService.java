@@ -5,7 +5,9 @@ import az.crocusoft.ecommerce.dto.UserDto;
 import az.crocusoft.ecommerce.dto.UserResponse;
 import az.crocusoft.ecommerce.enums.Role;
 import az.crocusoft.ecommerce.model.User;
+import az.crocusoft.ecommerce.model.product.Product;
 import az.crocusoft.ecommerce.repository.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -24,10 +26,7 @@ public class UserService {
 
     public UserResponse getUser(Long id){
 
-
         User u= userRepository.findById(id).orElseThrow(()->new RuntimeException("not found"));
-
-
 
         UserResponse user = UserResponse.builder()
                 .username(u.getUsername())
@@ -38,9 +37,10 @@ public class UserService {
 
         return user;
 
-
-
-
+    }
+    public User findUserById(Long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("User is currently not available"));
     }
 
     public void createUser(UserDto userDto){

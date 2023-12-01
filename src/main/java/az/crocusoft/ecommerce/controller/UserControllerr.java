@@ -17,10 +17,7 @@ import org.springframework.web.bind.annotation.*;
 @PreAuthorize("hasRole('ADMIN')")
 public class UserControllerr {
 
-
     private  final  UserService service;
-
-
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public UserResponse getUser(@PathVariable("id") Long id){

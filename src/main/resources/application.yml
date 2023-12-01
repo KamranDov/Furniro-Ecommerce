@@ -14,7 +14,21 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.MySQLDialect
 
+file:
+  upload-dir: C:\Users\User\OneDrive\Pictures\Saved Pictures
 
+  spring:
+    mail:
+      host: smtp.gmail.com
+      port: 587
+      username: 7qk9bme@code.edu.az
+      password: qhoyivfkyxjkfwpf
+      properties:
+        mail:
+          smtp:
+            auth: true
+            starttls:
+              enable: true
 
 application:
   security:

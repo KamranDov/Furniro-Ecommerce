@@ -11,7 +11,7 @@ import java.util.List;
 public interface WishListService {
 
 
-    void add(ProductRequest productRequest);
+    void add(WishListDTO wishListDTO);
 
     void delete(Long wishListId);
 

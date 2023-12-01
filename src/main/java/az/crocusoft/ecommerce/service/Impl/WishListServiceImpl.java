@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.nio.file.WatchService;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -28,16 +29,21 @@ public class WishListServiceImpl implements WishListService {
     private final UserService userService;
 
     @Override
-    public void add(ProductRequest productRequest) {
-        Product product=new Product();
-        product.setName(productRequest.getName());
-        product.setTitle(productRequest.getTitle());
-        product.setDescription(productRequest.getDescription());
-        product.setLongDescription(productRequest.getLongDescription());
-        product.setName(productRequest.getName());
-        product.setName(productRequest.getName());
-        product.setName(productRequest.getName());
-        wishListRepository.save(product);
+    public void add(WishListDTO wishListDTO) {
+        Long productId=wishListDTO.getId();
+        Long userId=wishListDTO.getUserId();
+        Product product=productService.findProductById(productId);
+        if(product==null){
+            System.out.println("nulllll");
+        }
+        User user=userService.findUserById(userId);
+        if (user==null){
+            System.out.println("nulll");
+        }
+        WishList wishList=WishList.builder()
+                .product(product)
+                .user(user).build();
+        wishListRepository.save(wishList);
     }
 
     @Override
@@ -45,8 +51,9 @@ public class WishListServiceImpl implements WishListService {
         if(productId==null){
             throw new NullPointerException("ProductId  cannot be null");
         }
-        Product product = wishListRepository.findById(productId).orElseThrow();
-        wishListRepository.delete(product);
+        Product product=productService.findProductById(productId);
+        WishList wishList=wishListRepository.findByProduct(product);
+        wishListRepository.delete(wishList);
     }
 
     @Override
@@ -54,9 +61,19 @@ public class WishListServiceImpl implements WishListService {
         if(userId==null){
             throw new NullPointerException("UserId cannot be null");
         }
-//        UserResponse user =userService.getUser(userId);
-//        List<WishList> wishListList=wishListRepository.findAllByUser(user);
-        return null;
+        User user =userService.findUserById(userId);
+        List<WishList> wishListList=wishListRepository.findAllByUser(user);
+
+        List<WishListDTO> wishListDTOList = wishListList.stream()
+                .map(this::mapper)
+                .collect(Collectors.toList());
+        return wishListDTOList;
+    }
+    public WishListDTO mapper(WishList wishList){
+        WishListDTO wishListDTO=WishListDTO.builder()
+                .id(wishList.getProduct().getId())
+                .userId(wishList.getUser().getId()).build();
+        return wishListDTO;
     }
 
 
