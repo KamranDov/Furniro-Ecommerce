@@ -14,7 +14,7 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.MySQLDialect
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     generate-ddl: true
     show-sql: true
   mail:
@@ -44,9 +44,9 @@ spring:
               enable: true
 
 file:
-  upload-dir: C:\Users\officemanager\OneDrive\Desktop\img
-  downloadPath: C:\Users\officemanager\OneDrive\Desktop\img
-  uploadPath: C:\Users\officemanager\OneDrive\Desktop\img
+  upload-dir: C:\Test
+  downloadPath: C:\Test
+  uploadPath: C:\Test
 
 
 
