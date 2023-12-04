@@ -1,29 +1,25 @@
 package az.crocusoft.ecommerce.service.Impl;
 
-import az.crocusoft.ecommerce.dto.UserResponse;
 import az.crocusoft.ecommerce.dto.WishListDTO;
-import az.crocusoft.ecommerce.dto.request.ProductRequest;
+import az.crocusoft.ecommerce.exception.ProductNullException;
 import az.crocusoft.ecommerce.model.User;
 import az.crocusoft.ecommerce.model.product.Product;
 import az.crocusoft.ecommerce.model.wishlist.WishList;
-import az.crocusoft.ecommerce.repository.ProductRepository;
 import az.crocusoft.ecommerce.repository.WishListRepository;
-import az.crocusoft.ecommerce.service.AuthenticationService;
 import az.crocusoft.ecommerce.service.ProductService;
 import az.crocusoft.ecommerce.service.UserService;
 import az.crocusoft.ecommerce.service.WishListService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.nio.file.WatchService;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class WishListServiceImpl implements WishListService {
-    private final ProductRepository repository;
     private final WishListRepository wishListRepository;
     private final ProductService productService;
     private final UserService userService;
@@ -34,26 +30,31 @@ public class WishListServiceImpl implements WishListService {
         Long userId=wishListDTO.getUserId();
         Product product=productService.findProductById(productId);
         if(product==null){
-            System.out.println("nulllll");
+            throw new ProductNullException("Product is null");
         }
         User user=userService.findUserById(userId);
         if (user==null){
-            System.out.println("nulll");
+            throw new ProductNullException("Product is null");
         }
         WishList wishList=WishList.builder()
                 .product(product)
                 .user(user).build();
         wishListRepository.save(wishList);
+        log.info("wishlist added in database");
     }
 
     @Override
-    public void delete(Long productId){
+    public void delete(WishListDTO wishListDTO){
+        Long productId=wishListDTO.getId();
+        Long userId=wishListDTO.getUserId();
         if(productId==null){
             throw new NullPointerException("ProductId  cannot be null");
         }
         Product product=productService.findProductById(productId);
-        WishList wishList=wishListRepository.findByProduct(product);
+        User user=userService.findUserById(userId);
+        WishList wishList=wishListRepository.findByProductAndUser(product,user);
         wishListRepository.delete(wishList);
+        log.info(productId+"No product deleted");
     }
 
     @Override
@@ -64,20 +65,14 @@ public class WishListServiceImpl implements WishListService {
         User user =userService.findUserById(userId);
         List<WishList> wishListList=wishListRepository.findAllByUser(user);
 
-        List<WishListDTO> wishListDTOList = wishListList.stream()
+        return wishListList.stream()
                 .map(this::mapper)
                 .collect(Collectors.toList());
-        return wishListDTOList;
     }
     public WishListDTO mapper(WishList wishList){
-        WishListDTO wishListDTO=WishListDTO.builder()
+        return WishListDTO.builder()
                 .id(wishList.getProduct().getId())
                 .userId(wishList.getUser().getId()).build();
-        return wishListDTO;
     }
-
-
-
-
 
 }

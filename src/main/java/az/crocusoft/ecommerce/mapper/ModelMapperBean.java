@@ -1,3 +1,4 @@
+/*
 package az.crocusoft.ecommerce.mapper;
 
 import org.modelmapper.ModelMapper;
@@ -13,3 +14,4 @@ public class ModelMapperBean {
         return new ModelMapper();
     }
 }
+*/

@@ -13,7 +13,7 @@ public interface WishListService {
 
     void add(WishListDTO wishListDTO);
 
-    void delete(Long wishListId);
+    void delete(WishListDTO wishListDTO);
 
     List<WishListDTO> getWishListByUserId(Long userId);
 }

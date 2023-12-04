@@ -23,18 +23,13 @@ public class AuthenticationController {
 
     private final AuthenticationService authenticationService;
 
-
-
-
     @PostMapping("/register")
     public ResponseEntity<AuthResponse> save(@RequestBody  @Valid UserDto userDto) {
         return ResponseEntity.ok(authenticationService.save(userDto));
     }
-
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> auth(@RequestBody   @Valid  UserRequest userRequest) {
         return ResponseEntity.ok(authenticationService.auth(userRequest));
-
 
     }
 

@@ -13,6 +13,6 @@ import java.util.Optional;
 @Repository
 public interface WishListRepository extends JpaRepository<WishList,Long> {
     List<WishList> findAllByUser(User user);
-    WishList findByProduct(Product product);
+    WishList findByProductAndUser(Product product,User user);
 
 }
