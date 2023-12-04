@@ -43,6 +43,6 @@ public class AddressDto {
 
 
     private Long userId;
-    private String username;
+
 
 }

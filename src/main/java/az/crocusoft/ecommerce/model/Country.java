@@ -16,7 +16,7 @@ import lombok.Setter;
 public class Country {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "country_Id")
+    @Column(name = "country_id")
 
     private Integer id;
 

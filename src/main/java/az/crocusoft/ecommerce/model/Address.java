@@ -14,7 +14,7 @@ import lombok.RequiredArgsConstructor;
 public class Address {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "addressId")
+    @Column(name = "address_id")
     private Integer id;
     private String firstName;
     private String lastName;

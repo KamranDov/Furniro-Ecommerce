@@ -14,7 +14,7 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.MySQLDialect
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     generate-ddl: true
     show-sql: true
   mail:
@@ -29,8 +29,6 @@ spring:
           starttls:
             enable: true
 
-file:
-  upload-dir: C:\Users\User\OneDrive\Pictures\Saved Pictures
 
   spring:
     mail:
@@ -46,7 +44,11 @@ file:
               enable: true
 
 file:
-  upload-dir: C:\Users\officemanager\OneDrive\Desktop\img
+  upload-dir: C:\Test
+  downloadPath: C:\Test
+  uploadPath: C:\Test
+
+
 
 application:
   security:
