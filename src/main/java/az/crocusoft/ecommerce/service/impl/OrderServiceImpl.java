@@ -1,12 +1,13 @@
 package az.crocusoft.ecommerce.service.Impl;
 
 import az.crocusoft.ecommerce.dto.OrderDto;
+import az.crocusoft.ecommerce.dto.cart.CartDto;
 import az.crocusoft.ecommerce.exception.ResourceNotFoundException;
-import az.crocusoft.ecommerce.model.Order;
-import az.crocusoft.ecommerce.model.User;
+import az.crocusoft.ecommerce.model.*;
 import az.crocusoft.ecommerce.repository.CartRepository;
 import az.crocusoft.ecommerce.repository.OrderRepository;
 import az.crocusoft.ecommerce.repository.UserRepository;
+import az.crocusoft.ecommerce.service.CartService;
 import az.crocusoft.ecommerce.service.OrderService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +31,7 @@ public class OrderServiceImpl implements OrderService {
     private final CartRepository cartRepository;
 
     private final ModelMapper modelMapper;
+    private final CartService cartService;
 
 
 
@@ -42,11 +44,16 @@ public class OrderServiceImpl implements OrderService {
 
         }
         Cart cart = cartOptional.get();
+        CartDto cartDto = new CartDto();
 
         Order order = modelMapper.map(orderDto, Order.class);
         order.setOrderDate(LocalDate.now());
-        order.setTotalAmount(order.getTotalAmount());
+        OrderItem orderItem = new OrderItem();
+        orderItem.setQuantity(cart.getQuantity());
+        orderItem.setTotalAmount(cartDto.getTotalPrice());
+        order.setOrderStatus(OrderStatusValues.SUCCESS);
         order.setCart(cart);
+
 
         Order savedOrder = orderRepository.save(order);
         return savedOrder;

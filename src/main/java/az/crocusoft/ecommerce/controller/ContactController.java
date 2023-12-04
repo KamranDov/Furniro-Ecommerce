@@ -18,10 +18,11 @@ public class ContactController {
 
     private final ContactService contactService;
 
-    @PostMapping("send-mail")
+    @PostMapping("/send-mail")
     public ResponseEntity<Void> sendMail(@Valid @RequestBody ContactDto contactDto) {
         contactService.saveContact(contactDto);
         return ResponseEntity.status(HttpStatus.CREATED).build();
 
     }
 }
+

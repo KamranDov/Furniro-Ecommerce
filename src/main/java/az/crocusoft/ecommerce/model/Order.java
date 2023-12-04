@@ -35,14 +35,12 @@ public class Order {
     private String phone;
     private String email;
     private String information;
-
-    private Double totalAmount;
-    @NotNull
     @Enumerated(EnumType.STRING)
     private OrderStatusValues orderStatus;
     private LocalDate orderDate;
+    @JsonIgnore
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "cart_id", nullable = true) // nullable olabilir çünkü her siparişin bir sepeti olmayabilir
+    @JoinColumn( nullable = true) // nullable olabilir çünkü her siparişin bir sepeti olmayabilir
     private Cart cart;
     @JsonIgnore
     @ManyToOne(cascade = CascadeType.ALL) //CascadeType.ALL means all operations (persist, remove, merge, refresh) will be cascaded

@@ -7,6 +7,7 @@ import az.crocusoft.ecommerce.dto.request.ProductVariationRequest;
 import az.crocusoft.ecommerce.dto.response.ProductPageResponse;
 import az.crocusoft.ecommerce.dto.response.ProductResponse;
 import az.crocusoft.ecommerce.dto.response.SingleProductResponse;
+import az.crocusoft.ecommerce.exception.ProductNotExistsException;
 import az.crocusoft.ecommerce.model.product.*;
 import az.crocusoft.ecommerce.repository.*;
 import az.crocusoft.ecommerce.service.ProductService;
@@ -20,10 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -228,7 +226,7 @@ public class ProductServiceImpl implements ProductService {
                 .anyMatch(variation -> variation.getDiscount() != null && variation.getDiscount() > 0);
     }
 
-    private Double getProductVariationSpecialPrice(ProductVariation variation){
+    private Double getProductVariationSpecialPrice(ProductVariation variation) {
         Double discount = variation.getDiscount();
         Double price = variation.getPrice();
         if (discount == null || discount == 0)
@@ -269,5 +267,15 @@ public class ProductServiceImpl implements ProductService {
         return productVariationDTO;
     }
 
+    @Override
+    public ProductVariation findById(Long productId) throws ProductNotExistsException{
+        Optional<ProductVariation> variationOptional = productVariationRepository.findById(productId);
+        if (variationOptional.isEmpty()) {
+            throw new ProductNotExistsException("product id is invalid" + productId);
+        }
+        return variationOptional.get();
+
+    }
 
 }
+

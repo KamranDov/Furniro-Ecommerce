@@ -18,5 +18,31 @@ public class GeneralExceptionHandler {
                 , exception.getMessage());
     }
 
+    @ExceptionHandler(ProductNotExistsException.class)
+    public ExceptionResponse handleProductNotExists(ProductNotExistsException exception) {
+        return new ExceptionResponse(
+                LocalDateTime.now()
+                , HttpStatus.NOT_FOUND.value()
+                , HttpStatus.NOT_FOUND
+                , exception.getMessage());
+    }
 
+    @ExceptionHandler(CartItemNotFoundException.class)
+    public ExceptionResponse handleCartItemNotFound(CartItemNotFoundException exception) {
+        return new ExceptionResponse(
+                LocalDateTime.now()
+                , HttpStatus.NOT_FOUND.value()
+                , HttpStatus.NOT_FOUND
+                , exception.getMessage());
+    }
+
+    @ExceptionHandler(CartItemOwnershipException.class)
+    public ExceptionResponse handleCartItemOwnership(CartItemOwnershipException exception) {
+        return new ExceptionResponse(
+                LocalDateTime.now()
+                , HttpStatus.FORBIDDEN.value()
+                , HttpStatus.FORBIDDEN
+                , exception.getMessage());
+    }
 }
+

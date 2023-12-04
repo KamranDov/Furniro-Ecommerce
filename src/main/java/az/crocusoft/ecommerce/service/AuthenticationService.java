@@ -19,6 +19,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -36,9 +37,9 @@ public class AuthenticationService {
     private final PasswordEncoder passwordEncoder;
 
     public AuthResponse save(UserDto userDto) {
-                 User user = User.builder()
+        User user = User.builder()
                 .username(userDto.getUsername())
-                         .email(userDto.getEmail())
+                .email(userDto.getEmail())
                 .password(passwordEncoder.encode(userDto.getPassword()))
                 .name(userDto.getName())
 
@@ -57,42 +58,36 @@ public class AuthenticationService {
         User saveUser= userRepository.save(user);
         var token = jwtService.generateToken(user);
         var refreshToken=jwtService.generateRefreshToken(user);
-      saveUserToken(saveUser, token);
+        saveUserToken(saveUser, token);
         return AuthResponse.builder().
                 userId(saveUser.getId())
                 .accessToken(token)
-                        .refreshToken(refreshToken)
+                .refreshToken(refreshToken)
                 .build();
 
     }
 
 
     public AuthResponse auth(UserRequest userRequest) {
-   Authentication authentication= authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userRequest.getUsername(), userRequest.getPassword()));
+        Authentication authentication= authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userRequest.getUsername(), userRequest.getPassword()));
 
-   if(authentication.isAuthenticated()){
-       User user = userRepository.findByUsername(userRequest.getUsername()).orElseThrow();
-       String token = jwtService.generateToken(user);
-       var refreshToken=jwtService.generateRefreshToken(user);
-       revokeAllUserTokens(user);
-       saveUserToken(user,token);
-       return AuthResponse.builder().
-               userId(user.getId())
-               .accessToken(token).refreshToken(refreshToken)
-               .build();
-   }
+        if(authentication.isAuthenticated()){
+            User user = userRepository.findByUsername(userRequest.getUsername()).orElseThrow();
+            String token = jwtService.generateToken(user);
+            var refreshToken=jwtService.generateRefreshToken(user);
+            revokeAllUserTokens(user);
+            saveUserToken(user,token);
+            return AuthResponse.builder().
+                    userId(user.getId())
+                    .accessToken(token).refreshToken(refreshToken)
+                    .build();
+        }
 
-   else {
-       throw new UsernameNotFoundException("invalid user request");
-
-
-
-
-   }
+        else {
+            throw new UsernameNotFoundException("invalid user request");
+        }
 
     }
-
-
     private void saveUserToken(User user, String jwtToken) {
         var token = Token.builder()
                 .user(user)
@@ -116,29 +111,37 @@ public class AuthenticationService {
         tokenRepository.saveAll(validUserTokens);
     }
 
+    public User getSignedInUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        System.out.println(authentication.getPrincipal());
+        return userRepository
+                .findByUsername(authentication.getName())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+    }
     public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
-            final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
-            final String refreshToken;
-            final String username;
-            if (authHeader == null ||!authHeader.startsWith("Bearer ")) {
-                return;
-            }
-             refreshToken = authHeader.substring(7);
+        final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
+        final String refreshToken;
+        final String username;
+        if (authHeader == null ||!authHeader.startsWith("Bearer ")) {
+            return;
+        }
+        refreshToken = authHeader.substring(7);
         username = jwtService.findUsername(refreshToken);
-            if (username != null) {
+        if (username != null) {
 
-                var user = this.userRepository.findByUsername(username)
-                        .orElseThrow();
-                if (jwtService.tokenControl(refreshToken, user)) {
-                    var accessToken = jwtService.generateToken(user);
-                    revokeAllUserTokens(user);
-                    saveUserToken(user, accessToken);
-                    var authResponse = AuthResponse.builder()
-                            .accessToken(accessToken)
-                            .refreshToken(refreshToken)
-                            .build();
-                    new ObjectMapper().writeValue(response.getOutputStream(), authResponse);
-                }
+            var user = this.userRepository.findByUsername(username)
+                    .orElseThrow();
+            if (jwtService.tokenControl(refreshToken, user)) {
+                var accessToken = jwtService.generateToken(user);
+                revokeAllUserTokens(user);
+                saveUserToken(user, accessToken);
+                var authResponse = AuthResponse.builder()
+                        .accessToken(accessToken)
+                        .refreshToken(refreshToken)
+                        .build();
+                new ObjectMapper().writeValue(response.getOutputStream(), authResponse);
             }
+        }
     }
 }
+
