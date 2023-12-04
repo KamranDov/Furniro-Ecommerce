@@ -21,14 +21,13 @@ public class OrderController {
 
 
     @PostMapping("/placeOrder")
-    public ResponseEntity<Order> placeOrder(@RequestBody OrderDto orderDto)
+    public ResponseEntity<Order> placeOrder(@RequestBody OrderDto orderDto,@RequestParam Long cartId)
             throws LoginException, OrderException {
-        if (orderDto == null || orderDto.getAddressDto() == null) {
-            // Gerekli hata işlemlerini burada gerçekleştir, örneğin bir hata yanıtı döndür.
+        if (orderDto == null ){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
-        Order placedOrder = orderService.placeOrder(orderDto);
-        return null;
+        Order placedOrder = orderService.placeOrder(orderDto,cartId);
+        return ResponseEntity.ok(placedOrder);
     }
 
     @GetMapping("/all")
@@ -36,7 +35,7 @@ public class OrderController {
         List<Order> allOrders = orderService.getAllOrders();
         return new ResponseEntity<>(allOrders, HttpStatus.OK);
     }
-    @GetMapping("/{orderId}")
+    @GetMapping("/order/{orderId}")
     public ResponseEntity<Order> getOrderById(@PathVariable Long orderId) {
         return orderService.getOrderById(orderId)
                 .map(order -> new ResponseEntity<>(order, HttpStatus.OK))
