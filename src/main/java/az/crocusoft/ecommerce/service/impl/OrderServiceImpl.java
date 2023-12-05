@@ -5,6 +5,7 @@ import az.crocusoft.ecommerce.dto.cart.CartDto;
 import az.crocusoft.ecommerce.exception.ResourceNotFoundException;
 import az.crocusoft.ecommerce.model.*;
 import az.crocusoft.ecommerce.repository.CartRepository;
+import az.crocusoft.ecommerce.repository.OrderItemRepository;
 import az.crocusoft.ecommerce.repository.OrderRepository;
 import az.crocusoft.ecommerce.repository.UserRepository;
 import az.crocusoft.ecommerce.service.CartService;
@@ -32,6 +33,7 @@ public class OrderServiceImpl implements OrderService {
 
     private final ModelMapper modelMapper;
     private final CartService cartService;
+    private final OrderItemRepository  orderItemRepository;
 
 
 
@@ -40,23 +42,21 @@ public class OrderServiceImpl implements OrderService {
     public Order placeOrder(OrderDto orderDto, Long cartId) {
         Optional<Cart> cartOptional = cartRepository.findById(cartId);
         if (cartOptional.isEmpty()){
-            throw new ResourceNotFoundException("Cart", "cartId", cartId);
+            throw new ResourceNotFoundException("Cart not found ", "cartId", cartId);
 
         }
-        Cart cart = cartOptional.get();
+        Cart cart = new Cart();
         CartDto cartDto = new CartDto();
 
         Order order = modelMapper.map(orderDto, Order.class);
         order.setOrderDate(LocalDate.now());
         OrderItem orderItem = new OrderItem();
         orderItem.setQuantity(cart.getQuantity());
-        orderItem.setTotalAmount(cartDto.getTotalPrice());
+        orderItem.setTotalAmount(cart.getTotalAmount());
         order.setOrderStatus(OrderStatusValues.SUCCESS);
         order.setCart(cart);
-
-
         Order savedOrder = orderRepository.save(order);
-        return savedOrder;
+        return savedOrder ;
     }
 
     @Override
