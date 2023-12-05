@@ -1,16 +1,21 @@
 package az.crocusoft.ecommerce.service.Impl;
 
 import az.crocusoft.ecommerce.dto.OrderDto;
+import az.crocusoft.ecommerce.dto.cart.CartDto;
 import az.crocusoft.ecommerce.exception.ResourceNotFoundException;
 import az.crocusoft.ecommerce.model.*;
-import az.crocusoft.ecommerce.repository.AddressRepository;
+import az.crocusoft.ecommerce.repository.CartRepository;
+import az.crocusoft.ecommerce.repository.OrderItemRepository;
 import az.crocusoft.ecommerce.repository.OrderRepository;
 import az.crocusoft.ecommerce.repository.UserRepository;
+import az.crocusoft.ecommerce.service.CartService;
 import az.crocusoft.ecommerce.service.OrderService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -21,27 +26,37 @@ import java.util.stream.Collectors;
 public class OrderServiceImpl implements OrderService {
 
 
-    private final AddressRepository addressRepository;
 
     private final UserRepository userRepository;
     private final OrderRepository orderRepository;
+    private final CartRepository cartRepository;
 
     private final ModelMapper modelMapper;
+    private final CartService cartService;
+    private final OrderItemRepository  orderItemRepository;
 
-    @Transactional
+
+
+
     @Override
-    public Order placeOrder(OrderDto orderDto) {
-        User user = userRepository.findById(orderDto.getUserId()).orElseThrow();
-        if (orderDto == null || orderDto.getAddressDto() == null) {
-            throw new IllegalArgumentException("OrderDto or AddressDto cannot be null");
+    public Order placeOrder(OrderDto orderDto, Long cartId) {
+        Optional<Cart> cartOptional = cartRepository.findById(cartId);
+        if (cartOptional.isEmpty()){
+            throw new ResourceNotFoundException("Cart not found ", "cartId", cartId);
+
         }
+        Cart cart = new Cart();
+        CartDto cartDto = new CartDto();
+
         Order order = modelMapper.map(orderDto, Order.class);
+        order.setOrderDate(LocalDate.now());
+        OrderItem orderItem = new OrderItem();
+        orderItem.setQuantity(cart.getQuantity());
+        orderItem.setTotalAmount(cart.getTotalAmount());
         order.setOrderStatus(OrderStatusValues.SUCCESS);
-        Address address =modelMapper.map(orderDto.getAddressDto(),Address.class);
-        order.setUser(user);
-       addressRepository.save(address);
-       order.setAddress(address);
-        return orderRepository.save(order);
+        order.setCart(cart);
+        Order savedOrder = orderRepository.save(order);
+        return savedOrder ;
     }
 
     @Override
@@ -65,7 +80,8 @@ public class OrderServiceImpl implements OrderService {
     public OrderDto updateOrder(Long orderId, OrderDto orderDto) {
 
         Order existingOrder = orderRepository.findById(orderId)
-                .orElseThrow(() -> new ResourceNotFoundException("Address", "addressId", Math.toIntExact(orderId)));
+                .orElseThrow(() -> new ResourceNotFoundException("Order", "orderId", orderId));
+
         modelMapper.map(orderDto, existingOrder);
         Order updatedOrder = orderRepository.save(existingOrder);
         return modelMapper.map(updatedOrder, OrderDto.class);
