@@ -2,6 +2,7 @@ package az.crocusoft.ecommerce.service.Impl;
 
 import az.crocusoft.ecommerce.dto.WishListDTO;
 import az.crocusoft.ecommerce.exception.ProductNullException;
+import az.crocusoft.ecommerce.exception.UserNotFoundException;
 import az.crocusoft.ecommerce.model.User;
 import az.crocusoft.ecommerce.model.product.Product;
 import az.crocusoft.ecommerce.model.wishlist.WishList;
@@ -30,11 +31,11 @@ public class WishListServiceImpl implements WishListService {
         Long userId=wishListDTO.getUserId();
         Product product=productService.findProductById(productId);
         if(product==null){
-            throw new ProductNullException("Product is null");
+            throw new ProductNullException("Product is null in wishlist");
         }
         User user=userService.findUserById(userId);
         if (user==null){
-            throw new ProductNullException("Product is null");
+            throw new UserNotFoundException("User cannot be null");
         }
         WishList wishList=WishList.builder()
                 .product(product)
@@ -48,7 +49,7 @@ public class WishListServiceImpl implements WishListService {
         Long productId=wishListDTO.getId();
         Long userId=wishListDTO.getUserId();
         if(productId==null){
-            throw new NullPointerException("ProductId  cannot be null");
+            throw new ProductNullException("Product not found in wishList");
         }
         Product product=productService.findProductById(productId);
         User user=userService.findUserById(userId);
@@ -60,7 +61,7 @@ public class WishListServiceImpl implements WishListService {
     @Override
     public List<WishListDTO> getWishListByUserId(Long userId) {
         if(userId==null){
-            throw new NullPointerException("UserId cannot be null");
+            throw new UserNotFoundException("User cannot be null");
         }
         User user =userService.findUserById(userId);
         List<WishList> wishListList=wishListRepository.findAllByUser(user);
