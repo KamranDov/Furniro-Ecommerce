@@ -1,8 +1,8 @@
 package az.crocusoft.ecommerce.service.Impl;
 
 import az.crocusoft.ecommerce.dto.WishListDTO;
-import az.crocusoft.ecommerce.exception.ProductNullException;
 import az.crocusoft.ecommerce.exception.UserNotFoundException;
+import az.crocusoft.ecommerce.exception.WishListNotFoundException;
 import az.crocusoft.ecommerce.model.User;
 import az.crocusoft.ecommerce.model.product.Product;
 import az.crocusoft.ecommerce.model.wishlist.WishList;
@@ -30,13 +30,7 @@ public class WishListServiceImpl implements WishListService {
         Long productId=wishListDTO.getId();
         Long userId=wishListDTO.getUserId();
         Product product=productService.findProductById(productId);
-        if(product==null){
-            throw new ProductNullException("Product is null in wishlist");
-        }
         User user=userService.findUserById(userId);
-        if (user==null){
-            throw new UserNotFoundException("User cannot be null");
-        }
         WishList wishList=WishList.builder()
                 .product(product)
                 .user(user).build();
@@ -48,12 +42,13 @@ public class WishListServiceImpl implements WishListService {
     public void delete(WishListDTO wishListDTO){
         Long productId=wishListDTO.getId();
         Long userId=wishListDTO.getUserId();
-        if(productId==null){
-            throw new ProductNullException("Product not found in wishList");
-        }
+
         Product product=productService.findProductById(productId);
         User user=userService.findUserById(userId);
         WishList wishList=wishListRepository.findByProductAndUser(product,user);
+        if (wishList==null){
+            throw new WishListNotFoundException("WishList is null");
+        }
         wishListRepository.delete(wishList);
         log.info(productId+"No product deleted");
     }

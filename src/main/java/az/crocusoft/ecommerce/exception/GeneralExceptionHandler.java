@@ -44,16 +44,16 @@ public class GeneralExceptionHandler {
                 , HttpStatus.FORBIDDEN
                 , exception.getMessage());
     }
-    @ExceptionHandler(ProductNullException.class)
-    public ExceptionResponse handleCartItemOwnership(ProductNullException exception) {
+    @ExceptionHandler(UserNotFoundException.class)
+    public ExceptionResponse handleCartItemOwnership(UserNotFoundException exception) {
         return new ExceptionResponse(
                 LocalDateTime.now()
                 , HttpStatus.NOT_FOUND.value()
                 , HttpStatus.NOT_FOUND
                 , exception.getMessage());
     }
-    @ExceptionHandler(UserNotFoundException.class)
-    public ExceptionResponse handleCartItemOwnership(UserNotFoundException exception) {
+    @ExceptionHandler(WishListNotFoundException.class)
+    public ExceptionResponse handleCartItemOwnership(WishListNotFoundException exception) {
         return new ExceptionResponse(
                 LocalDateTime.now()
                 , HttpStatus.NOT_FOUND.value()
