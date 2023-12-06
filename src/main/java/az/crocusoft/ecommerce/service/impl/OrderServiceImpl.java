@@ -39,22 +39,25 @@ public class OrderServiceImpl implements OrderService {
 
 
     @Override
-    public Order placeOrder(OrderDto orderDto, Long cartId) {
-        Optional<Cart> cartOptional = cartRepository.findById(cartId);
-        if (cartOptional.isEmpty()){
-            throw new ResourceNotFoundException("Cart not found ", "cartId", cartId);
+    public Order placeOrder(OrderDto orderDto, Long userId) {
 
+        Optional<User> user = userRepository.findById(userId);
+        CartDto cartDto = cartService.listCartItems(user.get());
+        Cart cart = cartRepository.findByUser(user.get());
+        if (cart==null){
+            throw new ResourceNotFoundException("Cart not found ", "cartId", userId);
         }
-        Cart cart = new Cart();
-        CartDto cartDto = new CartDto();
-
         Order order = modelMapper.map(orderDto, Order.class);
         order.setOrderDate(LocalDate.now());
         OrderItem orderItem = new OrderItem();
+        orderItem.setOrder(order);
         orderItem.setQuantity(cart.getQuantity());
-        orderItem.setTotalAmount(cart.getTotalAmount());
-        order.setOrderStatus(OrderStatusValues.SUCCESS);
+        orderItem.setTotalAmount(cartDto.getTotalPrice());
+        orderItem.setProduct(cart.getProductVariation().getProduct());
         order.setCart(cart);
+        order.setUser(user.get());
+        orderItemRepository.save(orderItem);
+        order.setOrderStatus(OrderStatusValues.SUCCESS);
         Order savedOrder = orderRepository.save(order);
         return savedOrder ;
     }

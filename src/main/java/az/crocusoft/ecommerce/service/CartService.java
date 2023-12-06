@@ -27,36 +27,38 @@ public class CartService {
     public void addToCart(AddToCartDto addToCartDto, User user) {
         ProductVariation productVariation = productService.findById(addToCartDto.getProductId());
 
+        CartDto cartDto = new CartDto();
         Cart cart = new Cart();
         cart.setProductVariation(productVariation);
         cart.setUser(user);
         cart.setQuantity(addToCartDto.getQuantity());
         cart.setCreatedDate(LocalDate.now());
+//        cart.setTotalAmount(cartDto.getTotalPrice());
         cartRepository.save(cart);
     }
 
     public CartDto listCartItems(User user) {
-
         List<Cart> cartList = cartRepository.findAllByUserOrderByCreatedDateDesc(user);
-        List<CartItemDto> cartItems = new ArrayList<>();
-        double totalPrice = 0;
-        for (Cart cart : cartList) {
-            CartItemDto cartItemDto = new CartItemDto(cart);
-            totalPrice += cartItemDto.getQuantity() * cart.getProductVariation().getPrice();
-            cartItems.add(cartItemDto);
-        }
+
+        List<CartItemDto> cartItems = cartList
+                .stream()
+                .map(CartItemDto::new)
+                .toList();
+
+        double totalPrice = cartItems
+                .stream()
+                .mapToDouble(cartItemDto -> {
+                    double itemPrice = cartItemDto.getQuantity() * cartItemDto.getProductVariation().getPrice();
+                    double discount = (itemPrice * cartItemDto.getProductVariation().getDiscount()) / 100;
+                    return itemPrice - discount;
+                })
+                .sum();
+
         CartDto cartDto = new CartDto();
         cartDto.setTotalPrice(totalPrice);
         cartDto.setCartItems(cartItems);
         return cartDto;
     }
-
-
-
-
-
-
-
 
 
 

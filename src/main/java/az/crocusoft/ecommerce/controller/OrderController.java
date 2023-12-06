@@ -21,12 +21,13 @@ public class OrderController {
 
 
     @PostMapping("/placeOrder")
-    public ResponseEntity<Order> placeOrder(@RequestBody OrderDto orderDto,@RequestParam Long cartId)
+    public ResponseEntity<Order> placeOrder(@RequestBody OrderDto orderDto,
+                                            @RequestParam Long userId)
             throws LoginException, OrderException {
         if (orderDto == null ){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
-        Order placedOrder = orderService.placeOrder(orderDto,cartId);
+        Order placedOrder = orderService.placeOrder(orderDto,userId);
         return ResponseEntity.ok(placedOrder);
     }
 

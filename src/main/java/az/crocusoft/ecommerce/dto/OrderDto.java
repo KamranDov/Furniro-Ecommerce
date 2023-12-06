@@ -14,9 +14,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class OrderDto {
-    private Long userId;
-
-
     @Column(nullable = false)
     // @Pattern(regexp = "^[a-zA-Z]*$", message = "First Name must not contain numbers or special characters")
     private String firstName;
