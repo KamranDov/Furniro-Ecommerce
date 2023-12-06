@@ -1,6 +1,6 @@
 package az.crocusoft.ecommerce.exception;
 
-public class ResourceNotFoundException extends RuntimeException {
+public class CartNotFoundException extends RuntimeException {
     private static final long serialVersionUID = 1L;
 
     String resourceName;
@@ -13,7 +13,7 @@ public class ResourceNotFoundException extends RuntimeException {
 
 
 
-    public ResourceNotFoundException(String resourceName, String field, Long fieldId) {
+    public CartNotFoundException(String resourceName, String field, Long fieldId) {
         super(String.format("%s not found with %s: %d", resourceName, field, fieldId));
         this.resourceName = resourceName;
         this.field = field;

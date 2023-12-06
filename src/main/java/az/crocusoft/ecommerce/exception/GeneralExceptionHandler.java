@@ -60,5 +60,13 @@ public class GeneralExceptionHandler {
                 , HttpStatus.NOT_FOUND
                 , exception.getMessage());
     }
+    @ExceptionHandler(CartNotFoundException.class)
+    public ExceptionResponse handleCartItemOwnership(CartNotFoundException exception) {
+        return new ExceptionResponse(
+                LocalDateTime.now()
+                , HttpStatus.NOT_FOUND.value()
+                , HttpStatus.NOT_FOUND
+                , exception.getMessage());
+    }
 }
 

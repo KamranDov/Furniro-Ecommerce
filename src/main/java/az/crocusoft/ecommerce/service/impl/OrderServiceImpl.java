@@ -2,7 +2,7 @@ package az.crocusoft.ecommerce.service.Impl;
 
 import az.crocusoft.ecommerce.dto.OrderDto;
 import az.crocusoft.ecommerce.dto.cart.CartDto;
-import az.crocusoft.ecommerce.exception.ResourceNotFoundException;
+import az.crocusoft.ecommerce.exception.CartNotFoundException;
 import az.crocusoft.ecommerce.model.*;
 import az.crocusoft.ecommerce.repository.CartRepository;
 import az.crocusoft.ecommerce.repository.OrderItemRepository;
@@ -45,7 +45,7 @@ public class OrderServiceImpl implements OrderService {
         CartDto cartDto = cartService.listCartItems(user.get());
         Cart cart = cartRepository.findByUser(user.get());
         if (cart==null){
-            throw new ResourceNotFoundException("Cart not found ", "cartId", userId);
+            throw new CartNotFoundException("Cart not found ", "cartId", userId);
         }
         Order order = modelMapper.map(orderDto, Order.class);
         order.setOrderDate(LocalDate.now());
@@ -83,7 +83,7 @@ public class OrderServiceImpl implements OrderService {
     public OrderDto updateOrder(Long orderId, OrderDto orderDto) {
 
         Order existingOrder = orderRepository.findById(orderId)
-                .orElseThrow(() -> new ResourceNotFoundException("Order", "orderId", orderId));
+                .orElseThrow(() -> new CartNotFoundException("Order", "orderId", orderId));
 
         modelMapper.map(orderDto, existingOrder);
         Order updatedOrder = orderRepository.save(existingOrder);
