@@ -1,5 +1,6 @@
 server:
   port: 8088
+  forward-headers-strategy: FRAMEWORK
 
 spring:
   config:
@@ -30,23 +31,10 @@ spring:
             enable: true
 
 
-  spring:
-    mail:
-      host: smtp.gmail.com
-      port: 587
-      username: 7qk9bme@code.edu.az
-      password: qhoyivfkyxjkfwpf
-      properties:
-        mail:
-          smtp:
-            auth: true
-            starttls:
-              enable: true
 
 file:
-  upload-dir: C:\Users\officemanager\OneDrive\Desktop\img
-  downloadPath: C:\Users\officemanager\OneDrive\Desktop\img
-  uploadPath: C:\Users\officemanager\OneDrive\Desktop\img
+  upload-dir: 'uploads'
+
 
 
 

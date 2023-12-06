@@ -13,7 +13,6 @@ public class ApiConfig {
     public JavaMailSender javaMailSender(){
         return new JavaMailSenderImpl();
     }
-
     @Bean
     public ModelMapper modelMapper() {
         return new ModelMapper();
