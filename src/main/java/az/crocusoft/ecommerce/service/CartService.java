@@ -13,7 +13,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,13 +26,17 @@ public class CartService {
     public void addToCart(AddToCartDto addToCartDto, User user) {
         ProductVariation productVariation = productService.findById(addToCartDto.getProductId());
 
-        CartDto cartDto = new CartDto();
+        double itemPrice = productVariation.getPrice();
+        double discount = (itemPrice * productVariation.getDiscount()) / 100;
+        double totalPrice = (itemPrice - discount) * addToCartDto.getQuantity();
+
         Cart cart = new Cart();
         cart.setProductVariation(productVariation);
         cart.setUser(user);
         cart.setQuantity(addToCartDto.getQuantity());
         cart.setCreatedDate(LocalDate.now());
-//        cart.setTotalAmount(cartDto.getTotalPrice());
+        cart.setTotalPrice(totalPrice);
+
         cartRepository.save(cart);
     }
 
@@ -59,7 +62,6 @@ public class CartService {
         cartDto.setCartItems(cartItems);
         return cartDto;
     }
-
 
 
     public void deleteCartItem(Long cartItemId, User user) {

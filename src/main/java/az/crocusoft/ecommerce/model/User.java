@@ -39,8 +39,7 @@ public class User implements UserDetails {
     private List<Order> orders = new ArrayList<>();
 
 
-    @OneToMany(mappedBy ="user" ,cascade = CascadeType.REMOVE
-    )
+    @OneToMany(mappedBy ="user" ,cascade = CascadeType.REMOVE)
     private List<Token> tokenList;
 
 
