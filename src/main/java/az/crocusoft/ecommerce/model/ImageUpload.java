@@ -17,7 +17,6 @@ public class ImageUpload {
     private String fileName;
     private String fileType;
     @Lob
-    @Column(columnDefinition = "LONGBLOB", length = 1000000)
     private byte[] data;
 
     public ImageUpload(String fileName, String fileType, byte[] data) {

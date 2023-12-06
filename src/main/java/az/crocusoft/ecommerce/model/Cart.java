@@ -18,19 +18,19 @@ public class Cart {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @Column(name = "created_date")
     private LocalDate createdDate;
+
     @ManyToOne
-    @JoinColumn(name = "product_id")
+    @JoinColumn(name = "product_variation_id")
     private ProductVariation productVariation;
-    @JsonIgnore
+
     @OneToOne
     @JoinColumn(name = "user_id")
     private User user;
-    private Integer quantity;
-    @JsonIgnore
-    @OneToOne
-    @JoinColumn(name = "order_id")
-    private Order order;
 
+    private Integer quantity;
+
+    private Double totalPrice;
 }

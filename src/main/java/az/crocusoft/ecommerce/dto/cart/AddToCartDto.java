@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
 
 public class AddToCartDto {
 
-    private Long id;
     private @NotNull Long productId;
     private @NotNull Integer quantity;
 

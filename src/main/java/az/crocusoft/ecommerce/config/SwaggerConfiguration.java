@@ -5,10 +5,15 @@ package az.crocusoft.ecommerce.config;
 
 
 
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
+import io.swagger.v3.oas.annotations.info.Contact;
+import io.swagger.v3.oas.annotations.info.Info;
+import io.swagger.v3.oas.annotations.info.License;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.servers.Server;
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
-import io.swagger.v3.oas.models.info.Info;
-import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,32 +21,42 @@ import org.springframework.context.annotation.Configuration;
 import static io.swagger.v3.oas.models.security.SecurityScheme.Type.HTTP;
 
 
-@Configuration
+@OpenAPIDefinition(
+        info = @Info(
+                contact = @Contact(
 
+                ),
+
+                version = "1.0",
+                license = @License(
+                        name = "Company",
+                        url = "https://company.com/"
+                ),
+                termsOfService = "Terms of service"
+        ),
+
+        security = {
+                @SecurityRequirement(
+                        name = "bearerAuth"
+                )
+        },
+        servers = {
+                @Server(
+                        url = "/", description = "Default Server URL"
+                )
+        }
+
+)
+@io.swagger.v3.oas.annotations.security.SecurityScheme(
+        name = "bearerAuth",
+        description = "JWT auth description",
+        scheme = "bearer",
+        type = SecuritySchemeType.HTTP,
+        bearerFormat = "JWT"
+//        in = SecuritySchemeIn.HEADER
+)
 public class SwaggerConfiguration {
 
-    @Bean
-    public OpenAPI myOpenAPI() {
-
-        final Info apiInformation = getApiInformation();
-        final Components components = new Components();
-
-        final String schemeName = "bearerAuth";
-        components.addSecuritySchemes(schemeName, new SecurityScheme().name(schemeName).type(HTTP).scheme("bearer").bearerFormat("JWT"));
-
-        final OpenAPI openAPI = new OpenAPI();
-        openAPI.setInfo(apiInformation);
-        openAPI.setComponents(components);
-        openAPI.addSecurityItem(new SecurityRequirement().addList(schemeName));
-        return openAPI;
-    }
-    private Info getApiInformation() {
-        final Info info = new Info();
-        info.setTitle("Weather Stack Api");
-        info.setVersion("2.1.0");
-        info.setDescription("API documentation for the Weather Stack application");
-        return info;
-    }
 
 }
 

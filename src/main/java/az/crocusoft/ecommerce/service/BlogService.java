@@ -19,6 +19,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -32,12 +34,8 @@ public class BlogService {
     private final ImageService imageService;
 
 
-    @Value("${file.downloadPath}")
-    String downloadPath;
-
-    @Value("${file.uploadPath}")
+    @Value("${file.upload-dir}")
     String uploadPath;
-
 
     public BlogMainDto creatBlog(BlogDto blogDto) {
         BlogCategory category = categoryService.getCategoryById(blogDto.getCategoryId());
@@ -134,7 +132,8 @@ public class BlogService {
 
 
     private BlogMainDto generateResponse(Blog blog) {
-        String imageUrl = uploadPath + blog.getImageName();
+        Path path = Paths.get(uploadPath);
+        String imageUrl = path + blog.getImageName();
         BlogMainDto blogMainDto = new BlogMainDto();
         blogMainDto.setPid(blog.getPid());
         blogMainDto.setTitle(blog.getTitle());

@@ -15,19 +15,21 @@ import java.nio.file.Paths;
 
 
 @Service
-@RequiredArgsConstructor
 public class ImageService {
 
     private final ImageRepository imageRepository;
+    private final Path path; // The path to the directory where files will be saved
 
-    @Value("${file.downloadPath}")
-    String downloadPath;
-
-    @Value("${file.uploadPath}")
-    String uploadPath;
-
-
-    private final Path path = Paths.get("C:\\Users\\Admin\\Pictures\\Screenshots\\");// path static
+    public ImageService(@Value("${file.upload-dir}") String uploadDir, ImageRepository imageRepository) {
+        this.path = Paths.get(uploadDir);
+        this.imageRepository = imageRepository;
+        // Ensure the directory exists
+        try {
+            Files.createDirectories(path);
+        } catch (IOException e) {
+            throw new RuntimeException("Could not initialize storage location", e);
+        }
+    }
 
 
     public ImageUpload saveFile(MultipartFile file) throws Exception {
