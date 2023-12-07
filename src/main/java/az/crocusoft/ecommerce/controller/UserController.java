@@ -5,7 +5,6 @@ import az.crocusoft.ecommerce.dto.UserResponse;
 import az.crocusoft.ecommerce.model.User;
 import az.crocusoft.ecommerce.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -14,8 +13,8 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/user")
 @RequiredArgsConstructor
-@PreAuthorize("hasRole('ADMIN')")
-public class UserControllerr {
+//@PreAuthorize("hasRole('ADMIN')")
+public class UserController {
 
     private  final  UserService service;
     @GetMapping("/{id}")
