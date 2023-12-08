@@ -38,10 +38,8 @@ public class User implements UserDetails {
     @JsonIgnore
     private List<Order> orders = new ArrayList<>();
 
-
     @OneToMany(mappedBy ="user" ,cascade = CascadeType.REMOVE)
     private List<Token> tokenList;
-
 
     @Override
     public String toString() {

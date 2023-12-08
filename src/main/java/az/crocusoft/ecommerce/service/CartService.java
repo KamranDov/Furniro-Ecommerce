@@ -28,14 +28,14 @@ public class CartService {
 
         double itemPrice = productVariation.getPrice();
         double discount = (itemPrice * productVariation.getDiscount()) / 100;
-        double totalPrice = (itemPrice - discount) * addToCartDto.getQuantity();
+        double discountedPrice = itemPrice - discount;
 
         Cart cart = new Cart();
         cart.setProductVariation(productVariation);
         cart.setUser(user);
         cart.setQuantity(addToCartDto.getQuantity());
         cart.setCreatedDate(LocalDate.now());
-        cart.setTotalPrice(totalPrice);
+        cart.setDiscountedPrice(discountedPrice);
 
         cartRepository.save(cart);
     }

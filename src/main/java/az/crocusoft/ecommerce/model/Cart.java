@@ -1,13 +1,13 @@
 package az.crocusoft.ecommerce.model;
 
 import az.crocusoft.ecommerce.model.product.ProductVariation;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -26,11 +26,13 @@ public class Cart {
     @JoinColumn(name = "product_variation_id")
     private ProductVariation productVariation;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
     private Integer quantity;
-
     private Double totalPrice;
+
+    @Column(name = "discounted_price")
+    private Double discountedPrice;
 }

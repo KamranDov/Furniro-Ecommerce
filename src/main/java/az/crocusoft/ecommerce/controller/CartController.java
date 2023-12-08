@@ -19,12 +19,12 @@ public class CartController {
     private final AuthenticationService authenticationService;
 
     @PostMapping("/add")
-    public ResponseEntity<Void> addToCart(@RequestBody AddToCartDto addToCartDto) {
+    public ResponseEntity<String> addToCart(@RequestBody AddToCartDto addToCartDto) {
 
         User signedInUser = authenticationService.getSignedInUser();
         System.out.println(signedInUser.getEmail());
         cartService.addToCart(addToCartDto, signedInUser);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        return new ResponseEntity<>("Product added successfully.", HttpStatus.CREATED);
     }
 
     @GetMapping("/cart-items")
@@ -35,10 +35,10 @@ public class CartController {
     }
 
     @DeleteMapping("delete/{cartItemId}")
-    public ResponseEntity<Void> deleteCartItems(@PathVariable(name = "cartItemId") Long cartItemId) {
+    public ResponseEntity<String> deleteCartItems(@PathVariable(name = "cartItemId") Long cartItemId) {
 
         User signedInUser = authenticationService.getSignedInUser();
         cartService.deleteCartItem(cartItemId, signedInUser);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>("Cart item successfully deleted.", HttpStatus.NO_CONTENT);
     }
 }
