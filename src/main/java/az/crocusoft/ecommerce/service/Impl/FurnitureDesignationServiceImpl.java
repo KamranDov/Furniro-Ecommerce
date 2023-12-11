@@ -50,7 +50,14 @@ public class FurnitureDesignationServiceImpl implements FurnitureDesignationServ
         FurnitureDesignation furnitureDesignation = furnitureDesignationRepository
                 .findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Furniture designation not found"));
-        FurnitureDesignationDTO dto = modelMapper.map(furnitureDesignation, FurnitureDesignationDTO.class);
+        FurnitureDesignationDTO dto = FurnitureDesignationDTO.builder()
+                .furnitureDesignationId(furnitureDesignation.getId())
+                .furnitureDesignationName(furnitureDesignation.getName())
+                .imageUrl(fileService.getFullImagePath(furnitureDesignation
+                        .getImage()
+                        .getImageUrl())
+                )
+                .build();
         return dto;
     }
 
@@ -59,8 +66,17 @@ public class FurnitureDesignationServiceImpl implements FurnitureDesignationServ
         List<FurnitureDesignationDTO> all = furnitureDesignationRepository
                 .findAll()
                 .stream()
-                .map(furnitureDesignation -> modelMapper
-                        .map(furnitureDesignation, FurnitureDesignationDTO.class))
+                .map(furnitureDesignation -> {
+                    FurnitureDesignationDTO dto = FurnitureDesignationDTO.builder()
+                            .furnitureDesignationId(furnitureDesignation.getId())
+                            .furnitureDesignationName(furnitureDesignation.getName())
+                            .imageUrl(fileService.getFullImagePath(furnitureDesignation
+                                    .getImage()
+                                    .getImageUrl())
+                            )
+                            .build();
+                    return dto;
+                })
                 .toList();
         return all;
     }
