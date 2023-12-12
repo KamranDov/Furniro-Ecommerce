@@ -15,6 +15,9 @@ import java.util.UUID;
 @Service
 public class FileService {
 
+    @Value("${app.base-url}")
+    private String baseUrl;
+
     private final Path rootLocation; // The path to the directory where files will be saved
 
     public FileService(@Value("${file.upload-dir}") String uploadDir) {
@@ -50,7 +53,8 @@ public class FileService {
         return "/images/" + subDirectoryName + "/" + fileName;
     }
 
-//    public MultipartFile downloadImage(String fileName) throws IOException {
-//
-//    }
+    public String getFullImagePath(String imageName) {
+        return baseUrl + imageName;
+
+    }
 }

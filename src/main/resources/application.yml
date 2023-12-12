@@ -35,6 +35,8 @@ spring:
 file:
   upload-dir: 'uploads'
 
+app:
+  base-url: https://furnirostore.up.railway.app
 
 
 
