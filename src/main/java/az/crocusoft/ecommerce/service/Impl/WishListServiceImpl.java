@@ -27,7 +27,7 @@ public class WishListServiceImpl implements WishListService {
 
     @Override
     public void add(WishListDTO wishListDTO) {
-        Long productId=wishListDTO.getId();
+        Long productId=wishListDTO.getProductId();
         Long userId=wishListDTO.getUserId();
         Product product=productService.findProductById(productId);
         User user=userService.findUserById(userId);
@@ -40,7 +40,7 @@ public class WishListServiceImpl implements WishListService {
 
     @Override
     public void delete(WishListDTO wishListDTO){
-        Long productId=wishListDTO.getId();
+        Long productId=wishListDTO.getProductId();
         Long userId=wishListDTO.getUserId();
 
         Product product=productService.findProductById(productId);
@@ -67,7 +67,7 @@ public class WishListServiceImpl implements WishListService {
     }
     public WishListDTO mapper(WishList wishList){
         return WishListDTO.builder()
-                .id(wishList.getProduct().getId())
+                .productId(wishList.getProduct().getId())
                 .userId(wishList.getUser().getId()).build();
     }
 

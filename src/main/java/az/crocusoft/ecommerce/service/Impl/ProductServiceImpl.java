@@ -249,7 +249,7 @@ public class ProductServiceImpl implements ProductService {
                 .price(getProductPrice(product))
                 .discount(getProductDiscount(product))
                 .discountPrice(getProductSpecialPrice(product))
-                .imageURL(product.getMainImage().getImageUrl())
+                .imageURL(fileService.getFullImagePath(product.getMainImage().getImageUrl()))
                 .build();
         return productResponse;
     }
@@ -263,7 +263,11 @@ public class ProductServiceImpl implements ProductService {
         productVariationDTO.setSpecialPrice(getProductVariationSpecialPrice(variation));
         productVariationDTO.setColor(variation.getColor());
         productVariationDTO.setSize(variation.getSize());
-        variation.getImages().forEach(image -> productVariationDTO.getImageUrls().add(image.getImageUrl()));
+        variation.getImages().forEach(
+                image -> productVariationDTO
+                        .getImageUrls()
+                        .add(fileService.getFullImagePath(image.getImageUrl()))
+        );
         return productVariationDTO;
     }
 
