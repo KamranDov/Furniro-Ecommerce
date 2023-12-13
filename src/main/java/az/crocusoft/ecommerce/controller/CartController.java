@@ -8,6 +8,7 @@ import az.crocusoft.ecommerce.service.CartService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
@@ -27,13 +28,14 @@ public class CartController {
         return new ResponseEntity<>("Product added successfully.", HttpStatus.CREATED);
     }
 
-    @GetMapping("/cart-items")
+    @GetMapping("/cart-items")//public
     public ResponseEntity<CartDto> getCartItems() {
         User signedInUser = authenticationService.getSignedInUser();
         CartDto cartDto = cartService.listCartItems(signedInUser);
         return new ResponseEntity<>(cartDto, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("delete/{cartItemId}")
     public ResponseEntity<String> deleteCartItems(@PathVariable(name = "cartItemId") Long cartItemId) {
 

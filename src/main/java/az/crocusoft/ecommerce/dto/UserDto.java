@@ -19,8 +19,6 @@ import lombok.NoArgsConstructor;
 public class UserDto {
 
 
-
-
     private String name;
     private String surname;
 
@@ -31,7 +29,8 @@ public class UserDto {
     @Email(message = "Email should be valid")
     @NotEmpty(message = "Email is required")
     private String email;
-    private Role role;
+
+
 
 
 

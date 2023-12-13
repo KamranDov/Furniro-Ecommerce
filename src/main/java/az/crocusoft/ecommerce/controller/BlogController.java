@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -41,26 +42,28 @@ BlogController {
         return blogService.getRecentPosts(months);
     }
 
+
     @GetMapping("/count/{categoryId}")
     public Integer getRecentBlogPosts(@PathVariable Integer categoryId) {
         return blogService.countBlogsByCategory(categoryId);
     }
 
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<BlogMainDto> saveBlog(@RequestPart BlogDto blog, @RequestPart MultipartFile image) {
         blog.setImage(image);
         blogService.creatBlog(blog);
         return ResponseEntity.ok().build();
     }
-
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping(path = "/{pid}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public BlogMainDto updateBlog(@RequestPart("blog") BlogUpdateRequest blog,
                                   @PathVariable("pid") Long blogId,
                                   @RequestPart("image") MultipartFile image) {
         return blogService.updateBlog(blog, blogId, image);
     }
-
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{pid}")
     public ResponseEntity deleteBlog(@PathVariable("pid") Long blogId) {
         return ResponseEntity.ok(blogService.deleteBlogById(blogId));

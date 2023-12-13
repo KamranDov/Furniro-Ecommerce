@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -27,6 +28,7 @@ public class ProductController {
 
     @PostMapping(consumes = {"multipart/form-data"})
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasRole('ADMIN')")
     public void addProduct(
             ProductRequest productRequest,
             @RequestParam("image") MultipartFile image) throws IOException {
@@ -35,6 +37,7 @@ public class ProductController {
 
     @PostMapping(path = "/{productId}/variations", consumes = {"multipart/form-data"})
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasRole('ADMIN')")
     public void addProductVariation(
             @PathVariable Long productId,
             ProductVariationRequest productVariationRequest,
