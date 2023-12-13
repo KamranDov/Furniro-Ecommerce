@@ -75,6 +75,7 @@ public class SecurityConfig {
             "/configuration/security",
             "/swagger-ui/**",
             "/webjars/**",
-            "/swagger-ui.html"
+            "/swagger-ui.html",
+            "/https://furnirostore.up.railway.app/images/Product-images/**"
     };
 }
