@@ -39,6 +39,7 @@ public class SecurityConfig {
                         req.requestMatchers("/auth/**")
                                 .permitAll()
                                 .requestMatchers(GET,"/api/blog/**").permitAll()
+                                .requestMatchers(GET,"/api/v1/products").permitAll()
                                 .requestMatchers(GET,"/api/v1/products/**").permitAll()
                                 .requestMatchers(GET,"/api/v1/category").permitAll()
                                 .requestMatchers("/api/v1/contact/**").permitAll()
