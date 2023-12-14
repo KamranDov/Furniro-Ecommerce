@@ -1,5 +1,6 @@
 package az.crocusoft.ecommerce.exception;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -67,6 +68,15 @@ public class GeneralExceptionHandler {
                 LocalDateTime.now()
                 , HttpStatus.NOT_FOUND.value()
                 , HttpStatus.NOT_FOUND
+                , exception.getMessage());
+    }
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ExceptionResponse handleEntityNotFound(ResourceNotFoundException exception) {
+        return new ExceptionResponse(
+                LocalDateTime.now()
+                , HttpStatus.BAD_REQUEST.value()
+                , HttpStatus.BAD_REQUEST
                 , exception.getMessage());
     }
 }

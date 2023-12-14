@@ -8,16 +8,17 @@ import az.crocusoft.ecommerce.dto.response.ProductPageResponse;
 import az.crocusoft.ecommerce.dto.response.ProductResponse;
 import az.crocusoft.ecommerce.dto.response.SingleProductResponse;
 import az.crocusoft.ecommerce.exception.ProductNotExistsException;
+import az.crocusoft.ecommerce.exception.ResourceNotFoundException;
 import az.crocusoft.ecommerce.model.product.*;
 import az.crocusoft.ecommerce.repository.*;
 import az.crocusoft.ecommerce.service.ProductService;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -36,7 +37,7 @@ public class ProductServiceImpl implements ProductService {
     private static final String PRODUCT_IMAGES_FOLDER_NAME = "Product-images";
 
 
-    @Override
+    @Transactional
     public void addProduct(ProductRequest productRequest,
                            MultipartFile image) throws IOException {
         Product product = new Product();
@@ -62,7 +63,7 @@ public class ProductServiceImpl implements ProductService {
         if (productRequest.getCategoryId() != null) {
             Category category = categoryRepository
                     .findById(productRequest.getCategoryId())
-                    .orElseThrow(() -> new EntityNotFoundException
+                    .orElseThrow(() -> new ResourceNotFoundException
                             ("Category not found with id: " + productRequest.getCategoryId()));
             product.setCategory(category);
         }
@@ -71,7 +72,7 @@ public class ProductServiceImpl implements ProductService {
             Set<FurnitureDesignation> furnitureDesignations = new HashSet<>();
             for (Long id : productRequest.getFurnitureDesignationIds()) {
                 FurnitureDesignation fd = furnitureDesignationRepository.findById(id)
-                        .orElseThrow(() -> new EntityNotFoundException
+                        .orElseThrow(() -> new ResourceNotFoundException
                                 ("FurnitureDesignation not found with id: " + id));
                 furnitureDesignations.add(fd);
             }
@@ -80,6 +81,7 @@ public class ProductServiceImpl implements ProductService {
         productRepository.save(product);
     }
 
+    @Transactional
     public void addVariationToProduct(Long productId,
                                       ProductVariationRequest productVariationRequest,
                                       List<MultipartFile> images) throws IOException {
@@ -174,6 +176,12 @@ public class ProductServiceImpl implements ProductService {
         return productResponse;
     }
 
+    @Transactional
+    public void deleteProduct(Long id) {
+        Product product = findProductById(id);
+        productRepository.delete(product);
+    }
+
     public Double getProductPrice(Product product) {
         List<ProductVariation> variations = product.getVariations();
         if (variations == null || variations.isEmpty())
@@ -234,9 +242,10 @@ public class ProductServiceImpl implements ProductService {
         return price - (price * discount / 100);
     }
 
+
     public Product findProductById(Long id) {
         return productRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Product is currently not available"));
+                .orElseThrow(() -> new ResourceNotFoundException("Product is currently not available"));
     }
 
 

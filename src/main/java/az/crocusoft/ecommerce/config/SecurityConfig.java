@@ -44,6 +44,7 @@ public class SecurityConfig {
                                 .requestMatchers(GET,"/api/v1/category").permitAll()
                                 .requestMatchers("/api/v1/contact/**").permitAll()
                                 .requestMatchers("/country/**").permitAll()
+                                .requestMatchers(GET,"/images/**").permitAll()
                                 .requestMatchers(permitSwagger).permitAll()
                                 .anyRequest()
                                 .authenticated()

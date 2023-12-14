@@ -16,7 +16,6 @@ import java.util.List;
 public class CartCleanupScheduler {
 
     private final CartRepository cartRepository;
-
     @Scheduled(cron = "0 0 0 1 * ?")
     public void performCartCleanup() {
         LocalDate oneMonthAgo = LocalDate.now().minusMonths(1);
