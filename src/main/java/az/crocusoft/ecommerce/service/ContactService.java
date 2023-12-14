@@ -5,6 +5,7 @@ import az.crocusoft.ecommerce.exception.MailSenderException;
 import az.crocusoft.ecommerce.mapper.ContactMapper;
 import az.crocusoft.ecommerce.model.Contact;
 import az.crocusoft.ecommerce.repository.ContactRepository;
+import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,9 +16,11 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@Builder
 public class ContactService {
 
-    private String mailSenderUsername;
+//    @Value("${spring.mail.username}")
+//    private String mailSenderUsername;
 
     private final JavaMailSender javaMailSender;
     private final ContactRepository contactRepository;
@@ -25,26 +28,34 @@ public class ContactService {
 
     public void saveContact(ContactDto contactDto) {
         Contact contact = contactMapper.dtoToEntity(contactDto);
-        sendMail(contactDto);
+//        sendMail(contactDto);
         contactRepository.save(contact);
         log.info("Customer saved successfully: {}", contactDto);
     }
 
 
-    private void sendMail(ContactDto contactDto) {
+    public void sendMail(ContactDto contactDto) {
         try {
             SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
-            simpleMailMessage.setFrom("myemail@gmail.com");
+            simpleMailMessage.setFrom("crocu-user@mail.com");
             simpleMailMessage.setTo(contactDto.getEmail());
             simpleMailMessage.setSubject(contactDto.getSubject());
             simpleMailMessage.setText(contactDto.getMessage());
 
             javaMailSender.send(simpleMailMessage);
             log.info("Customer saved successfully: {}", contactDto);
-        } catch (Exception e) {
+        } catch (MailSenderException e) {
             log.error("Error occurred while sending mail for customer: {}", contactDto, e);
             throw new MailSenderException("Error while sending email");
-
         }
     }
+
+//    public void mailSender(ContactDto contactDto){
+//        Contact contact = Contact.builder()
+//                .name(contactDto.getName())
+//                .email(contactDto.getEmail())
+//                .subject(contactDto.getSubject())
+//                .message(contactDto.getMessage())
+//                .build();
+//    }
 }
