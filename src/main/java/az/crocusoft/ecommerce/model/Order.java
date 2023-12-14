@@ -47,7 +47,7 @@ public class Order {
     @JoinColumn(name = "user_id", referencedColumnName = "user_id")
     private User user;
     @JsonIgnore
-    @OneToMany(mappedBy = "order", cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+    @OneToMany(mappedBy = "order", cascade = { CascadeType.PERSIST, CascadeType.MERGE,CascadeType.REMOVE })
     private List<OrderItem> orderItems = new ArrayList<>();
 
 
