@@ -43,7 +43,7 @@ public class Order {
     @JoinColumn(name = "id",nullable = true)
     private Cart cart;
     @JsonIgnore
-    @ManyToOne(cascade = CascadeType.ALL) //CascadeType.ALL means all operations (persist, remove, merge, refresh) will be cascaded
+    @ManyToOne //CascadeType.ALL means all operations (persist, remove, merge, refresh) will be cascaded
     @JoinColumn(name = "user_id", referencedColumnName = "user_id")
     private User user;
     @JsonIgnore
