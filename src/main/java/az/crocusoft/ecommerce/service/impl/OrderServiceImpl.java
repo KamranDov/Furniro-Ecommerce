@@ -2,8 +2,12 @@ package az.crocusoft.ecommerce.service.Impl;
 
 import az.crocusoft.ecommerce.dto.OrderDto;
 import az.crocusoft.ecommerce.dto.cart.CartDto;
+import az.crocusoft.ecommerce.dto.cart.CartItemDto;
 import az.crocusoft.ecommerce.exception.CartNotFoundException;
+import az.crocusoft.ecommerce.exception.UserNotFoundException;
 import az.crocusoft.ecommerce.model.*;
+import az.crocusoft.ecommerce.model.product.Product;
+import az.crocusoft.ecommerce.model.product.ProductVariation;
 import az.crocusoft.ecommerce.repository.CartRepository;
 import az.crocusoft.ecommerce.repository.OrderItemRepository;
 import az.crocusoft.ecommerce.repository.OrderRepository;
@@ -15,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -24,43 +29,49 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
-
-
-
     private final UserRepository userRepository;
     private final OrderRepository orderRepository;
     private final CartRepository cartRepository;
-
     private final ModelMapper modelMapper;
     private final CartService cartService;
     private final OrderItemRepository  orderItemRepository;
-
-
-
-
     @Override
     public Order placeOrder(OrderDto orderDto, Long userId) {
 
-        Optional<User> user = userRepository.findById(userId);
-        CartDto cartDto = cartService.listCartItems(user.get());
-        Cart cart = cartRepository.findByUser(user.get());
-        if (cart==null){
-            throw new CartNotFoundException("Cart not found ", "cartId", userId);
+        Optional<User> userOptional = userRepository.findById(userId);
+        if (userOptional.isEmpty()) {
+            throw new UserNotFoundException("User not found");
         }
-        Order order = modelMapper.map(orderDto, Order.class);
+        User user = userOptional.get();
+        CartDto cartDto = cartService.listCartItems(user);
+        if (cartDto == null || cartDto.getCartItems().isEmpty()) {
+        }
+        Order order = new Order();
         order.setOrderDate(LocalDate.now());
-        OrderItem orderItem = new OrderItem();
-        orderItem.setOrder(order);
-        orderItem.setQuantity(cart.getQuantity());
-        orderItem.setTotalAmount(cartDto.getTotalPrice());
-        orderItem.setProduct(cart.getProductVariation().getProduct());
-        order.setCart(cart);
-        order.setUser(user.get());
-        orderItemRepository.save(orderItem);
-        order.setOrderStatus(OrderStatusValues.SUCCESS);
+        order.setUser(user);
+        order = modelMapper.map(orderDto, Order.class);
+
+
+
+        for (CartItemDto cartItemDto : cartDto.getCartItems()) {
+            ProductVariation productVariation = cartItemDto.getProductVariation();
+            Product product = productVariation.getProduct();
+            BigDecimal price = BigDecimal.valueOf(productVariation.getPrice());
+
+            OrderItem orderItem = new OrderItem();
+            orderItem.setOrder(order);
+            orderItem.setProduct(cartItemDto.getProductVariation().getProduct());
+            orderItem.setQuantity(cartItemDto.getQuantity());
+            orderItem.setTotalAmount(price.multiply(BigDecimal.valueOf(cartItemDto.getQuantity())));
+            order.getOrderItems().add(orderItem);
+        }
+
+        order.setOrderStatus(OrderStatusValues.PENDING);
         Order savedOrder = orderRepository.save(order);
-        return savedOrder ;
-    }
+
+//        cartService.clearCart(user);
+
+        return savedOrder;}
 
     @Override
     public List<Order> getAllOrders() {
@@ -74,7 +85,9 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional
     public void deleteOrder(Long orderId) {
+        orderItemRepository.deleteById(orderId);
         orderRepository.deleteById(orderId);
     }
 

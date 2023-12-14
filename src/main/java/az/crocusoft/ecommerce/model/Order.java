@@ -40,14 +40,14 @@ public class Order {
     private LocalDate orderDate;
     @JsonIgnore
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "cart_id",nullable = true) // nullable olabilir çünkü her siparişin bir sepeti olmayabilir
+    @JoinColumn(name = "id",nullable = true)
     private Cart cart;
     @JsonIgnore
-    @ManyToOne(cascade = CascadeType.ALL) //CascadeType.ALL means all operations (persist, remove, merge, refresh) will be cascaded
+    @ManyToOne //CascadeType.ALL means all operations (persist, remove, merge, refresh) will be cascaded
     @JoinColumn(name = "user_id", referencedColumnName = "user_id")
     private User user;
     @JsonIgnore
-    @OneToMany(mappedBy = "order", cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+    @OneToMany(mappedBy = "order", cascade = { CascadeType.PERSIST, CascadeType.MERGE,CascadeType.REMOVE })
     private List<OrderItem> orderItems = new ArrayList<>();
 
 
