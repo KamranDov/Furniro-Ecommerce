@@ -21,6 +21,7 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class AuthenticationController {
 
+
     private final AuthenticationService authenticationService;
 
     @PostMapping("/register")

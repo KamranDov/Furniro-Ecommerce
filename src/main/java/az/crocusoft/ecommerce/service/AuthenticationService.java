@@ -143,5 +143,41 @@ public class AuthenticationService {
             }
         }
     }
+    public AuthResponse saveAdmin(UserDto userDto) {
+        User user = User.builder()
+                .id(1L)
+                .username(userDto.getUsername())
+                .email(userDto.getEmail())
+                .password(passwordEncoder.encode(userDto.getPassword()))
+                .name(userDto.getName())
+
+                .surname(userDto.getSurname())
+                .role(Role.ADMIN).build();
+
+
+
+        User saveUser= userRepository.save(user);
+        var token = jwtService.generateToken(user);
+        var refreshToken=jwtService.generateRefreshToken(user);
+        saveAdminToken(saveUser, token);
+        return AuthResponse.builder().
+                userId(saveUser.getId())
+                .accessToken(token)
+                .refreshToken(refreshToken)
+                .build();
+
+    }
+
+    private void saveAdminToken(User user, String jwtToken) {
+        var token = Token.builder()
+                .id(1)
+                .user(user)
+                .token(jwtToken)
+                .tokenType(TokenType.BEARER)
+                .expired(false)
+                .revoked(false)
+                .build();
+        tokenRepository.save(token);
+    }
 }
 

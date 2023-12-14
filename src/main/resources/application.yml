@@ -18,18 +18,18 @@ spring:
       ddl-auto: update
     generate-ddl: true
     show-sql: true
-  mail:
-    host: smtp.gmail.com
-    port: 587
-    username: ulviguluzada@gmail.com
-    password: awixhfnipncbcxhj
-    properties:
-      mail:
-        smtp:
-          auth: true
-          starttls:
-            enable: true
 
+#  mail:
+#    host: smtp.gmail.com
+#    port: 587
+#    username: axmedovkamran127@gmail.com
+#    password: jfjlrkgmaokhjzrm
+#    properties:
+#      mail:
+#        smtp:
+#          auth: true
+#          starttls:
+#            enable: true
 
 
 file:

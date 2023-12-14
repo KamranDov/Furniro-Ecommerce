@@ -8,6 +8,6 @@ public record ExceptionResponse(
         LocalDateTime timestamp,
         Integer statusCode,
         HttpStatus error,
-        String message) {
+        String message ) {
 
 }
