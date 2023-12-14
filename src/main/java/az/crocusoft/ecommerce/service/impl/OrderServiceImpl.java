@@ -29,20 +29,12 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
-
-
-
     private final UserRepository userRepository;
     private final OrderRepository orderRepository;
     private final CartRepository cartRepository;
-
     private final ModelMapper modelMapper;
     private final CartService cartService;
     private final OrderItemRepository  orderItemRepository;
-
-
-
-
     @Override
     public Order placeOrder(OrderDto orderDto, Long userId) {
 
@@ -57,6 +49,9 @@ public class OrderServiceImpl implements OrderService {
         Order order = new Order();
         order.setOrderDate(LocalDate.now());
         order.setUser(user);
+        order = modelMapper.map(orderDto, Order.class);
+
+
 
         for (CartItemDto cartItemDto : cartDto.getCartItems()) {
             ProductVariation productVariation = cartItemDto.getProductVariation();
@@ -71,7 +66,7 @@ public class OrderServiceImpl implements OrderService {
             order.getOrderItems().add(orderItem);
         }
 
-        order.setOrderStatus(OrderStatusValues.SUCCESS);
+        order.setOrderStatus(OrderStatusValues.PENDING);
         Order savedOrder = orderRepository.save(order);
 
 //        cartService.clearCart(user);
