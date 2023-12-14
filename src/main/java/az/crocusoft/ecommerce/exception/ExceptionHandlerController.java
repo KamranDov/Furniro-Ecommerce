@@ -89,11 +89,7 @@ public class ExceptionHandlerController {
     }
 
 
-    @ExceptionHandler(Exception.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    ErrorResponse handleOtherException(Exception ex) {
-        return new ErrorResponse(false, StatusCode.INTERNAL_SERVER_ERROR, "A server internal error occurs.", ex.getMessage());
-    }
+
 
 
 
