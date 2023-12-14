@@ -45,11 +45,17 @@ public class OrderServiceImpl implements OrderService {
         User user = userOptional.get();
         CartDto cartDto = cartService.listCartItems(user);
         if (cartDto == null || cartDto.getCartItems().isEmpty()) {
+            throw new CartNotFoundException("Cart not found ", "cartId", userId);
         }
-        Order order = new Order();
+        Cart cart = cartRepository.findByUser(user);
+        if (cart==null){
+            throw new CartNotFoundException("Cart not found ", "cartId", userId);
+        }
+
+        Order order = modelMapper.map(orderDto, Order.class);
         order.setOrderDate(LocalDate.now());
         order.setUser(user);
-        order = modelMapper.map(orderDto, Order.class);
+        order.setCart(cart);
 
 
 
@@ -85,8 +91,9 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    @Transactional
+//    @Transactional
     public void deleteOrder(Long orderId) {
+        System.out.println("orderId = " + orderId);
         orderItemRepository.deleteById(orderId);
         orderRepository.deleteById(orderId);
     }
