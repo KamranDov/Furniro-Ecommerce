@@ -27,4 +27,8 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     Page<Product> findProductsWithMinPriceDescOrder(Pageable pageable);
 
 
+    Page<Product> findProductsByFurnitureDesignations_IdAndPublishedIsTrue(Long designationId,
+                                                                           Pageable pageable);
+
+
 }

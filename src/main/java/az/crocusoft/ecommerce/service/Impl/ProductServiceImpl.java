@@ -147,6 +147,27 @@ public class ProductServiceImpl implements ProductService {
                 allProducts.hasNext());
     }
 
+    public ProductPageResponse getAllProductsByFurnitureDesignationId(Long designationId,
+                                                                      int pageNumber,
+                                                                      int pageSize) {
+
+        String sortBy = "name";
+        String sortOrder = PaginationConstants.SORT_DIRECTION;
+
+        Sort sort = Sort.by(Sort.Direction.fromString(sortOrder), sortBy);
+        Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
+        Page<Product> allProducts = productRepository
+                .findProductsByFurnitureDesignations_IdAndPublishedIsTrue(designationId, pageable);
+
+        return new ProductPageResponse(allProducts.getContent()
+                .stream()
+                .map(this::convertToProductResponse)
+                .toList(),
+                allProducts.getTotalPages(),
+                allProducts.getTotalElements(),
+                allProducts.hasNext());
+    }
+
     @Override
     public SingleProductResponse getProductById(Long id) {
         Product product = findProductById(id);

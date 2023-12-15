@@ -25,6 +25,10 @@ public interface ProductService {
     ProductPageResponse getAllPublishedProducts(int pageNumber, int pageSize,
                                                 String sortBy, String sortOrder);
     public void deleteProduct(Long id);
+
+    public ProductPageResponse getAllProductsByFurnitureDesignationId(Long designationId,
+                                                                      int pageNumber,
+                                                                      int pageSize);
     ProductVariation findById(Long productId);
 
 }

@@ -61,6 +61,15 @@ public class ProductController {
         return ResponseEntity.ok(productService.getAllPublishedProducts(page, size, sortBy, sortOrder));
     }
 
+    @GetMapping("/public/designation/{designationId}")
+    public ResponseEntity<ProductPageResponse> getAllProductsByDesignation(
+            @PathVariable Long designationId,
+            @RequestParam(name = "pageNumber", defaultValue = PaginationConstants.PAGE_NUMBER) Integer page,
+            @RequestParam(name = "pageSize", defaultValue = PaginationConstants.PAGE_SIZE) Integer size)
+    {
+        return ResponseEntity.ok(productService.getAllProductsByFurnitureDesignationId(designationId, page, size));
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteProductById (@PathVariable Long id) {
         productService.deleteProduct(id);
