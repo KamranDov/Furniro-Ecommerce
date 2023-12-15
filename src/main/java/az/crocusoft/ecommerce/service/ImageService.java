@@ -34,7 +34,7 @@ public class ImageService {
 
     public ImageUpload saveFile(MultipartFile file) throws Exception {
         String fileName = StringUtils.cleanPath(file.getOriginalFilename());
-
+        System.out.println(fileName);
         try {
             if (fileName.contains("..")) {
                 throw new Exception("The file name is invalid" + fileName);

@@ -1,6 +1,8 @@
 package az.crocusoft.ecommerce.dto;
 
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -17,8 +19,7 @@ public class BlogMainDto {
     private String title;
     private String content;
     private String imageUrl;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private Date date;
     private Integer categoryId;
-    private Long userId;
-    private List<Long> commentsId;
 }

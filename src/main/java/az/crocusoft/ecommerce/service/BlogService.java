@@ -8,6 +8,7 @@ import az.crocusoft.ecommerce.exception.CustomException;
 import az.crocusoft.ecommerce.model.Blog;
 import az.crocusoft.ecommerce.model.BlogCategory;
 import az.crocusoft.ecommerce.model.ImageUpload;
+import az.crocusoft.ecommerce.model.User;
 import az.crocusoft.ecommerce.repository.BlogRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -32,6 +33,7 @@ public class BlogService {
     private final BlogRepository blogRepository;
     private final BlogCategoryService categoryService;
     private final ImageService imageService;
+    private final AuthenticationService authenticationService;
 
 
     @Value("${file.upload-dir}")
@@ -40,6 +42,7 @@ public class BlogService {
     public BlogMainDto creatBlog(BlogDto blogDto) {
         BlogCategory category = categoryService.getCategoryById(blogDto.getCategoryId());
         Blog blog = new Blog();
+        Long signedInUserId = authenticationService.getSignedInUser().getId();
 
         MultipartFile image = blogDto.getImage();
         String imageName;
@@ -53,6 +56,7 @@ public class BlogService {
         blog.setCategory(category);
         blog.setDate(new Date());
         blog.setImageName(imageName);
+
         blogRepository.save(blog);
 
         return generateResponse(blog);

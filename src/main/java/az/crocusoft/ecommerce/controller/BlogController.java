@@ -49,18 +49,18 @@ BlogController {
     }
 
 
-//    @PreAuthorize("hasRole('ADMIN')")
-    @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<BlogMainDto> saveBlog(@RequestPart BlogDto blog, @RequestPart MultipartFile image) {
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping(consumes = {"multipart/form-data"})
+    public ResponseEntity<BlogMainDto> saveBlog(BlogDto blog, @RequestParam("image") MultipartFile image) {
         blog.setImage(image);
         blogService.creatBlog(blog);
         return ResponseEntity.ok().build();
     }
     @PreAuthorize("hasRole('ADMIN')")
-    @PutMapping(path = "/{pid}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public BlogMainDto updateBlog(@RequestPart("blog") BlogUpdateRequest blog,
-                                  @PathVariable("pid") Long blogId,
-                                  @RequestPart("image") MultipartFile image) {
+    @PutMapping(path = "/{pid}", consumes = {"multipart/form-data"})
+    public BlogMainDto updateBlog(@PathVariable("pid") Long blogId,
+                                  BlogUpdateRequest blog,
+                                  @RequestParam("image") MultipartFile image) {
         return blogService.updateBlog(blog, blogId, image);
     }
     @PreAuthorize("hasRole('ADMIN')")

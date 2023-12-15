@@ -14,12 +14,9 @@ import java.util.List;
 @Builder
 public class BlogDto {
 
-
-    private Long pid;
     private String title;
     private String content;
     private MultipartFile image;
-    private Date date;
     private Integer categoryId;
 
 

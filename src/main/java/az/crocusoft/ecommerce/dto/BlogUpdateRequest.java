@@ -13,12 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class BlogUpdateRequest {
-    private Long pid;
     private String title;
     private String content;
-    private String imageName;
-    private Date date;
     private Integer categoryId;
-    private Long userId;
-    private List<Long> commentIdList;
 }
