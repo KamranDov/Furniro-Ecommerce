@@ -39,8 +39,6 @@ public class EcommerceApplication  {
 
 			System.out.println("Admin token: " + service.saveAdmin(admin).getAccessToken());
 
-
-
 		};
 	}
 
