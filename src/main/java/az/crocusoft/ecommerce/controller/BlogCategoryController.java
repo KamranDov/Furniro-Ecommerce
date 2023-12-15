@@ -19,12 +19,12 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/api/category")
 @RequiredArgsConstructor
-@PreAuthorize("hasRole('ADMIN')")
 public class BlogCategoryController {
 
     private final BlogCategoryService categoryService;
     private final ModelMapper modelMapper;
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping()
     public BlogCategoryDto createCategory(@Valid @RequestBody BlogCategoryDto categoryDto) {
         BlogCategory category = new BlogCategory();
@@ -47,6 +47,7 @@ public class BlogCategoryController {
         return new ResponseEntity<>(modelMapper.map(category, BlogCategoryDto.class), HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{cid}")
     public ResponseEntity<BlogCategoryDto> updateCategoryById(@PathVariable("cid") Integer cid,
                                                               @Valid @RequestBody BlogCategory category) {
@@ -54,6 +55,7 @@ public class BlogCategoryController {
         return new ResponseEntity<>(modelMapper.map(updatedCategory, BlogCategoryDto.class), HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{cid}")
     public ResponseEntity<ApiResponse> deleteCategoryById(@PathVariable("cid") Integer cid) {
         categoryService.deleteCategory(cid);
