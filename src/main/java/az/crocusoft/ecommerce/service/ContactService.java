@@ -17,8 +17,8 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class ContactService {
 
-    @Value("${spring.mail.username}")
-    private String mailSenderUsername;
+//    @Value("${spring.mail.username}")
+//    private String mailSenderUsername;
 
     private final JavaMailSender javaMailSender;
     private final ContactRepository contactRepository;
@@ -26,25 +26,25 @@ public class ContactService {
 
     public void saveContact(ContactDto contactDto) {
         Contact contact = contactMapper.dtoToEntity(contactDto);
-        sendMail(contactDto);
+//        sendMail(contactDto);
         contactRepository.save(contact);
         log.info("User saved successfully: {}", contactDto);
     }
 
 
-    public void sendMail(ContactDto contactDto) {
-        try {
-            SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
-            simpleMailMessage.setFrom(mailSenderUsername);
-            simpleMailMessage.setTo(contactDto.getEmail());
-            simpleMailMessage.setSubject(contactDto.getSubject());
-            simpleMailMessage.setText(contactDto.getMessage());
-
-            javaMailSender.send(simpleMailMessage);
-            log.info("User saved successfully: {}", contactDto);
-        } catch (Exception e) {
-            log.error("Error occurred while sending mail for customer: {}", contactDto, e);
-            throw new MailSenderException("Error while sending email");
-        }
-    }
+//    public void sendMail(ContactDto contactDto) {
+//        try {
+//            SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
+//            simpleMailMessage.setFrom(mailSenderUsername);
+//            simpleMailMessage.setTo(contactDto.getEmail());
+//            simpleMailMessage.setSubject(contactDto.getSubject());
+//            simpleMailMessage.setText(contactDto.getMessage());
+//
+//            javaMailSender.send(simpleMailMessage);
+//            log.info("User saved successfully: {}", contactDto);
+//        } catch (MailSenderException e) {
+//            log.error("Error occurred while sending mail for customer: {}", contactDto, e);
+//            throw new MailSenderException("Error while sending email");
+//        }
+//    }
 }
