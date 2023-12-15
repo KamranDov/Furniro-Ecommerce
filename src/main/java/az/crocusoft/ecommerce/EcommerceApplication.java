@@ -23,24 +23,26 @@ public class EcommerceApplication  {
 	}
 
 
-	@Bean
-	public CommandLineRunner commandLineRunner(
-			AuthenticationService service
-	) {
-		return args -> {
-			var admin = UserDto.builder()
-					.name("Shemsi")
-					.surname("Azizaliyev")
-					.username("admin")
-					.password("12345")
-					.email("admin@gmail.com")
-					.build();
-
-
-			System.out.println("Admin token: " + service.saveAdmin(admin).getAccessToken());
-
-		};
-	}
+//	@Bean
+//	public CommandLineRunner commandLineRunner(
+//			AuthenticationService service
+//	) {
+//		return args -> {
+//			var admin = UserDto.builder()
+//					.name("Shemsi")
+//					.surname("Azizaliyev")
+//					.username("admin")
+//					.password("12345")
+//					.email("admin@gmail.com")
+//					.build();
+//
+//
+//			System.out.println("Admin token: " + service.saveAdmin(admin).getAccessToken());
+//
+//
+//
+//		};
+//	}
 
 
 

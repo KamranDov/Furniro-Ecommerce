@@ -34,7 +34,7 @@ public class User implements UserDetails {
     @Column(unique = true)
     private String email;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany
     @JsonIgnore
     private List<Order> orders = new ArrayList<>();
 

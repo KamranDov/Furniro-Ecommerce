@@ -24,7 +24,7 @@ public interface ProductService {
 
     ProductPageResponse getAllPublishedProducts(int pageNumber, int pageSize,
                                                 String sortBy, String sortOrder);
-
+    public void deleteProduct(Long id);
     ProductVariation findById(Long productId);
 
 }
