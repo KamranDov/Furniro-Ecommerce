@@ -16,7 +16,10 @@ import az.crocusoft.ecommerce.service.CartService;
 import az.crocusoft.ecommerce.service.OrderService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -28,6 +31,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class OrderServiceImpl implements OrderService {
     private final UserRepository userRepository;
     private final OrderRepository orderRepository;
@@ -35,6 +39,8 @@ public class OrderServiceImpl implements OrderService {
     private final ModelMapper modelMapper;
     private final CartService cartService;
     private final OrderItemRepository  orderItemRepository;
+    private static final Logger logger = LoggerFactory.getLogger(OrderServiceImpl.class);
+
     @Override
     public Order placeOrder(OrderDto orderDto, Long userId) {
 
@@ -47,23 +53,17 @@ public class OrderServiceImpl implements OrderService {
         if (cartDto == null || cartDto.getCartItems().isEmpty()) {
             throw new CartNotFoundException("Cart not found ", "cartId", userId);
         }
-        Cart cart = cartRepository.findByUser(user);
+       List< Cart> cart = cartRepository.findAllByUser(user);
         if (cart==null){
             throw new CartNotFoundException("Cart not found ", "cartId", userId);
         }
-
         Order order = modelMapper.map(orderDto, Order.class);
         order.setOrderDate(LocalDate.now());
         order.setUser(user);
-        order.setCart(cart);
-
-
-
         for (CartItemDto cartItemDto : cartDto.getCartItems()) {
             ProductVariation productVariation = cartItemDto.getProductVariation();
             Product product = productVariation.getProduct();
             BigDecimal price = BigDecimal.valueOf(productVariation.getPrice());
-
             OrderItem orderItem = new OrderItem();
             orderItem.setOrder(order);
             orderItem.setProduct(cartItemDto.getProductVariation().getProduct());
@@ -75,7 +75,8 @@ public class OrderServiceImpl implements OrderService {
         order.setOrderStatus(OrderStatusValues.PENDING);
         Order savedOrder = orderRepository.save(order);
 
-//        cartService.clearCart(user);
+        cartService.clearAllCartsForUser(user);
+        log.info("order completed");
 
         return savedOrder;}
 
@@ -96,6 +97,7 @@ public class OrderServiceImpl implements OrderService {
         System.out.println("orderId = " + orderId);
         orderItemRepository.deleteById(orderId);
         orderRepository.deleteById(orderId);
+        log.info("order and orderItem are deleted");
     }
 
     @Override
