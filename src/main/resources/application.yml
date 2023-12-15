@@ -24,9 +24,12 @@ spring:
     port: 587
     username: axmedovkamran127@gmail.com
     password: jfjlrkgmaokhjzrm
-    properties.mail.smtp:
-      auth: true
-      starttls.enable: true
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
 
 
 file:

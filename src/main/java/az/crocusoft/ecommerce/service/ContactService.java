@@ -28,7 +28,7 @@ public class ContactService {
         Contact contact = contactMapper.dtoToEntity(contactDto);
         sendMail(contactDto);
         contactRepository.save(contact);
-        log.info("Customer saved successfully: {}", contactDto);
+        log.info("User saved successfully: {}", contactDto);
     }
 
 
@@ -41,11 +41,10 @@ public class ContactService {
             simpleMailMessage.setText(contactDto.getMessage());
 
             javaMailSender.send(simpleMailMessage);
-            log.info("Customer saved successfully: {}", contactDto);
-        } catch (MailSenderException e) {
+            log.info("User saved successfully: {}", contactDto);
+        } catch (Exception e) {
             log.error("Error occurred while sending mail for customer: {}", contactDto, e);
             throw new MailSenderException("Error while sending email");
         }
     }
-
 }
