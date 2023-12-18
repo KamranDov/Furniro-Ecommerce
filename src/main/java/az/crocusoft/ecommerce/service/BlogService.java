@@ -30,6 +30,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static java.util.stream.Collectors.toList;
+
 
 @Service
 @RequiredArgsConstructor
@@ -103,8 +105,8 @@ public class BlogService {
         List<Blog> blogs = blogPages.getContent();
 
         List<BlogMainDto> blogDtoList = blogs.stream()
-                .map(blog -> generateResponse(blog))
-                .collect(Collectors.toList());
+                .map(this::generateResponse)
+                .collect(toList());
 
         BlogResponseDto response = new BlogResponseDto();
         response.setBlogs(blogDtoList);
@@ -124,7 +126,7 @@ public class BlogService {
 
         List<BlogMainDto> blogDtoList = blogs.stream()
                 .map(blog -> generateResponse(blog))
-                .collect(Collectors.toList());
+                .collect(toList());
 
         return blogDtoList;
     }
@@ -147,7 +149,11 @@ public class BlogService {
         blogMainDto.setContent(blog.getContent());
         blogMainDto.setDate(blog.getDate());
         blogMainDto.setCategoryId(blog.getCategory().getCid());
-        blogMainDto.setImageUrl(fileService.getFullImagePath(blog.getImageName().getImageUrl()));
+//        blogMainDto.setImageUrl(fileService
+//                .getFullImagePath(blog.getImageName().getImageUrl()));
+        if (blog.getImageName() != null) {
+            blogMainDto.setImageUrl(fileService.getFullImagePath(blog.getImageName().getImageUrl()));
+        }
 
         return blogMainDto;
     }
