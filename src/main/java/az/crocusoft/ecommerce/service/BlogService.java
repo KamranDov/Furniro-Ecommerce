@@ -51,8 +51,6 @@ public class BlogService {
         Blog blog = new Blog();
         Long signedInUserId = authenticationService.getSignedInUser().getId();
 
-
-
         MultipartFile image = blogDto.getImage();
 
         String uploadedImageURL = imageService.uploadImage(image, PRODUCT_IMAGES_FOLDER_NAME);
