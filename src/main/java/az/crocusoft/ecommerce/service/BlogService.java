@@ -9,7 +9,9 @@ import az.crocusoft.ecommerce.model.Blog;
 import az.crocusoft.ecommerce.model.BlogCategory;
 import az.crocusoft.ecommerce.model.ImageUpload;
 import az.crocusoft.ecommerce.model.User;
+import az.crocusoft.ecommerce.model.product.Image;
 import az.crocusoft.ecommerce.repository.BlogRepository;
+import az.crocusoft.ecommerce.service.Impl.FileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -20,12 +22,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
+
 
 @Service
 @RequiredArgsConstructor
@@ -34,28 +38,32 @@ public class BlogService {
     private final BlogCategoryService categoryService;
     private final ImageService imageService;
     private final AuthenticationService authenticationService;
+    private final FileService fileService;
+    private static final String PRODUCT_IMAGES_FOLDER_NAME = "Blog-images";
+
 
 
     @Value("${file.upload-dir}")
     String uploadPath;
 
-    public BlogMainDto creatBlog(BlogDto blogDto) {
+    public BlogMainDto creatBlog(BlogDto blogDto) throws Exception {
         BlogCategory category = categoryService.getCategoryById(blogDto.getCategoryId());
         Blog blog = new Blog();
         Long signedInUserId = authenticationService.getSignedInUser().getId();
 
+
+
         MultipartFile image = blogDto.getImage();
-        String imageName;
-        try {
-            imageName = imageService.saveFile(blogDto.getImage()).getFileName();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+
+        String uploadedImageURL = imageService.uploadImage(image, PRODUCT_IMAGES_FOLDER_NAME);
+        Image uploadedImage = new Image(uploadedImageURL);
+
+
         blog.setTitle(blogDto.getTitle());
         blog.setContent(blogDto.getContent());
         blog.setCategory(category);
         blog.setDate(new Date());
-        blog.setImageName(imageName);
+        blog.setImageName(uploadedImage);
 
         blogRepository.save(blog);
 
@@ -64,21 +72,18 @@ public class BlogService {
     }
 
 
-    public BlogMainDto updateBlog(BlogUpdateRequest newBlog, Long blogId, MultipartFile newImage) {
+    public BlogMainDto updateBlog(BlogUpdateRequest newBlog, Long blogId, MultipartFile newImage) throws IOException {
         BlogCategory category = categoryService.getCategoryById(newBlog.getCategoryId());
         ImageUpload image;
-        try {
-            image = imageService.saveFile(newImage);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        String uploadedImageURL = imageService.uploadImage(newImage, PRODUCT_IMAGES_FOLDER_NAME);
+        Image uploadedImage = new Image(uploadedImageURL);
         Blog blog = blogRepository.findById(blogId)
                 .orElseThrow(() -> new CustomException("Blog not found with id :" + blogId, HttpStatus.NOT_FOUND));
         blog.setTitle(newBlog.getTitle());
         blog.setContent(newBlog.getContent());
         blog.setCategory(category);
         blog.setDate(new Date());
-        blog.setImageName(image.getFileName());
+        blog.setImageName(uploadedImage);
         blogRepository.save(blog);
         return generateResponse(blog);
     }
@@ -88,7 +93,7 @@ public class BlogService {
         Blog blog = blogRepository.findById(blogId)
                 .orElseThrow(() -> new CustomException("Blog not found with id :" + blogId, HttpStatus.NOT_FOUND));
 
-        imageService.delete(blog.getImageName());
+        imageService.delete(String.valueOf(blog.getImageName()));
         blogRepository.delete(blog);
         return ResponseEntity.ok(blog);
     }
@@ -136,15 +141,15 @@ public class BlogService {
 
 
     private BlogMainDto generateResponse(Blog blog) {
-        Path path = Paths.get(uploadPath);
-        String imageUrl = path + blog.getImageName();
+//        Path path = Paths.get(uploadPath);
+//        String imageUrl = path + blog.getImageName();
         BlogMainDto blogMainDto = new BlogMainDto();
         blogMainDto.setPid(blog.getPid());
         blogMainDto.setTitle(blog.getTitle());
         blogMainDto.setContent(blog.getContent());
         blogMainDto.setDate(blog.getDate());
         blogMainDto.setCategoryId(blog.getCategory().getCid());
-        blogMainDto.setImageUrl(imageUrl);
+        blogMainDto.setImageUrl(fileService.getFullImagePath(blog.getImageName().getImageUrl()));
 
         return blogMainDto;
     }

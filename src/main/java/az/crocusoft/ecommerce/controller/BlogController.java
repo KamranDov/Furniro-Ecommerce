@@ -13,6 +13,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -51,7 +52,7 @@ BlogController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping(consumes = {"multipart/form-data"})
-    public ResponseEntity<BlogMainDto> saveBlog(BlogDto blog, @RequestParam("image") MultipartFile image) {
+    public ResponseEntity<BlogMainDto> saveBlog(BlogDto blog, @RequestParam("image") MultipartFile image) throws Exception {
         blog.setImage(image);
         blogService.creatBlog(blog);
         return ResponseEntity.ok().build();
@@ -60,7 +61,7 @@ BlogController {
     @PutMapping(path = "/{pid}", consumes = {"multipart/form-data"})
     public BlogMainDto updateBlog(@PathVariable("pid") Long blogId,
                                   BlogUpdateRequest blog,
-                                  @RequestParam("image") MultipartFile image) {
+                                  @RequestParam("image") MultipartFile image) throws IOException {
         return blogService.updateBlog(blog, blogId, image);
     }
     @PreAuthorize("hasRole('ADMIN')")

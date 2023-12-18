@@ -39,6 +39,7 @@ public class OrderServiceImpl implements OrderService {
     private final ModelMapper modelMapper;
     private final CartService cartService;
     private final OrderItemRepository  orderItemRepository;
+    private final ProductServiceImpl productService;
     private static final Logger logger = LoggerFactory.getLogger(OrderServiceImpl.class);
 
     @Override
@@ -62,13 +63,15 @@ public class OrderServiceImpl implements OrderService {
         order.setUser(user);
         for (CartItemDto cartItemDto : cartDto.getCartItems()) {
             ProductVariation productVariation = cartItemDto.getProductVariation();
+
             Product product = productVariation.getProduct();
-            BigDecimal price = BigDecimal.valueOf(productVariation.getPrice());
+
             OrderItem orderItem = new OrderItem();
             orderItem.setOrder(order);
-            orderItem.setProduct(cartItemDto.getProductVariation().getProduct());
+            orderItem.setProduct(product);
             orderItem.setQuantity(cartItemDto.getQuantity());
-            orderItem.setTotalAmount(price.multiply(BigDecimal.valueOf(cartItemDto.getQuantity())));
+            orderItem.setTotalAmount(
+                    BigDecimal.valueOf((productService.getProductSpecialPrice(product))*(cartItemDto.getQuantity())));
             order.getOrderItems().add(orderItem);
         }
 
