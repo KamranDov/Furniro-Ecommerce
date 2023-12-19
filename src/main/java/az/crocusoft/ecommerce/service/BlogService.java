@@ -69,7 +69,7 @@ public class BlogService {
     @Transactional
     public void updateBlog(BlogUpdateRequest newBlog, Long blogId, MultipartFile newImage) throws IOException {
         Blog blog = blogRepository.findById(blogId)
-                .orElseThrow(() -> new CustomException("Blog not found", HttpStatus.BAD_REQUEST));
+                .orElseThrow(() -> new CustomException("Blog not found"));
 
         String uploadedImageURL;
         if (newImage != null) {
@@ -92,7 +92,7 @@ public class BlogService {
 
     public ResponseEntity deleteBlogById(Long blogId) {
         Blog blog = blogRepository.findById(blogId)
-                .orElseThrow(() -> new CustomException("Blog not found with id :" + blogId, HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new CustomException("Blog not found with id :" + blogId));
 
         imageService.delete(String.valueOf(blog.getImageName()));
         blogRepository.delete(blog);
@@ -135,7 +135,7 @@ public class BlogService {
 
     public BlogMainDto getBlogById(Long id) {
         Blog blog = blogRepository.findById(id)
-                .orElseThrow(() -> new CustomException("Blog not found with id :" + id, HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new CustomException("Blog not found with id :" + id));
         BlogMainDto blogMainDto = generateResponse(blog);
         return blogMainDto;
     }
