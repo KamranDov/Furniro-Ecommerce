@@ -9,6 +9,7 @@ import az.crocusoft.ecommerce.model.Cart;
 import az.crocusoft.ecommerce.model.User;
 import az.crocusoft.ecommerce.model.product.ProductVariation;
 import az.crocusoft.ecommerce.repository.CartRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -62,6 +63,13 @@ public class CartService {
         cartDto.setCartItems(cartItems);
         return cartDto;
     }
+
+
+    public void clearAllCartsForUser(User user) {
+        List<Cart> userCarts = cartRepository.findAllByUser(user);
+        for (Cart cart : userCarts) {
+            cartRepository.delete(cart);
+        }}
 
 
     public void deleteCartItem(Long cartItemId, User user) {

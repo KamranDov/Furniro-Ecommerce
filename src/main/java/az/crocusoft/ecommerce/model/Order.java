@@ -38,10 +38,7 @@ public class Order {
     @Enumerated(EnumType.STRING)
     private OrderStatusValues orderStatus;
     private LocalDate orderDate;
-    @JsonIgnore
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "id",nullable = true)
-    private Cart cart;
+
     @JsonIgnore
     @ManyToOne //CascadeType.ALL means all operations (persist, remove, merge, refresh) will be cascaded
     @JoinColumn(name = "user_id", referencedColumnName = "user_id")
