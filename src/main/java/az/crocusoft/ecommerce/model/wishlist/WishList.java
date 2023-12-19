@@ -11,7 +11,7 @@ import org.hibernate.annotations.ColumnDefault;
 
 @Entity
 @Data
-@Table(name = "whish-lists")
+@Table(name = "wish_lists")
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -25,7 +25,7 @@ public class WishList {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "product_id")
     private Product product;
 
