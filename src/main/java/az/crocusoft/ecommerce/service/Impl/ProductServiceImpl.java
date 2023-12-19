@@ -168,6 +168,32 @@ public class ProductServiceImpl implements ProductService {
                 allProducts.hasNext());
     }
 
+    public ProductPageResponse searchProductByKeyword(String keyword, Integer pageNumber,
+                                               Integer pageSize, String sortBy,
+                                               String sortOrder) {
+        List<String> sortFields = Arrays.asList(new String[]{"name", "title"});
+        if (!sortFields.contains(sortBy.toLowerCase())) {
+            sortBy = PaginationConstants.SORT_BY;
+        }
+        List<String> orders = Arrays.asList(PaginationConstants.orders);
+        if (!orders.contains(sortOrder.toUpperCase())) {
+            sortOrder = PaginationConstants.SORT_BY;
+        }
+
+        Sort sort = Sort.by(Sort.Direction.fromString(sortOrder), sortBy);
+        Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
+        Page<Product> allProducts = productRepository
+                .findByNameContaining(keyword, pageable);
+
+        return new ProductPageResponse(allProducts.getContent()
+                .stream()
+                .map(this::convertToProductResponse)
+                .toList(),
+                allProducts.getTotalPages(),
+                allProducts.getTotalElements(),
+                allProducts.hasNext());
+    }
+
     @Override
     public SingleProductResponse getProductById(Long id) {
         Product product = findProductById(id);

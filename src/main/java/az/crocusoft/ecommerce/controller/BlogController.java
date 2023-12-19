@@ -23,8 +23,8 @@ BlogController {
 
     @GetMapping
     public ResponseEntity<BlogResponseDto> getAllBlogs(
-            @RequestParam(value = "pageNumber", defaultValue = "1", required = false) Integer pageNumber,
-            @RequestParam(value = "pageSize", defaultValue = "2", required = false) Integer pageSize
+            @RequestParam(value = "pageNumber", defaultValue = "0") Integer pageNumber,
+            @RequestParam(value = "pageSize", defaultValue = "5") Integer pageSize
     ) {
         BlogResponseDto response = blogService.getAllBlogs(pageNumber, pageSize);
         return new ResponseEntity<>(response, HttpStatus.OK);
@@ -56,11 +56,13 @@ BlogController {
     }
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping(path = "/{pid}", consumes = {"multipart/form-data"})
-    public BlogMainDto updateBlog(@PathVariable("pid") Long blogId,
+    public ResponseEntity<Void> updateBlog(@PathVariable("pid") Long blogId,
                                   BlogUpdateRequest blog,
-                                  @RequestParam("image") MultipartFile image) throws IOException {
-        return blogService.updateBlog(blog, blogId, image);
+                                  @RequestParam(value = "image", required = false) MultipartFile image) throws IOException {
+        blogService.updateBlog(blog, blogId, image);
+        return ResponseEntity.ok().build();
     }
+
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{pid}")
     public ResponseEntity deleteBlog(@PathVariable("pid") Long blogId) {

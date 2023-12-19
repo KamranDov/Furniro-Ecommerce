@@ -5,7 +5,6 @@ import az.crocusoft.ecommerce.exception.CustomException;
 import az.crocusoft.ecommerce.model.Blog;
 import az.crocusoft.ecommerce.model.BlogCategory;
 import az.crocusoft.ecommerce.model.ImageUpload;
-import az.crocusoft.ecommerce.model.User;
 import az.crocusoft.ecommerce.model.product.Image;
 import az.crocusoft.ecommerce.repository.BlogRepository;
 import az.crocusoft.ecommerce.service.Impl.FileService;
@@ -17,15 +16,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 
@@ -38,7 +35,7 @@ public class BlogService {
     private final ImageService imageService;
     private final AuthenticationService authenticationService;
     private final FileService fileService;
-    private static final String PRODUCT_IMAGES_FOLDER_NAME = "Blog-images";
+    private static final String BLOG_IMAGES_FOLDER_NAME = "Blog-images";
 
 
 
@@ -52,7 +49,7 @@ public class BlogService {
 
         MultipartFile image = blogDto.getImage();
 
-        String uploadedImageURL = imageService.uploadImage(image, PRODUCT_IMAGES_FOLDER_NAME);
+        String uploadedImageURL = imageService.uploadImage(image, BLOG_IMAGES_FOLDER_NAME);
         Image uploadedImage = new Image(uploadedImageURL);
 
 
@@ -69,20 +66,27 @@ public class BlogService {
     }
 
 
-    public BlogMainDto updateBlog(BlogUpdateRequest newBlog, Long blogId, MultipartFile newImage) throws IOException {
-        BlogCategory category = categoryService.getCategoryById(newBlog.getCategoryId());
-        ImageUpload image;
-        String uploadedImageURL = imageService.uploadImage(newImage, PRODUCT_IMAGES_FOLDER_NAME);
-        Image uploadedImage = new Image(uploadedImageURL);
+    @Transactional
+    public void updateBlog(BlogUpdateRequest newBlog, Long blogId, MultipartFile newImage) throws IOException {
         Blog blog = blogRepository.findById(blogId)
-                .orElseThrow(() -> new CustomException("Blog not found with id :" + blogId, HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new CustomException("Blog not found", HttpStatus.BAD_REQUEST));
+
+        String uploadedImageURL;
+        if (newImage != null) {
+            uploadedImageURL = imageService.uploadImage(newImage, BLOG_IMAGES_FOLDER_NAME);
+        } else {
+            uploadedImageURL = blog.getImageName().getImageUrl();
+        }
+        Image uploadedImage = new Image(uploadedImageURL);
+        blog.setImageName(uploadedImage);
+
+        BlogCategory category = categoryService.getCategoryById(newBlog.getCategoryId());
+
         blog.setTitle(newBlog.getTitle());
         blog.setContent(newBlog.getContent());
         blog.setCategory(category);
         blog.setDate(new Date());
-        blog.setImageName(uploadedImage);
         blogRepository.save(blog);
-        return generateResponse(blog);
     }
 
 
