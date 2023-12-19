@@ -59,11 +59,13 @@ BlogController {
     }
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping(path = "/{pid}", consumes = {"multipart/form-data"})
-    public BlogMainDto updateBlog(@PathVariable("pid") Long blogId,
+    public ResponseEntity<Void> updateBlog(@PathVariable("pid") Long blogId,
                                   BlogUpdateRequest blog,
-                                  @RequestParam("image") MultipartFile image) throws IOException {
-        return blogService.updateBlog(blog, blogId, image);
+                                  @RequestParam(value = "image", required = false) MultipartFile image) throws IOException {
+        blogService.updateBlog(blog, blogId, image);
+        return ResponseEntity.ok().build();
     }
+
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{pid}")
     public ResponseEntity deleteBlog(@PathVariable("pid") Long blogId) {

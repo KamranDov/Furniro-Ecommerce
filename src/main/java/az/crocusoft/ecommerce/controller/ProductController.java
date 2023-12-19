@@ -61,6 +61,17 @@ public class ProductController {
         return ResponseEntity.ok(productService.getAllPublishedProducts(page, size, sortBy, sortOrder));
     }
 
+    @GetMapping("/public/search")
+    public ResponseEntity<ProductPageResponse> searchProductByKeyword(
+            @RequestParam(name = "keyword") String keyword,
+            @RequestParam(name = "pageNumber", defaultValue = PaginationConstants.PAGE_NUMBER) Integer page,
+            @RequestParam(name = "pageSize", defaultValue = PaginationConstants.PAGE_SIZE) Integer size,
+            @RequestParam(name = "sortBy", defaultValue = PaginationConstants.SORT_BY) String sortBy,
+            @RequestParam(name = "sortOrder", defaultValue = PaginationConstants.SORT_DIRECTION) String sortOrder) {
+
+        return ResponseEntity.ok(productService.searchProductByKeyword(keyword, page, size, sortBy, sortOrder));
+    }
+
     @GetMapping("/public/designation/{designationId}")
     public ResponseEntity<ProductPageResponse> getAllProductsByDesignation(
             @PathVariable Long designationId,
