@@ -3,12 +3,14 @@ package az.crocusoft.ecommerce.mapper;
 import az.crocusoft.ecommerce.dto.ContactDto;
 import az.crocusoft.ecommerce.model.Contact;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
 
 class ContactMapperTest {
 
     @Test
+    @DisplayName("Values passed to ContactDto are converted to Contact data")
     void dtoToEntity() {
 
         ContactMapper contactMapper = new ContactMapperImpl();
