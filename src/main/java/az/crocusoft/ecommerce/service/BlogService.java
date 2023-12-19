@@ -1,9 +1,6 @@
 package az.crocusoft.ecommerce.service;
 
-import az.crocusoft.ecommerce.dto.BlogDto;
-import az.crocusoft.ecommerce.dto.BlogMainDto;
-import az.crocusoft.ecommerce.dto.BlogResponseDto;
-import az.crocusoft.ecommerce.dto.BlogUpdateRequest;
+import az.crocusoft.ecommerce.dto.*;
 import az.crocusoft.ecommerce.exception.CustomException;
 import az.crocusoft.ecommerce.model.Blog;
 import az.crocusoft.ecommerce.model.BlogCategory;
@@ -121,15 +118,15 @@ public class BlogService {
         return response;
     }
 
-    public List<BlogMainDto> getRecentPosts(Integer months) {
+    public List<BlogRecentDto> getRecentPosts(Integer months) {
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.MONTH, -months);
         Date startDate = calendar.getTime();
 
         List<Blog> blogs = blogRepository.findByDateGreaterThanEqual(startDate);
 
-        List<BlogMainDto> blogDtoList = blogs.stream()
-                .map(blog -> generateResponse(blog))
+        List<BlogRecentDto> blogDtoList = blogs.stream()
+                .map(blog -> generateRecentResponse(blog))
                 .collect(toList());
 
         return blogDtoList;
@@ -145,22 +142,37 @@ public class BlogService {
 
 
     private BlogMainDto generateResponse(Blog blog) {
-//        Path path = Paths.get(uploadPath);
-//        String imageUrl = path + blog.getImageName();
+
         BlogMainDto blogMainDto = new BlogMainDto();
         blogMainDto.setPid(blog.getPid());
         blogMainDto.setTitle(blog.getTitle());
         blogMainDto.setContent(blog.getContent());
         blogMainDto.setDate(blog.getDate());
         blogMainDto.setCategoryId(blog.getCategory().getCid());
-//        blogMainDto.setImageUrl(fileService
-//                .getFullImagePath(blog.getImageName().getImageUrl()));
+
         if (blog.getImageName() != null) {
             blogMainDto.setImageUrl(fileService.getFullImagePath(blog.getImageName().getImageUrl()));
         }
 
         return blogMainDto;
     }
+
+    private BlogRecentDto generateRecentResponse(Blog blog) {
+
+        BlogRecentDto blogMainDto = new BlogRecentDto();
+        blogMainDto.setPid(blog.getPid());
+        blogMainDto.setTitle(blog.getTitle());
+
+        blogMainDto.setDate(blog.getDate());
+        blogMainDto.setCategoryId(blog.getCategory().getCid());
+
+        if (blog.getImageName() != null) {
+            blogMainDto.setImageUrl(fileService.getFullImagePath(blog.getImageName().getImageUrl()));
+        }
+
+        return blogMainDto;
+    }
+
 
     public Integer countBlogsByCategory(Integer categoryId) {
         categoryService.getCategoryById(categoryId);
