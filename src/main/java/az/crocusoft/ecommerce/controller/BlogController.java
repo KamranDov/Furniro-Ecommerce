@@ -1,9 +1,6 @@
 package az.crocusoft.ecommerce.controller;
 
-import az.crocusoft.ecommerce.dto.BlogDto;
-import az.crocusoft.ecommerce.dto.BlogMainDto;
-import az.crocusoft.ecommerce.dto.BlogResponseDto;
-import az.crocusoft.ecommerce.dto.BlogUpdateRequest;
+import az.crocusoft.ecommerce.dto.*;
 import az.crocusoft.ecommerce.service.BlogService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -39,7 +36,7 @@ BlogController {
     }
 
     @GetMapping("/recent/{months}")
-    public List<BlogMainDto> getRecentBlogPosts(@PathVariable int months) {
+    public List<BlogRecentDto> getRecentBlogPosts(@PathVariable int months) {
         return blogService.getRecentPosts(months);
     }
 
