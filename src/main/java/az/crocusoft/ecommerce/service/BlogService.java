@@ -8,14 +8,12 @@ import az.crocusoft.ecommerce.exception.CustomException;
 import az.crocusoft.ecommerce.model.Blog;
 import az.crocusoft.ecommerce.model.BlogCategory;
 import az.crocusoft.ecommerce.model.ImageUpload;
-import az.crocusoft.ecommerce.model.User;
 import az.crocusoft.ecommerce.repository.BlogRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -73,7 +71,7 @@ public class BlogService {
             throw new RuntimeException(e);
         }
         Blog blog = blogRepository.findById(blogId)
-                .orElseThrow(() -> new CustomException("Blog not found with id :" + blogId, HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new CustomException("Blog not found with id :" + blogId));
         blog.setTitle(newBlog.getTitle());
         blog.setContent(newBlog.getContent());
         blog.setCategory(category);
@@ -86,7 +84,7 @@ public class BlogService {
 
     public ResponseEntity deleteBlogById(Long blogId) {
         Blog blog = blogRepository.findById(blogId)
-                .orElseThrow(() -> new CustomException("Blog not found with id :" + blogId, HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new CustomException("Blog not found with id :" + blogId));
 
         imageService.delete(blog.getImageName());
         blogRepository.delete(blog);
@@ -129,7 +127,7 @@ public class BlogService {
 
     public BlogMainDto getBlogById(Long id) {
         Blog blog = blogRepository.findById(id)
-                .orElseThrow(() -> new CustomException("Blog not found with id :" + id, HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new CustomException("Blog not found with id :" + id));
         BlogMainDto blogMainDto = generateResponse(blog);
         return blogMainDto;
     }

@@ -11,6 +11,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import static org.springframework.http.HttpStatus.*;
+import static org.springframework.http.HttpStatus.CREATED;
+
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/v1/cart")
@@ -25,14 +28,14 @@ public class CartController {
         User signedInUser = authenticationService.getSignedInUser();
         System.out.println(signedInUser.getEmail());
         cartService.addToCart(addToCartDto, signedInUser);
-        return new ResponseEntity<>("Product added successfully.", HttpStatus.CREATED);
+        return new ResponseEntity<>("Product added successfully.", CREATED);
     }
 
     @GetMapping("/cart-items")//public
     public ResponseEntity<CartDto> getCartItems() {
         User signedInUser = authenticationService.getSignedInUser();
         CartDto cartDto = cartService.listCartItems(signedInUser);
-        return new ResponseEntity<>(cartDto, HttpStatus.OK);
+        return new ResponseEntity<>(cartDto, OK);
     }
 
     @PreAuthorize("hasRole('ADMIN')")
@@ -41,6 +44,6 @@ public class CartController {
 
         User signedInUser = authenticationService.getSignedInUser();
         cartService.deleteCartItem(cartItemId, signedInUser);
-        return new ResponseEntity<>("Cart item successfully deleted.", HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>("Cart item successfully deleted.", NO_CONTENT);
     }
 }

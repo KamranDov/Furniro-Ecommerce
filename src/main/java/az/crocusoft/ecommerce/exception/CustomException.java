@@ -11,15 +11,7 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 public class CustomException extends RuntimeException {
-    private static final long serialVersionUID = 1L;
-    private String message;
-    private LocalDateTime timestamp;
-    private HttpStatus status;
-
-    public CustomException(String message,HttpStatus status)
-    {
-        this.message=message;
-        this.timestamp=LocalDateTime.now();
-        this.status=status;
+    public CustomException(String message) {
+        super(message);
     }
 }

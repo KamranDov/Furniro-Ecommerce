@@ -1,12 +1,16 @@
 package az.crocusoft.ecommerce.exception;
 
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 
 @RestControllerAdvice
 public class GeneralExceptionHandler {
@@ -78,6 +82,29 @@ public class GeneralExceptionHandler {
                 , HttpStatus.BAD_REQUEST.value()
                 , HttpStatus.BAD_REQUEST
                 , exception.getMessage());
+    }
+
+    @ExceptionHandler(CustomException.class)
+    public ExceptionResponse handleCustomException(CustomException ex) {
+        return new ExceptionResponse(
+                LocalDateTime.now()
+                , HttpStatus.BAD_REQUEST.value()
+                , HttpStatus.BAD_REQUEST
+                , ex.getMessage()
+        );
+    }
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public HashMap<Object,Object> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex, HttpServletResponse response)
+    {
+        HashMap<Object,Object> map=new HashMap<>();
+        map.put("status", HttpStatus.BAD_REQUEST);
+        map.put("statusCode",HttpStatus.BAD_REQUEST.value());
+
+        HashMap<Object,Object> errors=new HashMap<>();
+        ex.getBindingResult().getAllErrors().forEach((e)->errors.put(((FieldError)e).getField(), e.getDefaultMessage()));
+        map.put("errors",errors);
+        response.setStatus(HttpStatus.BAD_REQUEST.value());
+        return map;
     }
 }
 
