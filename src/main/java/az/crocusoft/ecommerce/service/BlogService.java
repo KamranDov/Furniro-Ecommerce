@@ -92,7 +92,7 @@ public class BlogService {
     }
 
     public BlogResponseDto searchBlogsByTitle(String title, int pageNumber, int pageSize) {
-        Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
         Page<Blog> blogPages = blogRepository.findByTitleContainingIgnoreCase(title, pageable);
 
         List<Blog> blogs = blogPages.getContent();

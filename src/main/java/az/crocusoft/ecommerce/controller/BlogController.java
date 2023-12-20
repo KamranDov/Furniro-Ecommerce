@@ -25,7 +25,7 @@ BlogController {
     public ResponseEntity<BlogResponseDto> getAllBlogs(
             @RequestParam(value = "pageNumber", defaultValue = "0") Integer pageNumber,
             @RequestParam(value = "pageSize", defaultValue = "5") Integer pageSize,
-            @RequestParam(value = "title", required = false) String title
+            @RequestParam(value = "title", defaultValue = "", required = false) String title
 
     ) {
         BlogResponseDto response = blogService.searchBlogsByTitle(title, pageNumber, pageSize);
