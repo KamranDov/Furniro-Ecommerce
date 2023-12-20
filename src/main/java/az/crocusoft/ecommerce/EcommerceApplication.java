@@ -1,8 +1,12 @@
 package az.crocusoft.ecommerce;
 
 
+import az.crocusoft.ecommerce.dto.UserDto;
+import az.crocusoft.ecommerce.service.AuthenticationService;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 
@@ -26,7 +30,7 @@ public class EcommerceApplication  {
 //					.name("Shemsi")
 //					.surname("Azizaliyev")
 //					.username("admin")
-//					.password("12345")
+//					.password("Admin123")
 //					.email("admin@gmail.com")
 //					.build();
 //
