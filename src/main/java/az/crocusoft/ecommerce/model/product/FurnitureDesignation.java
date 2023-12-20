@@ -26,6 +26,7 @@ public class FurnitureDesignation {
     @Size(min = 4, message = "Furniture designation name must contain at least 4 characters")
     private String name;
 
+    @Column(length = 800)
     private String description;
 
     @ManyToMany(mappedBy = "furnitureDesignations", fetch = FetchType.LAZY)
@@ -37,6 +38,13 @@ public class FurnitureDesignation {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name); // include only essential, non-collection fields
+        return Objects.hash(id, name);
+    }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof FurnitureDesignation)) return false;
+        FurnitureDesignation that = (FurnitureDesignation) o;
+        return Objects.equals(id, that.id) && Objects.equals(name, that.name);
     }
 }

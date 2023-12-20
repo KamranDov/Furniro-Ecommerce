@@ -24,7 +24,7 @@ public class Category {
     private Long id;
 
     @NotBlank(message = "Category name must not be blank")
-    @Size(min = 4, message = "Category name must contain at least 4 characters")
+    @Size(min = 3, message = "Category name must contain at least 3 characters")
     private String name;
 
     @OneToMany(mappedBy = "category", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
