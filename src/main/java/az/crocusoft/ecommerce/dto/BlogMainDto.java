@@ -22,4 +22,5 @@ public class BlogMainDto {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private Date date;
     private Integer categoryId;
+    private String name;
 }
