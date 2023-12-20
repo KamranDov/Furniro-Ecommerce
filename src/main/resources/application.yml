@@ -35,6 +35,11 @@ spring:
 file:
   upload-dir: '${RAILWAY_VOLUME_MOUNT_PATH}/uploads'
 
+multipart:
+  maxFileSize: 2Mb
+  maxRequestSize: 15Mb
+
+
 app:
   base-url: https://furnirostore.up.railway.app
 
