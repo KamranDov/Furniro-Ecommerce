@@ -26,7 +26,7 @@ public class FurnitureDesignation {
     @Size(min = 4, message = "Furniture designation name must contain at least 4 characters")
     private String name;
 
-    @Column(length = 800)
+    @Column(columnDefinition = "TEXT")
     private String description;
 
     @ManyToMany(mappedBy = "furnitureDesignations", fetch = FetchType.LAZY)
