@@ -1,7 +1,5 @@
 package az.crocusoft.ecommerce.exception;
 
-import org.springframework.http.HttpStatus;
-
 public class StatusCode {
 
 
