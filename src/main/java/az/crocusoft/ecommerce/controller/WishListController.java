@@ -18,7 +18,7 @@ public class WishListController {
 
 
 
-    @PreAuthorize("hasRole('ADMIN')")
+
     @GetMapping("/list/{id}")
     public ResponseEntity<List<WishListDTO>> getWishListByUserId(@PathVariable("id") Long userId){
         return ResponseEntity.ok(wishListService.getWishListByUserId(userId));

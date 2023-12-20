@@ -1,9 +1,7 @@
 package az.crocusoft.ecommerce.dto;
 
 import jakarta.persistence.Column;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
@@ -14,18 +12,29 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class OrderDto {
+    @NotBlank(message = "Firstname is required")
+    @NotEmpty
     @Column(nullable = false)
     // @Pattern(regexp = "^[a-zA-Z]*$", message = "First Name must not contain numbers or special characters")
     private String firstName;
+    @NotBlank(message = "LastName is required")
+    @NotEmpty
     @Column(nullable = false)
     // @Pattern(regexp = "^[a-zA-Z]*$", message = "First Name must not contain numbers or special characters")
     private String lastName;
+
     private String companyHome;
+    @NotBlank(message = "Country is required")
+    @NotEmpty
     @Column(nullable = false)
     private String country;
+    @NotBlank(message = "StreetAddress is required")
+    @NotEmpty
     @Column(nullable = false)
     private String streetAddress;
     @Column(nullable = false)
+    @NotBlank(message = "City is required")
+    @NotEmpty
     private String city;
     @Column(nullable = false)
     private String province;

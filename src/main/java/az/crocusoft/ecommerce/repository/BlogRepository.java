@@ -20,6 +20,7 @@ public interface BlogRepository extends JpaRepository<Blog,Long> {
     Integer countByCategoryId(@Param("categoryId") Integer categoryId);
 
 
+
     List<Blog> findBlogPostByCategory(BlogCategory category);
 
 }
