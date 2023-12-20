@@ -98,7 +98,7 @@ public class BlogService {
     }
 
     public BlogResponseDto getAllBlogs(Integer pageNumber, Integer pageSize) {
-        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        Pageable pageable = PageRequest.of(pageNumber-1, pageSize);
         Page<Blog> blogPages = blogRepository.findAll(pageable);
 
         List<Blog> blogs = blogPages.getContent();
@@ -147,6 +147,7 @@ public class BlogService {
         blogMainDto.setContent(blog.getContent());
         blogMainDto.setDate(blog.getDate());
         blogMainDto.setCategoryId(blog.getCategory().getCid());
+        blogMainDto.setName(blog.getCategory().getName());
 
         if (blog.getImageName() != null) {
             blogMainDto.setImageUrl(fileService.getFullImagePath(blog.getImageName().getImageUrl()));

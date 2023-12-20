@@ -109,7 +109,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
 
-    public ProductPageResponse getAllPublishedProducts(int pageNumber, int pageSize,
+    public ProductPageResponse getAllPublishedProducts(String keyword, int pageNumber, int pageSize,
                                                        String sortBy, String sortOrder) {
 
         List<String> sortFields = Arrays.asList(PaginationConstants.fields);
@@ -118,25 +118,13 @@ public class ProductServiceImpl implements ProductService {
         }
         List<String> orders = Arrays.asList(PaginationConstants.orders);
         if (!orders.contains(sortOrder.toUpperCase())) {
-            sortOrder = PaginationConstants.SORT_BY;
+            sortOrder = PaginationConstants.SORT_DIRECTION;
         }
 
         Page<Product> allProducts;
         Sort sort = Sort.by(Sort.Direction.fromString(sortOrder), sortBy);
         Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
-        if ("price".equalsIgnoreCase(sortBy)) {
-            switch (sortOrder.toUpperCase()) {
-                case "DESC":
-                    allProducts = productRepository
-                            .findProductsWithMinPriceDescOrder(PageRequest.of(pageNumber, pageSize));
-                    break;
-                default:
-                    allProducts = productRepository
-                            .findProductsWithMinPriceAscOrder(PageRequest.of(pageNumber, pageSize));
-            }
-        } else {
-            allProducts = productRepository.findAllByPublishedIsTrue(pageable);
-        }
+        allProducts = productRepository.findProductsWithMinPriceAndKeyword(keyword, pageable);
 
         return new ProductPageResponse(allProducts.getContent()
                 .stream()

@@ -22,7 +22,7 @@ public interface ProductService {
 
     Product findProductById(Long id);
 
-    ProductPageResponse getAllPublishedProducts(int pageNumber, int pageSize,
+    ProductPageResponse getAllPublishedProducts(String keyword, int pageNumber, int pageSize,
                                                 String sortBy, String sortOrder);
     public void deleteProduct(Long id);
 
