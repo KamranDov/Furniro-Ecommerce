@@ -13,6 +13,7 @@ import java.util.Set;
 @AllArgsConstructor
 public class ProductVariationDTO {
     private Long id;
+    private String sku;
     private String color;
     private String size;
     private Integer quantity;

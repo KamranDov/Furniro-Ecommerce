@@ -51,9 +51,8 @@ BlogController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping(consumes = {"multipart/form-data"})
-    public ResponseEntity<BlogMainDto> saveBlog(BlogDto blog, @RequestParam("image") MultipartFile image) throws Exception {
-        blog.setImage(image);
-        blogService.creatBlog(blog);
+    public ResponseEntity<Void> saveBlog(BlogDto blog, @RequestParam("image") MultipartFile image) throws Exception {
+        blogService.creatBlog(blog, image);
         return ResponseEntity.ok().build();
     }
     @PreAuthorize("hasRole('ADMIN')")

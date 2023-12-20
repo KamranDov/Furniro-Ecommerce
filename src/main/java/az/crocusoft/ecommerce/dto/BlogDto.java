@@ -16,7 +16,6 @@ public class BlogDto {
 
     private String title;
     private String content;
-    private MultipartFile image;
     private Integer categoryId;
 
 

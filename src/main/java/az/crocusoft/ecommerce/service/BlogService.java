@@ -41,16 +41,12 @@ public class BlogService {
     @Value("${file.upload-dir}")
     String uploadPath;
 
-    public BlogMainDto creatBlog(BlogDto blogDto) throws Exception {
+    public void creatBlog(BlogDto blogDto, MultipartFile image) throws Exception {
         BlogCategory category = categoryService.getCategoryById(blogDto.getCategoryId());
         Blog blog = new Blog();
-        Long signedInUserId = authenticationService.getSignedInUser().getId();
-
-        MultipartFile image = blogDto.getImage();
 
         String uploadedImageURL = imageService.uploadImage(image, BLOG_IMAGES_FOLDER_NAME);
         Image uploadedImage = new Image(uploadedImageURL);
-
 
         blog.setTitle(blogDto.getTitle());
         blog.setContent(blogDto.getContent());
@@ -59,9 +55,6 @@ public class BlogService {
         blog.setImageName(uploadedImage);
 
         blogRepository.save(blog);
-
-        return generateResponse(blog);
-
     }
 
 
