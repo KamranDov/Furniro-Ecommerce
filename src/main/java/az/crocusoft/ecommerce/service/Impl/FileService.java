@@ -41,7 +41,7 @@ public class FileService {
 
         // Construct the path where the file will be saved
         Path destinationFile = subdirectory.resolve(
-                        Paths.get(fileName))
+                Paths.get(fileName))
                 .normalize().toAbsolutePath();
 
         // Save the file
