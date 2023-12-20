@@ -1,14 +1,8 @@
 package az.crocusoft.ecommerce;
 
 
-import az.crocusoft.ecommerce.dto.UserDto;
-import az.crocusoft.ecommerce.repository.UserRepository;
-import az.crocusoft.ecommerce.service.AuthenticationService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 

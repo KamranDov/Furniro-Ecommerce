@@ -14,7 +14,7 @@ import static org.springframework.http.HttpStatus.CREATED;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/v1/contact")
+@RequestMapping( "/api/v1/contact")
 public class ContactController {
 
     private final ContactService contactService;
@@ -25,5 +25,6 @@ public class ContactController {
         return new ResponseEntity<>("User saved successfully", CREATED);
 
     }
+
 }
 
