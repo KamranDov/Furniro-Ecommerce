@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 
@@ -97,15 +98,15 @@ public class BlogService {
         return ResponseEntity.ok(blog);
     }
 
-    public BlogResponseDto getAllBlogs(Integer pageNumber, Integer pageSize) {
-        Pageable pageable = PageRequest.of(pageNumber-1, pageSize);
-        Page<Blog> blogPages = blogRepository.findAll(pageable);
+    public BlogResponseDto searchBlogsByTitle(String title, int pageNumber, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
+        Page<Blog> blogPages = blogRepository.findByTitleContainingIgnoreCase(title, pageable);
 
         List<Blog> blogs = blogPages.getContent();
 
         List<BlogMainDto> blogDtoList = blogs.stream()
                 .map(this::generateResponse)
-                .collect(toList());
+                .collect(Collectors.toList());
 
         BlogResponseDto response = new BlogResponseDto();
         response.setBlogs(blogDtoList);
@@ -115,6 +116,8 @@ public class BlogService {
         response.setTotalPage(blogPages.getTotalPages());
         return response;
     }
+
+
 
     public List<BlogRecentDto> getRecentPosts(Integer months) {
         Calendar calendar = Calendar.getInstance();
