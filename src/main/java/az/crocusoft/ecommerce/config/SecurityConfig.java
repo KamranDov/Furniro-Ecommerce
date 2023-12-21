@@ -43,6 +43,7 @@ public class SecurityConfig {
                                 .requestMatchers(GET,"/api/v1/products").permitAll()
                                 .requestMatchers(GET,"/api/v1/products/**").permitAll()
                                 .requestMatchers(GET,"/api/v1/category").permitAll()
+                                .requestMatchers(GET,"api/v1/designation").permitAll()
                                 .requestMatchers("/api/v1/contact/**").permitAll()
                                 .requestMatchers("/countries/**").permitAll()
                                 .requestMatchers(GET,"/images/**").permitAll()
