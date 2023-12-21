@@ -118,6 +118,8 @@ public class BlogService {
 
 
     public List<BlogRecentDto> getRecentPosts(Integer months) {
+        List<Blog> recentBlogs = blogRepository.findTop6ByOrderByDateDesc();
+
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.MONTH, -months);
         Date startDate = calendar.getTime();
@@ -128,7 +130,9 @@ public class BlogService {
                 .map(blog -> generateRecentResponse(blog))
                 .collect(toList());
 
-        return blogDtoList;
+         return recentBlogs.stream()
+                .map(this::generateRecentResponse)
+                .collect(Collectors.toList());
     }
 
 

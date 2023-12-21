@@ -106,5 +106,14 @@ public class GeneralExceptionHandler {
         response.setStatus(HttpStatus.BAD_REQUEST.value());
         return map;
     }
+
+    @ExceptionHandler(InsufficientStockException.class)
+    public ExceptionResponse handleInsufficientStockException(InsufficientStockException exception) {
+        return new ExceptionResponse(
+                LocalDateTime.now()
+                , HttpStatus.NOT_FOUND.value()
+                , HttpStatus.NOT_FOUND
+                , exception.getMessage());
+    }
 }
 
