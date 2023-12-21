@@ -28,7 +28,6 @@ public class ContactController {
         contactService.saveContact(contactDto);
         Map<String,String> messageObject = new HashMap<>();
         messageObject.put("message", "User saved successfully");
-
         return new ResponseEntity<>(messageObject, CREATED);
     }
 }

@@ -24,13 +24,13 @@ public class ContactService {
     private final ContactRepository contactRepository;
     private final ContactMapper contactMapper;
 
-    public void saveContact(ContactDto contactDto) {
-        Contact contact = contactMapper.dtoToEntity(contactDto);
-//        sendMail(contactDto);
-        contactRepository.save(contact);
-        log.info("User saved successfully: {}", contactDto);
+        public void saveContact(ContactDto contactDto) {
+            Contact contact = contactMapper.dtoToEntity(contactDto);
+    //        sendMail(contactDto);
+            contactRepository.save(contact);
+            log.info("User saved successfully: {}", contactDto);
 
-    }
+        }
 
 
 //    public void sendMail(ContactDto contactDto) {
