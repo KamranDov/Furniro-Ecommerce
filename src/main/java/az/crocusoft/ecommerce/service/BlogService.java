@@ -18,10 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
@@ -143,6 +140,17 @@ public class BlogService {
         return blogMainDto;
     }
 
+    public List<BlogMainDto> getBlogMainDtoByCategoryId(Integer categoryId) {
+        List<Blog> blogs = blogRepository.findByCategoryCid(categoryId);
+        List<BlogMainDto> blogMainDtos = new ArrayList<>();
+
+        for (Blog blog : blogs) {
+            BlogMainDto blogMainDto = generateResponse(blog);
+            blogMainDtos.add(blogMainDto);
+        }
+
+        return blogMainDtos;
+    }
 
     private BlogMainDto generateResponse(Blog blog) {
 

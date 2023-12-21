@@ -1,6 +1,7 @@
 package az.crocusoft.ecommerce.controller;
 
 import az.crocusoft.ecommerce.dto.*;
+import az.crocusoft.ecommerce.model.Blog;
 import az.crocusoft.ecommerce.service.BlogService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -32,6 +33,10 @@ BlogController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    @GetMapping("/category/{cid}")
+    public List<BlogMainDto> getBlogsByCategory(@PathVariable("cid") Integer categoryId) {
+        return blogService.getBlogMainDtoByCategoryId(categoryId);
+    }
     @GetMapping("/{pid}")
     public ResponseEntity<BlogMainDto> getBlogById(@PathVariable("pid") Long blogId) {
         return ResponseEntity.ok(blogService.getBlogById(blogId));
