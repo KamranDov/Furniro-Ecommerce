@@ -1,6 +1,7 @@
 package az.crocusoft.ecommerce.controller;
 
 import az.crocusoft.ecommerce.dto.ContactDto;
+import az.crocusoft.ecommerce.model.Contact;
 import az.crocusoft.ecommerce.service.ContactService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -14,17 +15,14 @@ import static org.springframework.http.HttpStatus.CREATED;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping( "/api/v1/contact")
+@RequestMapping("/api/v1/contact")
 public class ContactController {
 
     private final ContactService contactService;
 
     @PostMapping("/send-mail")
-    public ResponseEntity<String> sendMail(@Valid @RequestBody ContactDto contactDto) {
-        contactService.saveContact(contactDto);
-        return new ResponseEntity<>("User saved successfully", CREATED);
-
+    public ResponseEntity<Contact> sendMail(@Valid @RequestBody ContactDto contactDto) {
+        return new ResponseEntity<>(contactService.saveContact(contactDto),CREATED);
     }
-
 }
 

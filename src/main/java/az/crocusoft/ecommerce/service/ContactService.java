@@ -12,7 +12,6 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
-import java.util.function.Consumer;
 
 @Service
 @RequiredArgsConstructor
@@ -26,11 +25,12 @@ public class ContactService {
     private final ContactRepository contactRepository;
     private final ContactMapper contactMapper;
 
-    public void saveContact(ContactDto contactDto) {
+    public Contact saveContact(ContactDto contactDto) {
         Contact contact = contactMapper.dtoToEntity(contactDto);
 //        sendMail(contactDto);
-        contactRepository.save(contact);
         log.info("User saved successfully: {}", contactDto);
+        return contactRepository.save(contact);
+
     }
 
 
