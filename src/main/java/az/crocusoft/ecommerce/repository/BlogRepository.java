@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public interface BlogRepository extends JpaRepository<Blog,Long> {
@@ -22,6 +23,10 @@ public interface BlogRepository extends JpaRepository<Blog,Long> {
     Integer countByCategoryId(@Param("categoryId") Integer categoryId);
 
     Page<Blog> findByTitleContainingIgnoreCase(String title, Pageable pageable);
+
+
+    @Query(value = "SELECT c.name as categoryName, COUNT(b.pid) as blogCount FROM Blog b JOIN b.category c GROUP BY c.name")
+    List<Map<String, Integer>> countBlogsPerCategory();
 
 
     List<Blog> findBlogPostByCategory(BlogCategory category);

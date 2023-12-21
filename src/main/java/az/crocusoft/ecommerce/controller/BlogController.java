@@ -12,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/blog")
@@ -20,10 +21,9 @@ public class
 BlogController {
     private final BlogService blogService;
 
-
     @GetMapping
     public ResponseEntity<BlogResponseDto> getAllBlogs(
-            @RequestParam(value = "pageNumber", defaultValue = "0") Integer pageNumber,
+            @RequestParam(value = "pageNumber", defaultValue = "1") Integer pageNumber,
             @RequestParam(value = "pageSize", defaultValue = "5") Integer pageSize,
             @RequestParam(value = "title", defaultValue = "", required = false) String title
 
@@ -42,12 +42,10 @@ BlogController {
         return blogService.getRecentPosts(months);
     }
 
-
-    @GetMapping("/count/{categoryId}")
-    public Integer getRecentBlogPosts(@PathVariable Integer categoryId) {
-        return blogService.countBlogsByCategory(categoryId);
+    @GetMapping("/count")
+    public List<Map<String, Integer>> countBlogsByCategory() {
+        return blogService.countBlogsByCategory();
     }
-
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping(consumes = {"multipart/form-data"})
@@ -55,6 +53,7 @@ BlogController {
         blogService.creatBlog(blog, image);
         return ResponseEntity.ok().build();
     }
+
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping(path = "/{pid}", consumes = {"multipart/form-data"})
     public ResponseEntity<Void> updateBlog(@PathVariable("pid") Long blogId,

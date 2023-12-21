@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
@@ -92,7 +93,7 @@ public class BlogService {
     }
 
     public BlogResponseDto searchBlogsByTitle(String title, int pageNumber, int pageSize) {
-        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
         Page<Blog> blogPages = blogRepository.findByTitleContainingIgnoreCase(title, pageable);
 
         List<Blog> blogs = blogPages.getContent();
@@ -108,6 +109,10 @@ public class BlogService {
         response.setTotalBlogs(blogPages.getTotalElements());
         response.setTotalPage(blogPages.getTotalPages());
         return response;
+    }
+
+    public List<Map<String, Integer>> countBlogsByCategory() {
+        return blogRepository.countBlogsPerCategory();
     }
 
 

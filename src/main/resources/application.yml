@@ -33,7 +33,7 @@ spring:
 
 
 file:
-  upload-dir: '${RAILWAY_VOLUME_MOUNT_PATH}/uploads'
+  upload-dir: 'uploads'
 
 multipart:
   maxFileSize: 2Mb
