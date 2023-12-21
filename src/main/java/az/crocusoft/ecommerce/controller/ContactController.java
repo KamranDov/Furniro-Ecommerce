@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import static org.springframework.http.HttpStatus.CREATED;
 
 @RequiredArgsConstructor
@@ -21,9 +24,11 @@ public class ContactController {
     private final ContactService contactService;
 
     @PostMapping("/send-mail")
-    public ResponseEntity<String> sendMail(@Valid @RequestBody ContactDto contactDto) {
+    public ResponseEntity<Map<String,String>> sendMail(@Valid @RequestBody ContactDto contactDto) {
         contactService.saveContact(contactDto);
-        String messageObject = new String("User saved successfully");
+        Map<String,String> messageObject = new HashMap<>();
+        messageObject.put("message", "User saved successfully");
+
         return new ResponseEntity<>(messageObject, CREATED);
     }
 }
