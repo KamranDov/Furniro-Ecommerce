@@ -21,8 +21,10 @@ public class ContactController {
     private final ContactService contactService;
 
     @PostMapping("/send-mail")
-    public ResponseEntity<Contact> sendMail(@Valid @RequestBody ContactDto contactDto) {
-        return new ResponseEntity<>(contactService.saveContact(contactDto),CREATED);
+    public ResponseEntity<String> sendMail(@Valid @RequestBody ContactDto contactDto) {
+        contactService.saveContact(contactDto);
+        String messageObject = new String("User saved successfully");
+        return new ResponseEntity<>(messageObject, CREATED);
     }
 }
 
