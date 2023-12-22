@@ -66,7 +66,8 @@ BlogController {
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{pid}")
     public ResponseEntity deleteBlog(@PathVariable("pid") Long blogId) {
-        return ResponseEntity.ok(blogService.deleteBlogById(blogId));
+        blogService.deleteBlogById(blogId);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
 

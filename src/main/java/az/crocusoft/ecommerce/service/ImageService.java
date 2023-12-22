@@ -35,46 +35,33 @@ public class ImageService {
     }
 
 
-//    public ImageUpload saveFile(MultipartFile file) throws Exception {
-//        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
-//        System.out.println(fileName);
-//        try {
-//            if (fileName.contains("..")) {
-//                throw new Exception("The file name is invalid" + fileName);
-//            }
-//            ImageUpload fileUpload = new ImageUpload(fileName, file.getContentType(), file.getBytes());
-//            return imageRepository.save(fileUpload);
-//        } catch (Exception e) {
-//            throw new Exception("File could not be save");
-//        }
-//    }
-public String uploadImage(MultipartFile file, String subDirectoryName) throws IOException {
-    // Ensure the file is not empty, validate file type, etc.
-    String originalFileName = file.getOriginalFilename();
-    String randomId = UUID.randomUUID().toString();
-    String fileName = randomId.concat(originalFileName.substring(originalFileName.lastIndexOf('.')));
-    // Create the subdirectory if it doesn't exist
-    Path subdirectory = path.resolve(subDirectoryName);
-    Files.createDirectories(subdirectory);
+    public String uploadImage(MultipartFile file, String subDirectoryName) throws IOException {
+        // Ensure the file is not empty, validate file type, etc.
+        String originalFileName = file.getOriginalFilename();
+        String randomId = UUID.randomUUID().toString();
+        String fileName = randomId.concat(originalFileName.substring(originalFileName.lastIndexOf('.')));
+        // Create the subdirectory if it doesn't exist
+        Path subdirectory = path.resolve(subDirectoryName);
+        Files.createDirectories(subdirectory);
 
-    // Construct the path where the file will be saved
-    Path destinationFile = subdirectory.resolve(
-                    Paths.get(fileName))
-            .normalize().toAbsolutePath();
+        // Construct the path where the file will be saved
+        Path destinationFile = subdirectory.resolve(
+                        Paths.get(fileName))
+                .normalize().toAbsolutePath();
 
-    // Save the file
-    InputStream inputStream = file.getInputStream();
-    Files.copy(inputStream, destinationFile, StandardCopyOption.REPLACE_EXISTING);
+        // Save the file
+        InputStream inputStream = file.getInputStream();
+        Files.copy(inputStream, destinationFile, StandardCopyOption.REPLACE_EXISTING);
 
 
-    // Return the path or URL to access the file
-    return "/images/" + subDirectoryName + "/" + fileName;
-}
+        // Return the path or URL to access the file
+        return "/images/" + subDirectoryName + "/" + fileName;
+    }
 
 
     public boolean delete(String filename) {
         try {
-            Path url = path.resolve(filename);
+            Path url = path.resolve(Paths.get(filename));
             return Files.deleteIfExists(url);
         } catch (IOException e) {
             throw new RuntimeException("Error: " + e.getMessage());

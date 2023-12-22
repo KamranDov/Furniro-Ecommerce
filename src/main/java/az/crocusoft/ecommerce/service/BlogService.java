@@ -18,6 +18,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -33,7 +35,6 @@ public class BlogService {
     private final BlogRepository blogRepository;
     private final BlogCategoryService categoryService;
     private final ImageService imageService;
-    private final AuthenticationService authenticationService;
     private final FileService fileService;
     private static final String BLOG_IMAGES_FOLDER_NAME = "Blog-images";
 
@@ -83,11 +84,19 @@ public class BlogService {
     }
 
 
+    @Transactional
     public ResponseEntity deleteBlogById(Long blogId) {
         Blog blog = blogRepository.findById(blogId)
                 .orElseThrow(() -> new CustomException("Blog not found with id :" + blogId));
 
-        imageService.delete(String.valueOf(blog.getImageName()));
+        if (blog.getImageName() != null) {
+            imageService.delete(
+                    Paths.get(uploadPath).normalize().toAbsolutePath()
+                            + blog.getImageName().getImageUrl().substring(7)
+            );
+        } else {
+            throw new CustomException("Something went wrong");
+        }
         blogRepository.delete(blog);
         return ResponseEntity.ok(blog);
     }
