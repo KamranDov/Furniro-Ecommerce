@@ -93,6 +93,15 @@ public class GeneralExceptionHandler {
                 , ex.getMessage()
         );
     }
+    @ExceptionHandler(StockQuantityControlException.class)
+    public ExceptionResponse handleProductStockQuantityNotFound(StockQuantityControlException ex) {
+        return new ExceptionResponse(
+                LocalDateTime.now()
+                , HttpStatus.BAD_REQUEST.value()
+                , HttpStatus.BAD_REQUEST
+                , ex.getMessage()
+        );
+    }
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public HashMap<Object,Object> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex, HttpServletResponse response)
     {
@@ -105,6 +114,15 @@ public class GeneralExceptionHandler {
         map.put("errors",errors);
         response.setStatus(HttpStatus.BAD_REQUEST.value());
         return map;
+    }
+
+    @ExceptionHandler(InsufficientStockException.class)
+    public ExceptionResponse handleInsufficientStockException(InsufficientStockException exception) {
+        return new ExceptionResponse(
+                LocalDateTime.now()
+                , HttpStatus.NOT_FOUND.value()
+                , HttpStatus.NOT_FOUND
+                , exception.getMessage());
     }
 }
 

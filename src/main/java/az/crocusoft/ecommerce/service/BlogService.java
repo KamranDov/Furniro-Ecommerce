@@ -18,12 +18,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
@@ -127,6 +123,8 @@ public class BlogService {
 
 
     public List<BlogRecentDto> getRecentPosts(Integer months) {
+        List<Blog> recentBlogs = blogRepository.findTop6ByOrderByDateDesc();
+
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.MONTH, -months);
         Date startDate = calendar.getTime();
@@ -137,7 +135,9 @@ public class BlogService {
                 .map(blog -> generateRecentResponse(blog))
                 .collect(toList());
 
-        return blogDtoList;
+         return recentBlogs.stream()
+                .map(this::generateRecentResponse)
+                .collect(Collectors.toList());
     }
 
 
@@ -148,6 +148,17 @@ public class BlogService {
         return blogMainDto;
     }
 
+    public List<BlogMainDto> getBlogMainDtoByCategoryId(Integer categoryId) {
+        List<Blog> blogs = blogRepository.findByCategoryCid(categoryId);
+        List<BlogMainDto> blogMainDtos = new ArrayList<>();
+
+        for (Blog blog : blogs) {
+            BlogMainDto blogMainDto = generateResponse(blog);
+            blogMainDtos.add(blogMainDto);
+        }
+
+        return blogMainDtos;
+    }
 
     private BlogMainDto generateResponse(Blog blog) {
 

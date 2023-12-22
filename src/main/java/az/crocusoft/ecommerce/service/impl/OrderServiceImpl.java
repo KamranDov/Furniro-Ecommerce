@@ -4,6 +4,7 @@ import az.crocusoft.ecommerce.dto.OrderDto;
 import az.crocusoft.ecommerce.dto.cart.CartDto;
 import az.crocusoft.ecommerce.dto.cart.CartItemDto;
 import az.crocusoft.ecommerce.exception.CartNotFoundException;
+import az.crocusoft.ecommerce.exception.InsufficientStockException;
 import az.crocusoft.ecommerce.exception.UserNotFoundException;
 import az.crocusoft.ecommerce.model.*;
 import az.crocusoft.ecommerce.model.product.Product;
@@ -65,11 +66,18 @@ public class OrderServiceImpl implements OrderService {
             ProductVariation productVariation = cartItemDto.getProductVariation();
 
             Product product = productVariation.getProduct();
+            int orderedQuantity = cartItemDto.getQuantity();
+            int remainingStock = productVariation.getStockQuantity() - orderedQuantity;
+
+            if (remainingStock < 0) {
+                throw new InsufficientStockException("Insufficient stock for product variation with ID: " + productVariation.getId());
+            }
+            productVariation.setStockQuantity(remainingStock);
 
             OrderItem orderItem = new OrderItem();
             orderItem.setOrder(order);
             orderItem.setProduct(product);
-            orderItem.setQuantity(cartItemDto.getQuantity());
+            orderItem.setQuantity(orderedQuantity);
             orderItem.setTotalAmount(
                     BigDecimal.valueOf((productService.getProductSpecialPrice(product))*(cartItemDto.getQuantity())));
             order.getOrderItems().add(orderItem);

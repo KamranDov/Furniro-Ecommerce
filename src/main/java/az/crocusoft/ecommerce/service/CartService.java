@@ -5,6 +5,7 @@ import az.crocusoft.ecommerce.dto.cart.CartDto;
 import az.crocusoft.ecommerce.dto.cart.CartItemDto;
 import az.crocusoft.ecommerce.exception.CartItemNotFoundException;
 import az.crocusoft.ecommerce.exception.CartItemOwnershipException;
+import az.crocusoft.ecommerce.exception.StockQuantityControlException;
 import az.crocusoft.ecommerce.model.Cart;
 import az.crocusoft.ecommerce.model.User;
 import az.crocusoft.ecommerce.model.product.ProductVariation;
@@ -27,6 +28,9 @@ public class CartService {
     public void addToCart(AddToCartDto addToCartDto, User user) {
         ProductVariation productVariation = productService.findById(addToCartDto.getProductId());
 
+        if(productVariation.getStockQuantity()< addToCartDto.getQuantity()){
+            throw new StockQuantityControlException("We don't have as many products as you want in stock");
+        }
         double itemPrice = productVariation.getPrice();
         double discount = (itemPrice * productVariation.getDiscount()) / 100;
         double discountedPrice = itemPrice - discount;
