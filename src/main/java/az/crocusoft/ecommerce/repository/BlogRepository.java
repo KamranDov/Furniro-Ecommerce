@@ -29,8 +29,9 @@ public interface BlogRepository extends JpaRepository<Blog,Long> {
     Page<Blog> findByTitleContainingIgnoreCase(String title, Pageable pageable);
 
 
-    @Query(value = "SELECT c.name as categoryName, COUNT(b.pid) as blogCount FROM Blog b JOIN b.category c GROUP BY c.name")
+    @Query(value = "SELECT c.id as categoryId, c.name as categoryName, COUNT(b.pid) as blogCount FROM Blog b JOIN Category c ON b.category.id = c.id GROUP BY c.id, c.name")
     List<Map<String, Integer>> countBlogsPerCategory();
+
 
 
     List<Blog> findBlogPostByCategory(BlogCategory category);
