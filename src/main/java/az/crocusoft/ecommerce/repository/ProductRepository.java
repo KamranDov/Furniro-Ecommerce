@@ -7,6 +7,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
+
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
     Page<Product> findAllByPublishedIsTrue(Pageable pageable);
@@ -22,6 +24,8 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             @Param("keyword") String keyword,
             Pageable pageable
     );
+    @Query("SELECT DISTINCT p FROM Product p LEFT JOIN FETCH p.variations")
+    List<Product> findAllWithVariations();
 
 
     Page<Product> findProductsByFurnitureDesignations_IdAndPublishedIsTrue(Long designationId,

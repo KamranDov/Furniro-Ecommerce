@@ -22,7 +22,7 @@ public class ReportService {
     private final ProductRepository productRepository;
 
     public void generateProductWithVariationExcel(HttpServletResponse httpServletResponse) throws IOException {
-        List<Product> products = productRepository.findAll();
+        List<Product> products = productRepository.findAllWithVariations();
         HSSFWorkbook hssfWorkbook = new HSSFWorkbook();
         HSSFSheet sheet = hssfWorkbook.createSheet("Product with Variation Info");
         HSSFRow row = sheet.createRow(0);
