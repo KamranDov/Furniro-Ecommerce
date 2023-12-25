@@ -42,9 +42,9 @@ BlogController {
         return ResponseEntity.ok(blogService.getBlogById(blogId));
     }
 
-    @GetMapping("/recent/{months}")
-    public List<BlogRecentDto> getRecentBlogPosts(@PathVariable int months) {
-        return blogService.getRecentPosts(months);
+    @GetMapping("/recent")
+    public List<BlogRecentDto> getRecentBlogPosts() {
+        return blogService.getRecentPosts();
     }
 
     @GetMapping("/count")
