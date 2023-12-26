@@ -109,7 +109,9 @@ public class ProductServiceImpl implements ProductService {
     }
 
 
-    public ProductPageResponse getAllPublishedProducts(String keyword, int pageNumber, int pageSize,
+    public ProductPageResponse getAllPublishedProducts(String keyword, Long designationId,
+                                                       Long categoryId,
+                                                       int pageNumber, int pageSize,
                                                        String sortBy, String sortOrder) {
 
         List<String> sortFields = Arrays.asList(PaginationConstants.fields);
@@ -124,7 +126,8 @@ public class ProductServiceImpl implements ProductService {
         Page<Product> allProducts;
         Sort sort = Sort.by(Sort.Direction.fromString(sortOrder), sortBy);
         Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
-        allProducts = productRepository.findProductsWithMinPriceAndKeyword(keyword, pageable);
+        allProducts = productRepository.findProductsWithMinPriceAndKeywordAndDesignationAndCategory(
+                keyword, designationId, categoryId, pageable);
 
         return new ProductPageResponse(allProducts.getContent()
                 .stream()

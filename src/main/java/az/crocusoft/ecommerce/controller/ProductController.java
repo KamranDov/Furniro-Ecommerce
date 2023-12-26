@@ -54,12 +54,17 @@ public class ProductController {
     @GetMapping("/public")
     public ResponseEntity<ProductPageResponse> getAllProducts(
             @RequestParam(name = "keyword", defaultValue = "", required = false) String keyword,
+            @RequestParam(name = "designationId", required = false) Long designationId,
+            @RequestParam(name = "categoryId", required = false) Long categoryId,
             @RequestParam(name = "pageNumber", defaultValue = PaginationConstants.PAGE_NUMBER) Integer page,
             @RequestParam(name = "pageSize", defaultValue = PaginationConstants.PAGE_SIZE) Integer size,
             @RequestParam(name = "sortBy", defaultValue = PaginationConstants.SORT_BY) String sortBy,
             @RequestParam(name = "sortOrder", defaultValue = PaginationConstants.SORT_DIRECTION) String sortOrder) {
 
-        return ResponseEntity.ok(productService.getAllPublishedProducts(keyword, page, size, sortBy, sortOrder));
+        return ResponseEntity.ok(productService.getAllPublishedProducts (
+                keyword, designationId, categoryId,
+                page, size, sortBy, sortOrder)
+        );
     }
 
 

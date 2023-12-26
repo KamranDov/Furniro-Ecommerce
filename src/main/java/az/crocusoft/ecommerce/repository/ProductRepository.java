@@ -15,15 +15,26 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     @Query(value = "SELECT * FROM (SELECT *, " +
             "(SELECT MIN(price) FROM product_variations WHERE product_id = p.product_id) as price " +
-            "FROM products p WHERE p.published=true " +
-            "AND (LOWER(p.name) LIKE %:keyword% OR LOWER(p.title) LIKE %:keyword%)) as products_with_price",
-            countQuery = "SELECT count(*) FROM products p WHERE p.published=true " +
-                    "AND (LOWER(p.name) LIKE %:keyword% OR LOWER(p.title) LIKE %:keyword%)",
+            "FROM products p " +
+            "WHERE p.published=true " +
+            "AND (LOWER(p.name) LIKE %:keyword% OR LOWER(p.title) LIKE %:keyword%) " +
+            "AND (:designationId IS NULL OR p.product_id IN " +
+            "(SELECT pd.product_id FROM product_designations pd WHERE pd.designation_id = :designationId)) " +
+            "AND (:categoryId IS NULL OR p.category_id = :categoryId)) as products_with_price",
+            countQuery = "SELECT count(*) FROM products p " +
+                    "WHERE p.published=true " +
+                    "AND (LOWER(p.name) LIKE %:keyword% OR LOWER(p.title) LIKE %:keyword%) " +
+                    "AND (:designationId IS NULL OR p.product_id IN " +
+                    "(SELECT pd.product_id FROM product_designations pd WHERE pd.designation_id = :designationId)) " +
+                    "AND (:categoryId IS NULL OR p.category_id = :categoryId))",
             nativeQuery = true)
-    Page<Product> findProductsWithMinPriceAndKeyword(
+    Page<Product> findProductsWithMinPriceAndKeywordAndDesignationAndCategory(
             @Param("keyword") String keyword,
+            @Param("designationId") Long designationId,
+            @Param("categoryId") Long categoryId,
             Pageable pageable
     );
+
     @Query("SELECT DISTINCT p FROM Product p LEFT JOIN FETCH p.variations")
     List<Product> findAllWithVariations();
 
