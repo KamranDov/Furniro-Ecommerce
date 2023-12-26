@@ -28,13 +28,6 @@ public interface ProductService {
                                                 String sortBy, String sortOrder);
     public void deleteProduct(Long id);
 
-    public ProductPageResponse getAllProductsByFurnitureDesignationId(Long designationId,
-                                                                      int pageNumber,
-                                                                      int pageSize);
-
-    ProductPageResponse searchProductByKeyword(String keyword, Integer pageNumber,
-                                               Integer pageSize, String sortBy,
-                                               String sortOrder);
     ProductVariation findById(Long productId);
 
 }

@@ -11,22 +11,27 @@ import java.util.List;
 
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
-    Page<Product> findAllByPublishedIsTrue(Pageable pageable);
-
-    @Query(value = "SELECT * FROM (SELECT *, " +
-            "(SELECT MIN(price) FROM product_variations WHERE product_id = p.product_id) as price " +
-            "FROM products p " +
-            "WHERE p.published=true " +
-            "AND (LOWER(p.name) LIKE %:keyword% OR LOWER(p.title) LIKE %:keyword%) " +
-            "AND (:designationId IS NULL OR p.product_id IN " +
-            "(SELECT pd.product_id FROM product_designations pd WHERE pd.designation_id = :designationId)) " +
-            "AND (:categoryId IS NULL OR p.category_id = :categoryId)) as products_with_price",
-            countQuery = "SELECT count(*) FROM products p " +
+    String FIND_ALL_PUBLISHED_PRODUCTS_QUERY =
+            "SELECT * FROM (SELECT *, " +
+                    "(SELECT MIN(price) FROM product_variations WHERE product_id = p.product_id) as price " +
+                    "FROM products p " +
                     "WHERE p.published=true " +
                     "AND (LOWER(p.name) LIKE %:keyword% OR LOWER(p.title) LIKE %:keyword%) " +
                     "AND (:designationId IS NULL OR p.product_id IN " +
                     "(SELECT pd.product_id FROM product_designations pd WHERE pd.designation_id = :designationId)) " +
-                    "AND (:categoryId IS NULL OR p.category_id = :categoryId))",
+                    "AND (:categoryId IS NULL OR p.category_id = :categoryId)) as products_with_price";
+
+    String COUNT_PRODUCTS_QUERY =
+            "SELECT count(*) FROM products p " +
+                    "WHERE p.published=true " +
+                    "AND (LOWER(p.name) LIKE %:keyword% OR LOWER(p.title) LIKE %:keyword%) " +
+                    "AND (:designationId IS NULL OR p.product_id IN " +
+                    "(SELECT pd.product_id FROM product_designations pd WHERE pd.designation_id = :designationId)) " +
+                    "AND (:categoryId IS NULL OR p.category_id = :categoryId))";
+
+
+    @Query(value = FIND_ALL_PUBLISHED_PRODUCTS_QUERY,
+            countQuery = COUNT_PRODUCTS_QUERY,
             nativeQuery = true)
     Page<Product> findProductsWithMinPriceAndKeywordAndDesignationAndCategory(
             @Param("keyword") String keyword,
@@ -37,12 +42,5 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     @Query("SELECT DISTINCT p FROM Product p LEFT JOIN FETCH p.variations")
     List<Product> findAllWithVariations();
-
-
-    Page<Product> findProductsByFurnitureDesignations_IdAndPublishedIsTrue(Long designationId,
-                                                                           Pageable pageable);
-
-    Page<Product> findByNameContaining(String keyword, Pageable pageDetails);
-
 
 }

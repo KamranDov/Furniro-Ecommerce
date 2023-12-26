@@ -67,16 +67,6 @@ public class ProductController {
         );
     }
 
-
-    @GetMapping("/public/designation/{designationId}")
-    public ResponseEntity<ProductPageResponse> getAllProductsByDesignation(
-            @PathVariable Long designationId,
-            @RequestParam(name = "pageNumber", defaultValue = PaginationConstants.PAGE_NUMBER) Integer page,
-            @RequestParam(name = "pageSize", defaultValue = PaginationConstants.PAGE_SIZE) Integer size)
-    {
-        return ResponseEntity.ok(productService.getAllProductsByFurnitureDesignationId(designationId, page, size));
-    }
-
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> deleteProductById (@PathVariable Long id) {

@@ -96,7 +96,6 @@ public class ProductServiceImpl implements ProductService {
                 .discount(productVariationRequest.getDiscount())
                 .stockQuantity(productVariationRequest.getStockQuantity())
                 .build();
-        System.out.println(productVariationRequest.getPrice());
         Set<Image> productVarImages = new HashSet<>();
 
         for (MultipartFile image : images) {
@@ -128,53 +127,6 @@ public class ProductServiceImpl implements ProductService {
         Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
         allProducts = productRepository.findProductsWithMinPriceAndKeywordAndDesignationAndCategory(
                 keyword, designationId, categoryId, pageable);
-
-        return new ProductPageResponse(allProducts.getContent()
-                .stream()
-                .map(this::convertToProductResponse)
-                .toList(),
-                allProducts.getTotalPages(),
-                allProducts.getTotalElements(),
-                allProducts.hasNext());
-    }
-
-    public ProductPageResponse getAllProductsByFurnitureDesignationId(Long designationId,
-                                                                      int pageNumber,
-                                                                      int pageSize) {
-
-        String sortBy = "name";
-        String sortOrder = PaginationConstants.SORT_DIRECTION;
-
-        Sort sort = Sort.by(Sort.Direction.fromString(sortOrder), sortBy);
-        Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
-        Page<Product> allProducts = productRepository
-                .findProductsByFurnitureDesignations_IdAndPublishedIsTrue(designationId, pageable);
-
-        return new ProductPageResponse(allProducts.getContent()
-                .stream()
-                .map(this::convertToProductResponse)
-                .toList(),
-                allProducts.getTotalPages(),
-                allProducts.getTotalElements(),
-                allProducts.hasNext());
-    }
-
-    public ProductPageResponse searchProductByKeyword(String keyword, Integer pageNumber,
-                                               Integer pageSize, String sortBy,
-                                               String sortOrder) {
-        List<String> sortFields = Arrays.asList(new String[]{"name", "title"});
-        if (!sortFields.contains(sortBy.toLowerCase())) {
-            sortBy = PaginationConstants.SORT_BY;
-        }
-        List<String> orders = Arrays.asList(PaginationConstants.orders);
-        if (!orders.contains(sortOrder.toUpperCase())) {
-            sortOrder = PaginationConstants.SORT_BY;
-        }
-
-        Sort sort = Sort.by(Sort.Direction.fromString(sortOrder), sortBy);
-        Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
-        Page<Product> allProducts = productRepository
-                .findByNameContaining(keyword, pageable);
 
         return new ProductPageResponse(allProducts.getContent()
                 .stream()
