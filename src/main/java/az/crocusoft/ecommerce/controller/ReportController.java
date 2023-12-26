@@ -3,6 +3,7 @@ package az.crocusoft.ecommerce.controller;
 import az.crocusoft.ecommerce.service.ReportService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class ReportController {
     private final ReportService reportService;
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/product")
     public void generateExcelReportProduct(HttpServletResponse response)throws Exception{
     response.setContentType("application/octet-stream");
@@ -20,12 +22,4 @@ public class ReportController {
     response.setHeader(headerKey,headerValue);
     reportService.generateProductWithVariationExcel(response);
     }
-//    @GetMapping("/product-variation")
-//    public void generateExcelReportProductVariation(HttpServletResponse response)throws Exception{
-//        response.setContentType("application/octet-stream");
-//        String headerKey="Content-Disposition";
-//        String headerValue="attachment;filename=productVariation.xls";
-//        response.setHeader(headerKey,headerValue);
-//        reportService.generateProductExcel(response);
-//    }
 }

@@ -89,7 +89,8 @@ public class OrderServiceImpl implements OrderService {
         cartService.clearAllCartsForUser(user);
         log.info("order completed");
 
-        return savedOrder;}
+        return savedOrder;
+    }
 
     @Override
     public List<Order> getAllOrders() {
