@@ -33,6 +33,8 @@ public class User implements UserDetails {
     private String password;
     @Column(unique = true)
     private String email;
+    @Enumerated(EnumType.STRING)
+    private UserStatus status;
 
     @OneToMany
     @JsonIgnore

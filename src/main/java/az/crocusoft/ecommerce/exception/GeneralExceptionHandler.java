@@ -2,7 +2,10 @@ package az.crocusoft.ecommerce.exception;
 
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.LockedException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -122,6 +125,14 @@ public class GeneralExceptionHandler {
                 LocalDateTime.now()
                 , HttpStatus.NOT_FOUND.value()
                 , HttpStatus.NOT_FOUND
+                , exception.getMessage());
+    }
+    @ExceptionHandler(BlockedUserException.class)
+    public ExceptionResponse handleBlockedUserException(BlockedUserException exception) {
+        return new ExceptionResponse(
+                LocalDateTime.now()
+                , HttpStatus.FORBIDDEN.value()
+                , HttpStatus.FORBIDDEN
                 , exception.getMessage());
     }
 }
