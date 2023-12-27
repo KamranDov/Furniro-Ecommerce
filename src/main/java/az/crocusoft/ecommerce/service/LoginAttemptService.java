@@ -28,7 +28,7 @@ public class LoginAttemptService {
 
         if (attemptOptional.isPresent()) {
             FailedLoginAttempt attempt = attemptOptional.get();
-            LocalDateTime blockEndTime = attempt.getLastAttempt().plusMinutes(BLOCK_DURATION_HOURS);
+            LocalDateTime blockEndTime = attempt.getLastAttempt().plusHours(BLOCK_DURATION_HOURS);
 
             return attempt.getCount() >= MAX_FAILED_ATTEMPTS &&
                     blockEndTime.isAfter(LocalDateTime.now());
@@ -38,7 +38,8 @@ public class LoginAttemptService {
     }
 
     public void incrementFailedLoginAttempts(String username) {
-        Optional<FailedLoginAttempt> attemptOptional = failedLoginAttemptRepository.findByUsername(username);
+        Optional<FailedLoginAttempt> attemptOptional =
+                failedLoginAttemptRepository.findByUsername(username);
         FailedLoginAttempt attempt;
 
         if (attemptOptional.isPresent()) {
@@ -56,7 +57,7 @@ public class LoginAttemptService {
 
         if (attempt.getCount() >= MAX_FAILED_ATTEMPTS) {
             blockUser(username);
-            attempt.setBlockedUntil(attempt.getLastAttempt().plusMinutes(BLOCK_DURATION_HOURS));
+            attempt.setBlockedUntil(attempt.getLastAttempt().plusHours(BLOCK_DURATION_HOURS));
         }
     }
 
@@ -73,7 +74,7 @@ public class LoginAttemptService {
             user.setStatus(UserStatus.BLOCKED);
 
             // Set blockedUntil to the current time plus BLOCK_DURATION_HOURS
-            LocalDateTime blockedUntil = LocalDateTime.now().plusMinutes(BLOCK_DURATION_HOURS);
+            LocalDateTime blockedUntil = LocalDateTime.now().plusHours(BLOCK_DURATION_HOURS);
 
             // Save the blockedUntil time in the FailedLoginAttempt entity
             saveBlockedUntil(username, blockedUntil);
