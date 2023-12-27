@@ -56,7 +56,7 @@ public class AuthenticationService {
 
         // Check if the user is currently blocked
         if (loginAttemptService.isUserBlocked(username)) {
-            throw new BlockedUserException("User is blocked. Please try again later.");
+            throw new BlockedUserException("User is blocked. Please try again 1 hour later.");
         }
 
         try {
