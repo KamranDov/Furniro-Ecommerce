@@ -2,6 +2,7 @@ package az.crocusoft.ecommerce.service.Impl;
 
 import az.crocusoft.ecommerce.dto.WishListDTO;
 import az.crocusoft.ecommerce.exception.StockQuantityControlException;
+import az.crocusoft.ecommerce.exception.UserAlreadyAddedThisProductWishList;
 import az.crocusoft.ecommerce.exception.UserNotFoundException;
 import az.crocusoft.ecommerce.exception.WishListNotFoundException;
 import az.crocusoft.ecommerce.model.Cart;
@@ -38,8 +39,8 @@ public class WishListServiceImpl implements WishListService {
         ProductVariation productVariation = productService.findById(productVariationId);
 
         if (wishListRepository.existsByUserAndProductVariation(user, productVariation)) {
-            log.warn("User already added the product to the wishlist");
-            return;
+            log.warn("User already added this product to the wishlist");
+            throw new UserAlreadyAddedThisProductWishList("User already added this product to the wishlist");
         }
                 WishList wishList=WishList.builder()
                 .productVariation(productVariation)

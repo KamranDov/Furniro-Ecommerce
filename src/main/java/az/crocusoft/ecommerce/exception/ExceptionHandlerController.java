@@ -30,9 +30,6 @@ import java.util.Map;
 @RestControllerAdvice
 public class ExceptionHandlerController {
 
-
-
-
     @ExceptionHandler(ObjectNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     ErrorResponse handleObjectNotFoundException(ObjectNotFoundException ex) {

@@ -93,6 +93,15 @@ public class GeneralExceptionHandler {
                 , ex.getMessage()
         );
     }
+    @ExceptionHandler(UserAlreadyAddedThisProductWishList.class)
+    public ExceptionResponse handleProductStockQuantityNotFound(UserAlreadyAddedThisProductWishList ex) {
+        return new ExceptionResponse(
+                LocalDateTime.now()
+                , HttpStatus.BAD_REQUEST.value()
+                , HttpStatus.BAD_REQUEST
+                , ex.getMessage()
+        );
+    }
     @ExceptionHandler(StockQuantityControlException.class)
     public ExceptionResponse handleProductStockQuantityNotFound(StockQuantityControlException ex) {
         return new ExceptionResponse(
