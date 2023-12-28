@@ -16,7 +16,8 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 
 @RestControllerAdvice
-public class GeneralExceptionHandler {
+public class
+GeneralExceptionHandler {
 
     @ExceptionHandler(MailSenderException.class)
     public ExceptionResponse handleMailSender(MailSenderException exception) {
@@ -137,6 +138,7 @@ public class GeneralExceptionHandler {
                 , exception.getMessage());
     }
     @ExceptionHandler(BlockedUserException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
     public ExceptionResponse handleBlockedUserException(BlockedUserException exception) {
         return new ExceptionResponse(
                 LocalDateTime.now()
