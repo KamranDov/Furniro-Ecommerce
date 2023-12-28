@@ -25,8 +25,8 @@ public class UserDto {
     @Size(min = 2, message = "user name should have atleast 2 characters.")
     private String username;
     @NotBlank(message = "Password is required")
-    @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,20}$",
-            message = "Invalid Password pattern. Password must contain 8 to 20 characters at least one digit, lower, upper case ."
+    @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,20}$"
+
     )
     private String password;
     @Email(message = "Email should be valid")
