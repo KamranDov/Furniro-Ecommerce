@@ -13,6 +13,7 @@ import az.crocusoft.ecommerce.model.product.*;
 import az.crocusoft.ecommerce.repository.*;
 import az.crocusoft.ecommerce.service.ProductService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -26,6 +27,7 @@ import java.util.*;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ProductServiceImpl implements ProductService {
 
     private final CategoryRepository categoryRepository;
@@ -121,12 +123,17 @@ public class ProductServiceImpl implements ProductService {
         if (!orders.contains(sortOrder.toUpperCase())) {
             sortOrder = PaginationConstants.SORT_DIRECTION;
         }
+        pageNumber = Math.max(pageNumber, Integer.parseInt(PaginationConstants.PAGE_NUMBER));
+        pageSize = pageSize < 1 ? Integer.parseInt(PaginationConstants.PAGE_SIZE) : pageSize;
+        pageSize = Math.min(pageSize, 50);
 
-        Page<Product> allProducts;
         Sort sort = Sort.by(Sort.Direction.fromString(sortOrder), sortBy);
-        Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
-        allProducts = productRepository.findProductsWithMinPriceAndKeywordAndDesignationAndCategory(
-                keyword, designationId, categoryId, pageable);
+        Pageable pageable = PageRequest.of(pageNumber - 1, pageSize, sort);
+
+        Page<Product> allProducts = productRepository
+                .findProductsWithMinPriceAndKeywordAndDesignationAndCategory(
+                keyword, designationId, categoryId, pageable
+                );
 
         return new ProductPageResponse(allProducts.getContent()
                 .stream()

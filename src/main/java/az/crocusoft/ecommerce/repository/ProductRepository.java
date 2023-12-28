@@ -1,6 +1,7 @@
 package az.crocusoft.ecommerce.repository;
 
 import az.crocusoft.ecommerce.model.product.Product;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -8,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+
 
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
@@ -27,7 +29,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
                     "AND (LOWER(p.name) LIKE %:keyword% OR LOWER(p.title) LIKE %:keyword%) " +
                     "AND (:designationId IS NULL OR p.product_id IN " +
                     "(SELECT pd.product_id FROM product_designations pd WHERE pd.designation_id = :designationId)) " +
-                    "AND (:categoryId IS NULL OR p.category_id = :categoryId))";
+                    "AND (:categoryId IS NULL OR p.category_id = :categoryId)";
 
 
     @Query(value = FIND_ALL_PUBLISHED_PRODUCTS_QUERY,
