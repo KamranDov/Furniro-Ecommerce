@@ -12,7 +12,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProductVariationDTO {
-    private Long id;
+    private Long variationId;
     private String sku;
     private String color;
     private String size;

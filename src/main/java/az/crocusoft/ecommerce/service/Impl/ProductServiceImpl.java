@@ -262,7 +262,7 @@ public class ProductServiceImpl implements ProductService {
 
     private ProductVariationDTO toProductVariationDTO(ProductVariation variation) {
         ProductVariationDTO productVariationDTO = new ProductVariationDTO();
-        productVariationDTO.setId(variation.getId());
+        productVariationDTO.setVariationId(variation.getId());
         productVariationDTO.setSku(variation.getSku());
         productVariationDTO.setPrice(variation.getPrice());
         productVariationDTO.setDiscount(variation.getDiscount());
