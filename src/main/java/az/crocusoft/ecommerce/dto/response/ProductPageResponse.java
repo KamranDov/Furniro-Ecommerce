@@ -6,8 +6,8 @@ import java.util.List;
 
 public record ProductPageResponse(
         List<ProductResponse> productResponseList,
-        Integer totalPages,
-        Long TotalElements,
-        Boolean hasNext
+        int totalPages,
+        long TotalElements,
+        boolean hasNext
 ) {
 }
