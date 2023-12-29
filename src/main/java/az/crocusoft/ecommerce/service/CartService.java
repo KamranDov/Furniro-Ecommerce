@@ -9,7 +9,6 @@ import az.crocusoft.ecommerce.model.Cart;
 import az.crocusoft.ecommerce.model.User;
 import az.crocusoft.ecommerce.model.product.ProductVariation;
 import az.crocusoft.ecommerce.repository.CartRepository;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
