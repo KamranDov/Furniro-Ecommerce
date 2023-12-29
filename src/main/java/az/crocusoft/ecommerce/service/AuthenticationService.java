@@ -4,9 +4,12 @@ import az.crocusoft.ecommerce.dto.UserDto;
 import az.crocusoft.ecommerce.dto.UserRequest;
 import az.crocusoft.ecommerce.dto.AuthResponse;
 import az.crocusoft.ecommerce.enums.Role;
+import az.crocusoft.ecommerce.exception.BlockedUserException;
 import az.crocusoft.ecommerce.exception.EmailAlreadyExistsException;
 import az.crocusoft.ecommerce.exception.UserNameAlreadyExistsException;
+import az.crocusoft.ecommerce.model.FailedLoginAttempt;
 import az.crocusoft.ecommerce.model.User;
+import az.crocusoft.ecommerce.repository.FailedLoginAttemptRepository;
 import az.crocusoft.ecommerce.repository.TokenRepository;
 import az.crocusoft.ecommerce.repository.UserRepository;
 import az.crocusoft.ecommerce.token.Token;
@@ -14,9 +17,12 @@ import az.crocusoft.ecommerce.token.TokenType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.LockedException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -25,6 +31,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -35,6 +43,57 @@ public class AuthenticationService {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
+    private final FailedLoginAttemptRepository failedLoginAttemptRepository;
+
+    private final LoginAttemptService loginAttemptService;
+
+
+
+
+
+    public AuthResponse auth(UserRequest userRequest) {
+        String username = userRequest.getUsername();
+
+        // Check if the user is currently blocked
+        if (loginAttemptService.isUserBlocked(username)) {
+            throw new BlockedUserException("User is blocked. Please try again 1 hour later.");
+        }
+
+        try {
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(username, userRequest.getPassword()));
+
+            if (authentication.isAuthenticated()) {
+                User user = userRepository.findByUsername(username).orElseThrow();
+                String token = jwtService.generateToken(user);
+                var refreshToken = jwtService.generateRefreshToken(user);
+                revokeAllUserTokens(user);
+                saveUserToken(user, token);
+
+                // Reset failed login attempts upon successful authentication
+                loginAttemptService.resetFailedLoginAttempts(username);
+
+                // Engellenen kullanıcıyı engelden kaldır
+                loginAttemptService.unblockUser(username);
+
+                return AuthResponse.builder()
+                        .userId(user.getId())
+                        .accessToken(token)
+                        .refreshToken(refreshToken)
+                        .build();
+            } else {
+                // Increment failed login attempts upon unsuccessful authentication
+                loginAttemptService.incrementFailedLoginAttempts(username);
+
+                throw new UsernameNotFoundException("Invalid user request");
+            }
+        } catch (BadCredentialsException e) {
+            // Increment failed login attempts upon bad credentials
+            loginAttemptService.incrementFailedLoginAttempts(username);
+
+            throw new UsernameNotFoundException("Invalid user request");
+        }
+    }
 
     public AuthResponse save(UserDto userDto) {
         User user = User.builder()
@@ -64,28 +123,6 @@ public class AuthenticationService {
                 .accessToken(token)
                 .refreshToken(refreshToken)
                 .build();
-
-    }
-
-
-    public AuthResponse auth(UserRequest userRequest) {
-        Authentication authentication= authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userRequest.getUsername(), userRequest.getPassword()));
-
-        if(authentication.isAuthenticated()){
-            User user = userRepository.findByUsername(userRequest.getUsername()).orElseThrow();
-            String token = jwtService.generateToken(user);
-            var refreshToken=jwtService.generateRefreshToken(user);
-            revokeAllUserTokens(user);
-            saveUserToken(user,token);
-            return AuthResponse.builder().
-                    userId(user.getId())
-                    .accessToken(token).refreshToken(refreshToken)
-                    .build();
-        }
-
-        else {
-            throw new UsernameNotFoundException("invalid user request");
-        }
 
     }
     private void saveUserToken(User user, String jwtToken) {

@@ -18,10 +18,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.nio.file.Paths;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
@@ -33,7 +31,6 @@ public class BlogService {
     private final BlogRepository blogRepository;
     private final BlogCategoryService categoryService;
     private final ImageService imageService;
-    private final AuthenticationService authenticationService;
     private final FileService fileService;
     private static final String BLOG_IMAGES_FOLDER_NAME = "Blog-images";
 
@@ -83,11 +80,19 @@ public class BlogService {
     }
 
 
+    @Transactional
     public ResponseEntity deleteBlogById(Long blogId) {
         Blog blog = blogRepository.findById(blogId)
                 .orElseThrow(() -> new CustomException("Blog not found with id :" + blogId));
 
-        imageService.delete(String.valueOf(blog.getImageName()));
+        if (blog.getImageName() != null) {
+            imageService.delete(
+                    Paths.get(uploadPath).normalize().toAbsolutePath()
+                            + blog.getImageName().getImageUrl().substring(7)
+            );
+        } else {
+            throw new CustomException("Something went wrong");
+        }
         blogRepository.delete(blog);
         return ResponseEntity.ok(blog);
     }
@@ -117,18 +122,17 @@ public class BlogService {
 
 
 
-    public List<BlogRecentDto> getRecentPosts(Integer months) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.MONTH, -months);
-        Date startDate = calendar.getTime();
+    public List<BlogRecentDto> getRecentPosts() {
+        List<Blog> recentBlogs = blogRepository.findTop6ByOrderByDateDesc();
 
-        List<Blog> blogs = blogRepository.findByDateGreaterThanEqual(startDate);
 
-        List<BlogRecentDto> blogDtoList = blogs.stream()
-                .map(blog -> generateRecentResponse(blog))
-                .collect(toList());
 
-        return blogDtoList;
+
+
+
+         return recentBlogs.stream()
+                .map(this::generateRecentResponse)
+                .collect(Collectors.toList());
     }
 
 
@@ -139,6 +143,17 @@ public class BlogService {
         return blogMainDto;
     }
 
+    public List<BlogMainDto> getBlogMainDtoByCategoryId(Integer categoryId) {
+        List<Blog> blogs = blogRepository.findByCategoryCid(categoryId);
+        List<BlogMainDto> blogMainDtos = new ArrayList<>();
+
+        for (Blog blog : blogs) {
+            BlogMainDto blogMainDto = generateResponse(blog);
+            blogMainDtos.add(blogMainDto);
+        }
+
+        return blogMainDtos;
+    }
 
     private BlogMainDto generateResponse(Blog blog) {
 

@@ -1,6 +1,7 @@
 package az.crocusoft.ecommerce.controller;
 
 import az.crocusoft.ecommerce.dto.*;
+import az.crocusoft.ecommerce.model.Blog;
 import az.crocusoft.ecommerce.service.BlogService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -32,14 +33,18 @@ BlogController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    @GetMapping("/category/{cid}")
+    public List<BlogMainDto> getBlogsByCategory(@PathVariable("cid") Integer categoryId) {
+        return blogService.getBlogMainDtoByCategoryId(categoryId);
+    }
     @GetMapping("/{pid}")
     public ResponseEntity<BlogMainDto> getBlogById(@PathVariable("pid") Long blogId) {
         return ResponseEntity.ok(blogService.getBlogById(blogId));
     }
 
-    @GetMapping("/recent/{months}")
-    public List<BlogRecentDto> getRecentBlogPosts(@PathVariable int months) {
-        return blogService.getRecentPosts(months);
+    @GetMapping("/recent")
+    public List<BlogRecentDto> getRecentBlogPosts() {
+        return blogService.getRecentPosts();
     }
 
     @GetMapping("/count")
@@ -66,7 +71,8 @@ BlogController {
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{pid}")
     public ResponseEntity deleteBlog(@PathVariable("pid") Long blogId) {
-        return ResponseEntity.ok(blogService.deleteBlogById(blogId));
+        blogService.deleteBlogById(blogId);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
 

@@ -1,6 +1,10 @@
 package az.crocusoft.ecommerce.controller;
 
 import az.crocusoft.ecommerce.dto.WishListDTO;
+import az.crocusoft.ecommerce.model.User;
+import az.crocusoft.ecommerce.model.product.ProductVariation;
+import az.crocusoft.ecommerce.model.wishlist.WishList;
+import az.crocusoft.ecommerce.service.AuthenticationService;
 import az.crocusoft.ecommerce.service.WishListService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,24 +21,22 @@ public class WishListController {
     private final WishListService wishListService;
 
 
-
-
-    @GetMapping("/list/{id}")
-    public ResponseEntity<List<WishListDTO>> getWishListByUserId(@PathVariable("id") Long userId){
+    @GetMapping("/list/{userid}")
+    public ResponseEntity<List<WishListDTO>> getWishListByUserId(@PathVariable("userid") Long userId){
         return ResponseEntity.ok(wishListService.getWishListByUserId(userId));
 
     }
     @PreAuthorize("hasRole('USER')")
     @PostMapping("/add")
     @ResponseStatus(HttpStatus.CREATED)
-    public void add(@RequestBody WishListDTO wishListDTO){
-        wishListService.add(wishListDTO);
+    public void add(@RequestParam("productVariationId") Long id){
+        wishListService.add(id);
     }
 
     @PreAuthorize("hasRole('USER')")
     @DeleteMapping("/delete")
-    public ResponseEntity<Void> delete(@RequestBody WishListDTO wishListDTO){
-        wishListService.delete(wishListDTO);
+    public ResponseEntity<Void> delete(@RequestParam("productVariationId") Long productId){
+        wishListService.delete(productId);
         return ResponseEntity.ok().build();
     }
 

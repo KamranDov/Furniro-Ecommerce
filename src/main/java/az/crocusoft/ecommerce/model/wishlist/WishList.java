@@ -2,6 +2,7 @@ package az.crocusoft.ecommerce.model.wishlist;
 
 import az.crocusoft.ecommerce.model.User;
 import az.crocusoft.ecommerce.model.product.Product;
+import az.crocusoft.ecommerce.model.product.ProductVariation;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,14 +22,13 @@ public class WishList {
     @Column(name = "wish_list_id")
     private Long id;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne
+    @JoinColumn(name = "product_variation_id")
+    ProductVariation productVariation;
+
+    @ManyToOne
     @JoinColumn(name = "user_id")
-    private User user;
-
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "product_id")
-    private Product product;
-
+    User user;
 
 
 }

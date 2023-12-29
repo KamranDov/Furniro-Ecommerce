@@ -30,9 +30,6 @@ import java.util.Map;
 @RestControllerAdvice
 public class ExceptionHandlerController {
 
-
-
-
     @ExceptionHandler(ObjectNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     ErrorResponse handleObjectNotFoundException(ObjectNotFoundException ex) {
@@ -42,23 +39,21 @@ public class ExceptionHandlerController {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     ErrorResponse handleValidationException(MethodArgumentNotValidException ex) {
-        List<ObjectError> errors = ex.getBindingResult().getAllErrors();
-        Map<String, String> map = new HashMap<>(errors.size());
-        errors.forEach((error) -> {
-            String key = ((FieldError) error).getField();
-            String val = error.getDefaultMessage();
-            map.put(key, val);
-        });
-        return new ErrorResponse(false, StatusCode.INVALID_ARGUMENT, "Provided arguments are invalid, see data for details.", map);
+
+        return new ErrorResponse(false,
+                StatusCode.INVALID_ARGUMENT,
+                "Invalid Password pattern. Password must contain 8 to 20 characters at least one digit, lower, upper case .", ex.getMessage());
     }
 
 
     @ExceptionHandler(UserNameAlreadyExistsException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
-    public ErrorResponse handleUserNameAlreadyExistsException(UserNameAlreadyExistsException ex) {
+    public ErrorResponse
+    handleUserNameAlreadyExistsException(UserNameAlreadyExistsException ex) {
 
 
-        return new ErrorResponse(false, StatusCode.CONFLICT, "Enter another username ", ex.getMessage());
+        return new ErrorResponse(false, StatusCode.CONFLICT,
+                "Enter another username ", ex.getMessage());
     }
 
     @ExceptionHandler(EmailAlreadyExistsException.class)
@@ -71,7 +66,8 @@ public class ExceptionHandlerController {
     ErrorResponse handleAuthenticationException(Exception ex) {
         System.out.println(ex.getMessage());
          ex.printStackTrace();
-        return new ErrorResponse(false, StatusCode.UNAUTHORIZED, "username or password is incorrect.", ex.getMessage());
+        return new ErrorResponse(false, StatusCode.UNAUTHORIZED,
+                "username or password is incorrect.", ex.getMessage());
     }
 
 
@@ -79,7 +75,9 @@ public class ExceptionHandlerController {
     @ExceptionHandler(AccessDeniedException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
     ErrorResponse handleAccessDeniedException(AccessDeniedException ex) {
-        return new ErrorResponse(false, StatusCode.FORBIDDEN, "No permission.", ex.getMessage());
+        return new ErrorResponse(
+                false, StatusCode.FORBIDDEN,
+                "No permission.", ex.getMessage());
     }
 
     @ExceptionHandler(NoHandlerFoundException.class)
