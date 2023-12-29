@@ -29,13 +29,13 @@ public class WishListController {
     @PreAuthorize("hasRole('USER')")
     @PostMapping("/add")
     @ResponseStatus(HttpStatus.CREATED)
-    public void add(@RequestParam("productId") Long id){
+    public void add(@RequestParam("productVariationId") Long id){
         wishListService.add(id);
     }
 
     @PreAuthorize("hasRole('USER')")
     @DeleteMapping("/delete")
-    public ResponseEntity<Void> delete(@RequestParam("productId") Long productId){
+    public ResponseEntity<Void> delete(@RequestParam("productVariationId") Long productId){
         wishListService.delete(productId);
         return ResponseEntity.ok().build();
     }
