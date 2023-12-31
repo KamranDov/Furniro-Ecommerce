@@ -27,22 +27,34 @@ public class CartService {
     public void addToCart(AddToCartDto addToCartDto, User user) {
         ProductVariation productVariation = productService.findById(addToCartDto.getProductId());
 
-        if(productVariation.getStockQuantity()< addToCartDto.getQuantity()){
+        if(productVariation.getStockQuantity() < addToCartDto.getQuantity()){
             throw new StockQuantityControlException("We don't have as many products as you want in stock");
         }
+
         double itemPrice = productVariation.getPrice();
         double discount = (itemPrice * productVariation.getDiscount()) / 100;
         double discountedPrice = itemPrice - discount;
 
-        Cart cart = new Cart();
-        cart.setProductVariation(productVariation);
-        cart.setUser(user);
-        cart.setQuantity(addToCartDto.getQuantity());
-        cart.setCreatedDate(LocalDate.now());
-        cart.setDiscountedPrice(discountedPrice);
+        // Check if the product already exists in the cart
+        Cart existingCart = cartRepository.findByProductVariationAndUser(productVariation, user);
 
-        cartRepository.save(cart);
+        if (existingCart != null) {
+            // Increase the quantity of the product in the cart
+            existingCart.setQuantity(existingCart.getQuantity() + addToCartDto.getQuantity());
+            cartRepository.save(existingCart);
+        } else {
+            // Add the product to the cart
+            Cart cart = new Cart();
+            cart.setProductVariation(productVariation);
+            cart.setUser(user);
+            cart.setQuantity(addToCartDto.getQuantity());
+            cart.setCreatedDate(LocalDate.now());
+            cart.setDiscountedPrice(discountedPrice);
+
+            cartRepository.save(cart);
+        }
     }
+
 
     public CartDto listCartItems(User user) {
         List<Cart> cartList = cartRepository.findAllByUserOrderByCreatedDateDesc(user);
