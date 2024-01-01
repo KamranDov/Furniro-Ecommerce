@@ -22,7 +22,7 @@ public class ProductVariation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "product_variation_id")
-    private Long id;
+    private Long productVariationiId;
     private String sku;
 
     @ManyToOne(fetch = FetchType.LAZY)

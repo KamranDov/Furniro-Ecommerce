@@ -70,7 +70,7 @@ public class OrderServiceImpl implements OrderService {
             int remainingStock = productVariation.getStockQuantity() - orderedQuantity;
 
             if (remainingStock < 0) {
-                throw new InsufficientStockException("Insufficient stock for product variation with ID: " + productVariation.getId());
+                throw new InsufficientStockException("Insufficient stock for product variation with ID: " + productVariation.getProductVariationiId());
             }
             productVariation.setStockQuantity(remainingStock);
 

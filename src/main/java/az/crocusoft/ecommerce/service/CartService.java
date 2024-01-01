@@ -10,6 +10,7 @@ import az.crocusoft.ecommerce.model.Cart;
 import az.crocusoft.ecommerce.model.User;
 import az.crocusoft.ecommerce.model.product.ProductVariation;
 import az.crocusoft.ecommerce.repository.CartRepository;
+import az.crocusoft.ecommerce.service.Impl.ProductServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +24,7 @@ public class CartService {
 
     private final ProductService productService;
     private final CartRepository cartRepository;
+    private final ProductServiceImpl productServiceImpl;
 
     public void addToCart(AddToCartDto addToCartDto, User user) {
         ProductVariation productVariation = productService.findById(addToCartDto.getProductId());
@@ -61,16 +63,18 @@ public class CartService {
 
         List<CartItemDto> cartItems = cartList
                 .stream()
-                .map(CartItemDto::new)
+                .map(cart -> {
+                    CartItemDto cartItemDto = new CartItemDto(cart);
+                    cartItemDto.setProductTitle(cart.getProductVariation().getProduct().getTitle());
+                    Double subtotal = productServiceImpl.getProductVariationSpecialPrice(cart.getProductVariation()) * cart.getQuantity();
+                    cartItemDto.setSubtotal(subtotal);
+                    return cartItemDto;
+                })
                 .toList();
 
         double totalPrice = cartItems
                 .stream()
-                .mapToDouble(cartItemDto -> {
-                    double itemPrice = cartItemDto.getQuantity() * cartItemDto.getProductVariation().getPrice();
-                    double discount = (itemPrice * cartItemDto.getProductVariation().getDiscount()) / 100;
-                    return itemPrice - discount;
-                })
+                .mapToDouble(CartItemDto::getSubtotal)
                 .sum();
 
         CartDto cartDto = new CartDto();
@@ -78,6 +82,7 @@ public class CartService {
         cartDto.setCartItems(cartItems);
         return cartDto;
     }
+
 
 
     public void clearAllCartsForUser(User user) {

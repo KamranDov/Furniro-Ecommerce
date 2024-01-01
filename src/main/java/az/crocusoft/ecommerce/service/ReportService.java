@@ -56,7 +56,7 @@ public class ReportService {
                 dataRow.createCell(5).setCellValue(product.getDescription());
                 dataRow.createCell(6).setCellValue(product.getLongDescription());
                 dataRow.createCell(7).setCellValue(product.getMainImage().getId());
-                dataRow.createCell(8).setCellValue(productVariation.getId());
+                dataRow.createCell(8).setCellValue(productVariation.getProductVariationiId());
                 dataRow.createCell(9).setCellValue(productVariation.getSku());
                 dataRow.createCell(10).setCellValue(productVariation.getColor());
                 dataRow.createCell(11).setCellValue(productVariation.getSize());

@@ -231,7 +231,7 @@ public class ProductServiceImpl implements ProductService {
                 .anyMatch(variation -> variation.getDiscount() != null && variation.getDiscount() > 0);
     }
 
-    private Double getProductVariationSpecialPrice(ProductVariation variation) {
+    public Double getProductVariationSpecialPrice(ProductVariation variation) {
         Double discount = variation.getDiscount();
         Double price = variation.getPrice();
         if (discount == null || discount == 0)
@@ -262,7 +262,7 @@ public class ProductServiceImpl implements ProductService {
 
     private ProductVariationDTO toProductVariationDTO(ProductVariation variation) {
         ProductVariationDTO productVariationDTO = new ProductVariationDTO();
-        productVariationDTO.setVariationId(variation.getId());
+        productVariationDTO.setVariationId(variation.getProductVariationiId());
         productVariationDTO.setSku(variation.getSku());
         productVariationDTO.setPrice(variation.getPrice());
         productVariationDTO.setDiscount(variation.getDiscount());
