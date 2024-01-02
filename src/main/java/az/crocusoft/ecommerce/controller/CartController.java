@@ -38,7 +38,6 @@ public class CartController {
         return new ResponseEntity<>(cartDto, OK);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("delete/{cartItemId}")
     public ResponseEntity<String> deleteCartItems(@PathVariable(name = "cartItemId") Long cartItemId) {
 

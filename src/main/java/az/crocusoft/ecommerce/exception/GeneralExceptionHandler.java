@@ -130,6 +130,7 @@ GeneralExceptionHandler {
     }
 
     @ExceptionHandler(InsufficientStockException.class)
+    @ResponseStatus(HttpStatus.BAD_GATEWAY)
     public ExceptionResponse handleInsufficientStockException(InsufficientStockException exception) {
         return new ExceptionResponse(
                 LocalDateTime.now()
