@@ -8,8 +8,10 @@ import az.crocusoft.ecommerce.exception.CartItemOwnershipException;
 import az.crocusoft.ecommerce.exception.StockQuantityControlException;
 import az.crocusoft.ecommerce.model.Cart;
 import az.crocusoft.ecommerce.model.User;
+import az.crocusoft.ecommerce.model.product.Product;
 import az.crocusoft.ecommerce.model.product.ProductVariation;
 import az.crocusoft.ecommerce.repository.CartRepository;
+import az.crocusoft.ecommerce.repository.ProductVariationRepository;
 import az.crocusoft.ecommerce.service.Impl.ProductServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -37,16 +39,15 @@ public class CartService {
         double discount = (itemPrice * productVariation.getDiscount()) / 100;
         double discountedPrice = itemPrice - discount;
 
-        // Check if the product already exists in the cart
-        Cart existingCart = cartRepository.findByProductVariationAndUser(productVariation, user);
+        Cart existingCart = cartRepository.findByProductAndProductVariationAndUser(
+                productVariation.getProduct(), productVariation, user);
 
         if (existingCart != null) {
-            // Increase the quantity of the product in the cart
             existingCart.setQuantity(existingCart.getQuantity() + addToCartDto.getQuantity());
             cartRepository.save(existingCart);
         } else {
-            // Add the product to the cart
             Cart cart = new Cart();
+            cart.setProduct(productVariation.getProduct());
             cart.setProductVariation(productVariation);
             cart.setUser(user);
             cart.setQuantity(addToCartDto.getQuantity());

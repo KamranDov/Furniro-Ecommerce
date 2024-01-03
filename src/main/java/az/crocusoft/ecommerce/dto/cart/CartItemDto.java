@@ -1,6 +1,7 @@
 package az.crocusoft.ecommerce.dto.cart;
 
 import az.crocusoft.ecommerce.model.Cart;
+import az.crocusoft.ecommerce.model.product.Product;
 import az.crocusoft.ecommerce.model.product.ProductVariation;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -14,6 +15,7 @@ public class CartItemDto {
 
     private Long id;
     private Integer quantity;
+    private Product product;
     private ProductVariation productVariation;
     private String productTitle;
     private Double subtotal;  // Yeni eklenen subtotal alanı
@@ -22,6 +24,7 @@ public class CartItemDto {
     public CartItemDto(Cart cart) {
         this.id = cart.getId();
         this.quantity = cart.getQuantity();
+        this.setProduct(cart.getProductVariation().getProduct());
         this.setProductVariation(cart.getProductVariation());
         this.productTitle = cart.getProductVariation().getProduct().getTitle();
     }
