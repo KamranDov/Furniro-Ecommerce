@@ -21,7 +21,7 @@ public interface CartRepository extends JpaRepository<Cart, Long> {
 
     List<Cart> findCartByCreatedDateBefore(LocalDate localDate);
 
-    Cart findByProductAndProductVariationAndUser(Product product, ProductVariation productVariation, User user);
+    Cart findByProductVariationAndUser(ProductVariation productVariation, User user);
 }
 
 

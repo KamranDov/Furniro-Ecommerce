@@ -3,16 +3,14 @@ package az.crocusoft.ecommerce.model;
 import az.crocusoft.ecommerce.model.product.Product;
 import az.crocusoft.ecommerce.model.product.ProductVariation;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
 
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -33,7 +31,7 @@ public class Cart {
 
     @ManyToOne
     @JoinColumn(name = "product_id")
-    Product product;
+    private Product product;
 
     @ManyToOne
     @JoinColumn(name = "product_variation_id")

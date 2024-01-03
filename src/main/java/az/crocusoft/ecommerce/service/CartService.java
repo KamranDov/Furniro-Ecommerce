@@ -11,7 +11,6 @@ import az.crocusoft.ecommerce.model.User;
 import az.crocusoft.ecommerce.model.product.Product;
 import az.crocusoft.ecommerce.model.product.ProductVariation;
 import az.crocusoft.ecommerce.repository.CartRepository;
-import az.crocusoft.ecommerce.repository.ProductVariationRepository;
 import az.crocusoft.ecommerce.service.Impl.ProductServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -39,8 +38,7 @@ public class CartService {
         double discount = (itemPrice * productVariation.getDiscount()) / 100;
         double discountedPrice = itemPrice - discount;
 
-        Cart existingCart = cartRepository.findByProductAndProductVariationAndUser(
-                productVariation.getProduct(), productVariation, user);
+        Cart existingCart = cartRepository.findByProductVariationAndUser(productVariation, user);
 
         if (existingCart != null) {
             existingCart.setQuantity(existingCart.getQuantity() + addToCartDto.getQuantity());
