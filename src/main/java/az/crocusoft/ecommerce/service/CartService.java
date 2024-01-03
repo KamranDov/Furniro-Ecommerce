@@ -27,7 +27,7 @@ public class CartService {
     private final ProductServiceImpl productServiceImpl;
 
     public void addToCart(AddToCartDto addToCartDto, User user) {
-        ProductVariation productVariation = productService.findById(addToCartDto.getProductId());
+        ProductVariation productVariation = productService.findById(addToCartDto.getProductVariationId());
 
         if(productVariation.getStockQuantity() < addToCartDto.getQuantity()){
             throw new StockQuantityControlException("We don't have as many products as you want in stock");
