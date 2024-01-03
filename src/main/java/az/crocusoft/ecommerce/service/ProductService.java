@@ -23,7 +23,7 @@ public interface ProductService {
     Product findProductById(Long id);
 
     ProductPageResponse getAllPublishedProducts(String keyword, Long designationId,
-                                                Long categoryId,
+                                                List<Long> categoryId,
                                                 int pageNumber, int pageSize,
                                                 String sortBy, String sortOrder);
     public void deleteProduct(Long id);
