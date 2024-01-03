@@ -4,12 +4,10 @@ import az.crocusoft.ecommerce.constants.PaginationConstants;
 import az.crocusoft.ecommerce.dto.request.ProductRequest;
 import az.crocusoft.ecommerce.dto.request.ProductVariationRequest;
 import az.crocusoft.ecommerce.dto.response.ProductPageResponse;
-import az.crocusoft.ecommerce.dto.response.ProductResponse;
 import az.crocusoft.ecommerce.dto.response.SingleProductResponse;
 import az.crocusoft.ecommerce.service.ProductService;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -55,14 +53,14 @@ public class ProductController {
     public ResponseEntity<ProductPageResponse> getAllProducts(
             @RequestParam(name = "keyword", defaultValue = "", required = false) String keyword,
             @RequestParam(name = "designationId", required = false) Long designationId,
-            @RequestParam(name = "categoryId", required = false) Long categoryId,
+            @RequestParam(name = "categoryId", required = false) @NotEmpty.List({}) List<Long> categoryIds,
             @RequestParam(name = "pageNumber", defaultValue = PaginationConstants.PAGE_NUMBER) Integer page,
-            @RequestParam(name = "pageSize", defaultValue = PaginationConstants.PAGE_SIZE) Integer size,
+            @RequestParam(name = "pageSize", defaultValue = PaginationConstants.DEFAULT_PAGE_SIZE) Integer size,
             @RequestParam(name = "sortBy", defaultValue = PaginationConstants.SORT_BY) String sortBy,
             @RequestParam(name = "sortOrder", defaultValue = PaginationConstants.SORT_DIRECTION) String sortOrder) {
 
         return ResponseEntity.ok(productService.getAllPublishedProducts (
-                keyword, designationId, categoryId,
+                keyword, designationId, categoryIds,
                 page, size, sortBy, sortOrder)
         );
     }

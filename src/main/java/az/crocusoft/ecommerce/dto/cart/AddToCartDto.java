@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 public class AddToCartDto {
 
     private @NotNull Long productId;
+    private @NotNull Long productVariationId;
     private @NotNull Integer quantity;
 
 }

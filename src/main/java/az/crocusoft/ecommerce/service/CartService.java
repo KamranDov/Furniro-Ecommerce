@@ -8,6 +8,7 @@ import az.crocusoft.ecommerce.exception.CartItemOwnershipException;
 import az.crocusoft.ecommerce.exception.StockQuantityControlException;
 import az.crocusoft.ecommerce.model.Cart;
 import az.crocusoft.ecommerce.model.User;
+import az.crocusoft.ecommerce.model.product.Product;
 import az.crocusoft.ecommerce.model.product.ProductVariation;
 import az.crocusoft.ecommerce.repository.CartRepository;
 import az.crocusoft.ecommerce.service.Impl.ProductServiceImpl;
@@ -27,7 +28,7 @@ public class CartService {
     private final ProductServiceImpl productServiceImpl;
 
     public void addToCart(AddToCartDto addToCartDto, User user) {
-        ProductVariation productVariation = productService.findById(addToCartDto.getProductId());
+        ProductVariation productVariation = productService.findById(addToCartDto.getProductVariationId());
 
         if(productVariation.getStockQuantity() < addToCartDto.getQuantity()){
             throw new StockQuantityControlException("We don't have as many products as you want in stock");
@@ -37,16 +38,14 @@ public class CartService {
         double discount = (itemPrice * productVariation.getDiscount()) / 100;
         double discountedPrice = itemPrice - discount;
 
-        // Check if the product already exists in the cart
         Cart existingCart = cartRepository.findByProductVariationAndUser(productVariation, user);
 
         if (existingCart != null) {
-            // Increase the quantity of the product in the cart
             existingCart.setQuantity(existingCart.getQuantity() + addToCartDto.getQuantity());
             cartRepository.save(existingCart);
         } else {
-            // Add the product to the cart
             Cart cart = new Cart();
+            cart.setProduct(productVariation.getProduct());
             cart.setProductVariation(productVariation);
             cart.setUser(user);
             cart.setQuantity(addToCartDto.getQuantity());

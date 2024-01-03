@@ -1,6 +1,7 @@
 package az.crocusoft.ecommerce.dto.cart;
 
 import az.crocusoft.ecommerce.model.Cart;
+import az.crocusoft.ecommerce.model.product.Product;
 import az.crocusoft.ecommerce.model.product.ProductVariation;
 import lombok.AllArgsConstructor;
 import lombok.Data;
