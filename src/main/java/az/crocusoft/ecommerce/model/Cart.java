@@ -1,5 +1,6 @@
 package az.crocusoft.ecommerce.model;
 
+import az.crocusoft.ecommerce.model.product.Product;
 import az.crocusoft.ecommerce.model.product.ProductVariation;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -29,6 +30,10 @@ public class Cart {
 
     @Column(name = "created_date")
     LocalDate createdDate;
+
+    @ManyToOne
+    @JoinColumn(name = "product_id")
+    Product product;
 
     @ManyToOne
     @JoinColumn(name = "product_variation_id")

@@ -28,6 +28,5 @@ public interface ProductService {
                                                 String sortBy, String sortOrder);
     public void deleteProduct(Long id);
 
-    ProductVariation findById(Long productId);
-
+    ProductVariation findById(Long productVariationId);
 }

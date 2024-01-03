@@ -283,10 +283,10 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductVariation findById(Long productId) throws ProductNotExistsException{
-        Optional<ProductVariation> variationOptional = productVariationRepository.findById(productId);
+    public ProductVariation findById( Long productVariationId) throws ProductNotExistsException{
+        Optional<ProductVariation> variationOptional = productVariationRepository.findById(productVariationId);
         if (variationOptional.isEmpty()) {
-            throw new ProductNotExistsException("product id is invalid" + productId);
+            throw new ProductNotExistsException("product id is invalid" + productVariationId);
         }
         return variationOptional.get();
 
