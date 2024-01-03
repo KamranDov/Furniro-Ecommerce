@@ -111,7 +111,7 @@ public class ProductServiceImpl implements ProductService {
 
 
     public ProductPageResponse getAllPublishedProducts(String keyword, Long designationId,
-                                                       Long categoryId,
+                                                       List<Long> categoryIds,
                                                        int pageNumber, int pageSize,
                                                        String sortBy, String sortOrder) {
 
@@ -124,15 +124,21 @@ public class ProductServiceImpl implements ProductService {
             sortOrder = PaginationConstants.SORT_DIRECTION;
         }
         pageNumber = Math.max(pageNumber, Integer.parseInt(PaginationConstants.PAGE_NUMBER));
-        pageSize = pageSize < 1 ? Integer.parseInt(PaginationConstants.PAGE_SIZE) : pageSize;
-        pageSize = Math.min(pageSize, 50);
+        pageSize = pageSize < 1 ? Integer.parseInt(PaginationConstants.DEFAULT_PAGE_SIZE) : pageSize;
+        pageSize = Math.min(pageSize, Integer.parseInt(PaginationConstants.MAX_PAGE_SIZE));
 
         Sort sort = Sort.by(Sort.Direction.fromString(sortOrder), sortBy);
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize, sort);
+        if (categoryIds == null || categoryIds.isEmpty() || categoryIds.contains(0L)) {
+            categoryIds = categoryRepository.findAll()
+                    .stream()
+                    .map(Category::getId)
+                    .toList();
+        }
 
         Page<Product> allProducts = productRepository
-                .findProductsWithMinPriceAndKeywordAndDesignationAndCategory(
-                keyword, designationId, categoryId, pageable
+                .findProductsWithMinPriceAndKeywordAndDesignationAndCategories(
+                keyword, designationId, categoryIds, pageable
                 );
 
         return new ProductPageResponse(allProducts.getContent()
@@ -147,12 +153,11 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public SingleProductResponse getProductById(Long id) {
         Product product = findProductById(id);
-        SingleProductResponse singleProductResponse = convertToSingleProductResponse(product);
-        return singleProductResponse;
+        return convertToSingleProductResponse(product);
     }
 
     private SingleProductResponse convertToSingleProductResponse(Product product) {
-        SingleProductResponse productResponse = SingleProductResponse.builder()
+        return SingleProductResponse.builder()
                 .id(product.getId())
                 .name(product.getName())
                 .title(product.getTitle())
@@ -170,7 +175,6 @@ public class ProductServiceImpl implements ProductService {
                         .map(this::toProductVariationDTO)
                         .toList())
                 .build();
-        return productResponse;
     }
 
     @Transactional
