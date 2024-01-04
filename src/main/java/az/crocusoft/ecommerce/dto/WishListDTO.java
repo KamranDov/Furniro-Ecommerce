@@ -10,7 +10,7 @@ import lombok.Data;
 public class WishListDTO {
 
     private ProductVariation productVariation;
-    private String productTitle;
+    private String productName;
 
 
 
