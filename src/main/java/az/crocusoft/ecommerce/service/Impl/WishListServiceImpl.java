@@ -77,8 +77,9 @@ public class WishListServiceImpl implements WishListService {
     }
     public WishListDTO mapper(WishList wishList){
         return WishListDTO.builder()
-                .productVariationId(wishList.getProductVariation().getProductVariationiId())
-                .build();
-    }
+                .productVariation(wishList.getProductVariation())
+                .productTitle(wishList.getProductVariation().getProduct().getTitle())
+
+                .build();}
 
 }
