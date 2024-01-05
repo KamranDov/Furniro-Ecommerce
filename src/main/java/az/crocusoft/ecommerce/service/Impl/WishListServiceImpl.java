@@ -32,6 +32,7 @@ public class WishListServiceImpl implements WishListService {
     private final AuthenticationService authenticationService;
     private final ProductService productService;
     private final UserService userService;
+    private final FileService fileService;
 
     @Override
     public void add(Long productVariationId) {
@@ -72,17 +73,40 @@ public class WishListServiceImpl implements WishListService {
         List<WishList> wishListList=wishListRepository.findAllByUser(user);
 
         return wishListList.stream()
-                .map(this::mapper)
+                .map(this::toWishListDTO)
                 .collect(Collectors.toList());
     }
-    public WishListDTO mapper(WishList wishList){
-        return WishListDTO.builder()
-                .productVariation(wishList.getProductVariation())
-                .productName(wishList
-                        .getProductVariation()
-                        .getProduct()
-                        .getName())
 
-                .build();}
+    private WishListDTO toWishListDTO(WishList wishList) {
+        ProductVariation variation = wishList.getProductVariation();
+        WishListDTO wishListDTO = new WishListDTO();
+        wishListDTO.setVariationId(variation.getProductVariationiId());
+        wishListDTO.setSku(variation.getSku());
+        wishListDTO.setPrice(variation.getPrice());
+        wishListDTO.setDiscount(variation.getDiscount());
+        wishListDTO.setColor(variation.getColor());
+        wishListDTO.setSize(variation.getSize());
+        wishListDTO.setProductName(variation.getProduct().getName());
+//        wishListDTO.setProduct(variation.getProduct());
+
+
+        variation.getImages().forEach(
+                image -> wishListDTO
+                        .getImageUrls()
+                        .add(fileService.getFullImagePath(image.getImageUrl()))
+        );
+
+        return wishListDTO;
+    }
+//    public WishListDTO mapper(WishList wishList){
+//        return WishListDTO.builder()
+//                .productVariation(wishList.getProductVariation())
+//                .productName(wishList
+//                        .getProductVariation()
+//                        .getProduct()
+//                        .getName())
+//
+//
+//                .build();}
 
 }
