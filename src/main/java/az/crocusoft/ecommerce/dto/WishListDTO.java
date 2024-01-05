@@ -16,7 +16,7 @@ import java.util.Set;
 public class WishListDTO {
 
 
-//    private Product product;
+    private Long productId;
     private String productName;
     private Long variationId;
     private String sku;
@@ -27,8 +27,8 @@ public class WishListDTO {
     private Set<String> imageUrls = new HashSet<>();
 
     @Builder
-    public WishListDTO(String productName, Long variationId, String sku, Double price, Double discount, String color, String size, Set<String> imageUrls) {
-//       this.product=product;
+    public WishListDTO(Long productId, String productName, Long variationId, String sku, Double price, Double discount, String color, String size, Set<String> imageUrls) {
+       this.productId=productId;
         this.productName = productName;
         this.variationId = variationId;
         this.sku = sku;

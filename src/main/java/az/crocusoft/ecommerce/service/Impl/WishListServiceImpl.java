@@ -87,7 +87,7 @@ public class WishListServiceImpl implements WishListService {
         wishListDTO.setColor(variation.getColor());
         wishListDTO.setSize(variation.getSize());
         wishListDTO.setProductName(variation.getProduct().getName());
-//        wishListDTO.setProduct(variation.getProduct());
+        wishListDTO.setProductId(variation.getProduct().getId());
 
 
         variation.getImages().forEach(
