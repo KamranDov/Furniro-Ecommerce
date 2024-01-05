@@ -63,7 +63,7 @@ public class OrderServiceImpl implements OrderService {
         order.setOrderDate(LocalDate.now());
         order.setUser(user);
         for (CartItemDto cartItemDto : cartDto.getCartItems()) {
-            ProductVariation productVariation = cartItemDto.getProductVariation();
+            ProductVariation productVariation = productService.findById(cartItemDto.getVariationId());
 
             Product product = productVariation.getProduct();
             int orderedQuantity = cartItemDto.getQuantity();

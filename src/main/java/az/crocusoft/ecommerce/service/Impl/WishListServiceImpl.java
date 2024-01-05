@@ -89,7 +89,6 @@ public class WishListServiceImpl implements WishListService {
         wishListDTO.setProductName(variation.getProduct().getName());
         wishListDTO.setProductId(variation.getProduct().getId());
 
-
         variation.getImages().forEach(
                 image -> wishListDTO
                         .getImageUrls()
