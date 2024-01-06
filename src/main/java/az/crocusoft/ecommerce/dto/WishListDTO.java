@@ -15,7 +15,6 @@ import java.util.Set;
 
 public class WishListDTO {
 
-
     private Long productId;
     private String productName;
     private Long variationId;
@@ -38,12 +37,9 @@ public class WishListDTO {
         this.size = size;
         this.imageUrls = imageUrls;
     }
-    public WishListDTO(){
+
+
+    public WishListDTO() {
 
     }
-
-
-
-
-
 }
