@@ -112,7 +112,7 @@ public class BlogService {
         response.setCurrentPage(blogPages.getNumber());
         response.setIsLastPage(blogPages.isLast());
         response.setTotalBlogs(blogPages.getTotalElements());
-        response.setTotalPage(blogPages.getTotalPages());
+        response.setTotalPages(blogPages.getTotalPages());
         return response;
     }
 
