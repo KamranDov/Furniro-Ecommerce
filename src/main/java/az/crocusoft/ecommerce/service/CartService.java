@@ -73,10 +73,9 @@ public class CartService {
                 .toList();
 
         double totalPrice = cartList
-                .stream()
-                .mapToDouble(this::getTotalPrice)
-                .min()
-                .getAsDouble();
+            .stream()
+            .mapToDouble(this::getTotalPrice)
+            .min().orElse(0);
 
         CartDto cartDto = new CartDto();
         cartDto.setTotalPrice(totalPrice);
