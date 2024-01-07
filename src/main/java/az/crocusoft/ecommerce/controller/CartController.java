@@ -11,6 +11,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import static org.springframework.http.HttpStatus.*;
 import static org.springframework.http.HttpStatus.CREATED;
 
@@ -23,12 +26,14 @@ public class CartController {
     private final AuthenticationService authenticationService;
 
     @PostMapping("/add")
-    public ResponseEntity<String> addToCart(@RequestBody AddToCartDto addToCartDto) {
+    public ResponseEntity<Map<String, String>> addToCart(@RequestBody AddToCartDto addToCartDto) {
 
         User signedInUser = authenticationService.getSignedInUser();
         System.out.println(signedInUser.getEmail());
         cartService.addToCart(addToCartDto, signedInUser);
-        return new ResponseEntity<>("Product added successfully.", CREATED);
+        Map<String, String> cartObject = new HashMap<>();
+        cartObject.put("message", "Product added successfully.");
+        return new ResponseEntity<>(cartObject, CREATED);
     }
 
     @GetMapping("/cart-items")//public
