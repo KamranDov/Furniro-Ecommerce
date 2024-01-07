@@ -51,7 +51,6 @@ public class CartService {
             cartRepository.save(existingCart);
         } else {
             Cart cart = new Cart();
-            cart.setProduct(productVariation.getProduct());
             cart.setProductVariation(productVariation);
             cart.setUser(user);
             cart.setQuantity(addToCartDto.getQuantity());
