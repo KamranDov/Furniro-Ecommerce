@@ -108,7 +108,9 @@ public class CartService {
         cartItemDto.setStockQuantity(variation.getStockQuantity());
         cartItemDto.setProductName(variation.getProduct().getName());
         cartItemDto.setProductId(variation.getProduct().getId());
-        Double subtotal=variation.getPrice()*cart.getQuantity();
+        Double subtotal=(variation.getPrice()*cart.getQuantity())-
+                ((variation.getPrice()*cart.getQuantity())*
+                variation.getDiscount())/100;
         cartItemDto.setSubtotal(subtotal);
 
         variation.getImages().forEach(
