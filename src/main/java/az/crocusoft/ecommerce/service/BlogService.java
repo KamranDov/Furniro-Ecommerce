@@ -5,8 +5,10 @@ import az.crocusoft.ecommerce.exception.CustomException;
 import az.crocusoft.ecommerce.model.Blog;
 import az.crocusoft.ecommerce.model.BlogCategory;
 import az.crocusoft.ecommerce.model.product.Image;
+import az.crocusoft.ecommerce.repository.BlogCategoryRepository;
 import az.crocusoft.ecommerce.repository.BlogRepository;
 import az.crocusoft.ecommerce.service.Impl.FileService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -31,6 +33,7 @@ public class BlogService {
     private final BlogRepository blogRepository;
     private final BlogCategoryService categoryService;
     private final ImageService imageService;
+    private final BlogCategoryRepository blogCategoryRepository;
     private final FileService fileService;
     private static final String BLOG_IMAGES_FOLDER_NAME = "Blog-images";
 
@@ -97,9 +100,18 @@ public class BlogService {
         return ResponseEntity.ok(blog);
     }
 
-    public BlogResponseDto searchBlogsByTitle(String title, int pageNumber, int pageSize) {
+    public BlogResponseDto searchBlogsByTitleAndCategory(String title, Integer categoryId, int pageNumber, int pageSize) {
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
-        Page<Blog> blogPages = blogRepository.findByTitleContainingIgnoreCase(title, pageable);
+        Page<Blog> blogPages;
+
+        if (categoryId != null) {
+            BlogCategory category = blogCategoryRepository.findById(categoryId)
+                    .orElseThrow(() -> new EntityNotFoundException("Category not found with id: " + categoryId));
+
+            blogPages = blogRepository.findByTitleContainingIgnoreCaseAndCategory(title, category, pageable);
+        } else {
+            blogPages = blogRepository.findByTitleContainingIgnoreCase(title, pageable);
+        }
 
         List<Blog> blogs = blogPages.getContent();
 
@@ -107,14 +119,25 @@ public class BlogService {
                 .map(this::generateResponse)
                 .collect(Collectors.toList());
 
-        BlogResponseDto response = new BlogResponseDto();
-        response.setBlogs(blogDtoList);
-        response.setCurrentPage(blogPages.getNumber());
-        response.setIsLastPage(blogPages.isLast());
-        response.setTotalBlogs(blogPages.getTotalElements());
-        response.setTotalPages(blogPages.getTotalPages());
-        return response;
+        return new BlogResponseDto(blogDtoList, blogPages.getNumber(),
+                blogPages.getTotalPages(), blogPages.getTotalElements(), blogPages.isLast());
     }
+
+
+    public BlogResponseDto searchBlogsByTitle(String title, int pageNumber, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
+        Page<Blog> blogPages = blogRepository.findByTitleContainingIgnoreCase(title, pageable);
+
+        List<Blog> blogs = blogPages.getContent();
+        List<BlogMainDto> blogDtoList = blogs.stream()
+                .map(this::generateResponse)
+                .collect(Collectors.toList());
+
+        return new BlogResponseDto(blogDtoList, blogPages.getNumber(),
+                blogPages.getTotalPages(), blogPages.getTotalElements(), blogPages.isLast());
+    }
+
+
 
     public List<Map<String, Integer>> countBlogsByCategory() {
         return blogRepository.countBlogsPerCategory();
