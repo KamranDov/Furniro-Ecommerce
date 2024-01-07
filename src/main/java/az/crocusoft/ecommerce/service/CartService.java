@@ -80,10 +80,17 @@ public class CartService {
                     return itemPrice - discount;
                 })
                 .sum();
+        double totalPriceWithoutDiscount = cartItems
+                .stream()
+                .mapToDouble(cartItemDto -> {
+                    return cartItemDto.getQuantity() * cartItemDto.getPrice();
+                })
+                .sum();
 
         CartDto cartDto = new CartDto();
         cartDto.setTotalPrice(totalPrice);
         cartDto.setCartItems(cartItems);
+        cartDto.setTotalPriceWithoutDiscount(totalPriceWithoutDiscount);
         return cartDto;
     }
 
