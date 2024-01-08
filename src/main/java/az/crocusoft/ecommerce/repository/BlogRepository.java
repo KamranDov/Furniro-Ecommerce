@@ -33,6 +33,8 @@ public interface BlogRepository extends JpaRepository<Blog,Long> {
     List<Map<String, Integer>> countBlogsPerCategory();
 
 
+    @Query("SELECT b FROM Blog b WHERE LOWER(b.title) LIKE LOWER(CONCAT('%', :title, '%')) AND b.category = :category")
+    Page<Blog> findByTitleContainingIgnoreCaseAndCategory(@Param("title") String title, @Param("category") BlogCategory category, Pageable pageable);
 
     List<Blog> findBlogPostByCategory(BlogCategory category);
 
