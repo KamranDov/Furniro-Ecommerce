@@ -51,7 +51,6 @@ public class CartService {
             cartRepository.save(existingCart);
         } else {
             Cart cart = new Cart();
-            cart.setProduct(productVariation.getProduct());
             cart.setProductVariation(productVariation);
             cart.setUser(user);
             cart.setQuantity(addToCartDto.getQuantity());
@@ -72,14 +71,25 @@ public class CartService {
                 )
                 .toList();
 
-        double totalPrice = cartList
-            .stream()
-            .mapToDouble(this::getTotalPrice)
-            .min().orElse(0);
+        double totalPrice = cartItems
+                .stream()
+                .mapToDouble(cartItemDto -> {
+                    double itemPrice = cartItemDto.getQuantity() * cartItemDto.getPrice();
+                    double discount = (itemPrice * cartItemDto.getDiscount()) / 100;
+                    return itemPrice - discount;
+                })
+                .sum();
+        double totalPriceWithoutDiscount = cartItems
+                .stream()
+                .mapToDouble(cartItemDto -> {
+                    return cartItemDto.getQuantity() * cartItemDto.getPrice();
+                })
+                .sum();
 
         CartDto cartDto = new CartDto();
         cartDto.setTotalPrice(totalPrice);
         cartDto.setCartItems(cartItems);
+        cartDto.setTotalPriceWithoutDiscount(totalPriceWithoutDiscount);
         return cartDto;
     }
 
@@ -97,7 +107,9 @@ public class CartService {
         cartItemDto.setStockQuantity(variation.getStockQuantity());
         cartItemDto.setProductName(variation.getProduct().getName());
         cartItemDto.setProductId(variation.getProduct().getId());
-        Double subtotal=variation.getPrice()*cart.getQuantity();
+        Double subtotal=(variation.getPrice()*cart.getQuantity())-
+                ((variation.getPrice()*cart.getQuantity())*
+                variation.getDiscount())/100;
         cartItemDto.setSubtotal(subtotal);
 
         variation.getImages().forEach(

@@ -1,5 +1,6 @@
 package az.crocusoft.ecommerce.controller;
 
+import az.crocusoft.ecommerce.constants.PaginationConstants;
 import az.crocusoft.ecommerce.dto.*;
 import az.crocusoft.ecommerce.model.Blog;
 import az.crocusoft.ecommerce.service.BlogService;
@@ -22,15 +23,22 @@ public class
 BlogController {
     private final BlogService blogService;
 
-    @GetMapping
+    @GetMapping("/public/blogs")
     public ResponseEntity<BlogResponseDto> getAllBlogs(
-            @RequestParam(value = "pageNumber", defaultValue = "1") Integer pageNumber,
-            @RequestParam(value = "pageSize", defaultValue = "5") Integer pageSize,
-            @RequestParam(value = "title", defaultValue = "", required = false) String title
+            @RequestParam(name = "title", defaultValue = "", required = false) String title,
+            @RequestParam(name = "categoryId", required = false) Integer categoryId,
+            @RequestParam(name = "pageNumber", defaultValue = PaginationConstants.PAGE_NUMBER) Integer page,
+            @RequestParam(name = "pageSize", defaultValue = PaginationConstants.DEFAULT_PAGE_SIZE) Integer size) {
 
-    ) {
-        BlogResponseDto response = blogService.searchBlogsByTitle(title, pageNumber, pageSize);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        BlogResponseDto response;
+
+        if (categoryId != null) {
+            response = blogService.searchBlogsByTitleAndCategory(title, categoryId, page, size);
+        } else {
+            response = blogService.searchBlogsByTitle(title, page, size);
+        }
+
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/category/{cid}")

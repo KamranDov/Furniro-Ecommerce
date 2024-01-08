@@ -44,10 +44,11 @@ app:
   base-url: https://furnirostore.up.railway.app
 
 
+
 application:
   security:
     jwt:
       secret-key: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
-      expiration: 63072000000 # iki yıl (2 * 365 * 24 * 60 * 60 * 1000)
+      expiration: 63072000000 # iki yıl
       refresh-token:
-        expiration: 63072000000 # iki yıl (2 * 365 * 24 * 60 * 60 * 1000)
+        expiration: 63072000000 # iki yıl 
