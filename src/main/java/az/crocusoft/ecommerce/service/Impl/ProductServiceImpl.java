@@ -121,7 +121,7 @@ public class ProductServiceImpl implements ProductService {
         }
         List<String> orders = Arrays.asList(PaginationConstants.orders);
         if (!orders.contains(sortOrder.toUpperCase())) {
-            sortOrder = PaginationConstants.SORT_DIRECTION;
+            sortOrder = PaginationConstants.SORT_ORDER;
         }
         pageNumber = Math.max(pageNumber, Integer.parseInt(PaginationConstants.PAGE_NUMBER));
         pageSize = pageSize < 1 ? Integer.parseInt(PaginationConstants.DEFAULT_PAGE_SIZE) : pageSize;
