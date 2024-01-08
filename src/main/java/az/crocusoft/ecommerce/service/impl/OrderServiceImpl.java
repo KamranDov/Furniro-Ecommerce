@@ -125,8 +125,7 @@ public class OrderServiceImpl implements OrderService {
     }
     @Override
     public List<OrderDto> getOrdersByUserId(Long userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+
         List<Order> userOrders = orderRepository.findAllByUserId(userId);
         return userOrders.stream()
                 .map(order -> modelMapper.map(order, OrderDto.class))
