@@ -3,6 +3,12 @@ server:
   forward-headers-strategy: FRAMEWORK
 
 spring:
+
+#  #Telegram Bot Configuration
+#  bot:
+#    username: User_block_alert_bot
+#    token: 6934693814:AAHKnYZGmIfhTEoUxUiDiXZqDaelZMjTPLU
+
   config:
     import: classpath:env.properties
   datasource:
@@ -19,17 +25,17 @@ spring:
     generate-ddl: true
     show-sql: true
 
-#  mail:
-#    host: smtp.gmail.com
-#    port: 587
-#    username: axmedovkamran127@gmail.com
-#    password: jfjlrkgmaokhjzrm
-#    properties:
-#      mail:
-#        smtp:
-#          auth: true
-#          starttls:
-#            enable: true
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: axmedovkamran127@gmail.com
+    password: dhqkefybanahnhvq
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
 
 
 file:

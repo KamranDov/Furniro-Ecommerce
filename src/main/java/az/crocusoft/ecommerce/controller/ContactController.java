@@ -25,6 +25,7 @@ public class ContactController {
 
     @PostMapping("/send-mail")
     public ResponseEntity<Map<String,String>> sendMail(@Valid @RequestBody ContactDto contactDto) {
+        System.out.println("kecdi");
         contactService.saveContact(contactDto);
         Map<String,String> messageObject = new HashMap<>();
         messageObject.put("message", "User saved successfully");
