@@ -121,7 +121,7 @@ public class ProductServiceImpl implements ProductService {
         }
         List<String> orders = Arrays.asList(PaginationConstants.orders);
         if (!orders.contains(sortOrder.toUpperCase())) {
-            sortOrder = PaginationConstants.SORT_DIRECTION;
+            sortOrder = PaginationConstants.SORT_ORDER;
         }
         pageNumber = Math.max(pageNumber, Integer.parseInt(PaginationConstants.PAGE_NUMBER));
         pageSize = pageSize < 1 ? Integer.parseInt(PaginationConstants.DEFAULT_PAGE_SIZE) : pageSize;
@@ -183,17 +183,6 @@ public class ProductServiceImpl implements ProductService {
         productRepository.delete(product);
     }
 
-    public Double getProductPrice(Product product) {
-        List<ProductVariation> variations = product.getVariations();
-        if (variations == null || variations.isEmpty())
-            return null;
-        return variations
-                .stream()
-                .mapToDouble(ProductVariation::getPrice)
-                .min()
-                .getAsDouble();
-    }
-
     public Double getProductRating(Product product) {
         List<Review> reviews = product.getReviews();
         if (reviews == null || reviews.isEmpty())
@@ -204,14 +193,27 @@ public class ProductServiceImpl implements ProductService {
                 .sum() / reviews.size();
     }
 
+    public Double getProductPrice(Product product) {
+        List<ProductVariation> variations = product.getVariations();
+        if (variations == null || variations.isEmpty())
+            return null;
+
+        return variations
+                .stream()
+                .mapToDouble(ProductVariation::getPrice)
+                .min()
+                .getAsDouble();
+    }
+
     public Double getProductSpecialPrice(Product product) {
         List<ProductVariation> variations = product.getVariations();
         if (variations == null || variations.isEmpty())
             return null;
         return variations
                 .stream()
+                .sorted(Comparator.comparing(ProductVariation::getPrice))
                 .mapToDouble(this::getProductVariationSpecialPrice)
-                .min()
+                .findFirst()
                 .getAsDouble();
     }
 
@@ -221,18 +223,12 @@ public class ProductServiceImpl implements ProductService {
             return null;
         return variations
                 .stream()
-                .mapToDouble(ProductVariation::getDiscount)
-                .max()
+                .sorted(Comparator.comparing(ProductVariation::getPrice))
+                .mapToDouble(variation ->
+                        variation.getDiscount() == null ? 0 : variation.getDiscount())
+                .findFirst()
                 .getAsDouble();
-    }
 
-    public Boolean isProductDiscounted(Product product) {
-        List<ProductVariation> variations = product.getVariations();
-        if (variations == null || variations.isEmpty())
-            return false;
-        return variations
-                .stream()
-                .anyMatch(variation -> variation.getDiscount() != null && variation.getDiscount() > 0);
     }
 
     public Double getProductVariationSpecialPrice(ProductVariation variation) {
@@ -241,6 +237,16 @@ public class ProductServiceImpl implements ProductService {
         if (discount == null || discount == 0)
             return price;
         return price - (price * discount / 100);
+    }
+
+
+    public Boolean isProductDiscounted(Product product) {
+        List<ProductVariation> variations = product.getVariations();
+        if (variations == null || variations.isEmpty())
+            return false;
+        return variations
+                .stream()
+                .anyMatch(variation -> variation.getDiscount() != null && variation.getDiscount() > 0);
     }
 
 

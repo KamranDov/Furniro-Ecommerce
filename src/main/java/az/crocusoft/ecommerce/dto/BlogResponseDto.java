@@ -15,7 +15,7 @@ import java.util.List;
 public class BlogResponseDto {
     private List<BlogMainDto> blogs;
     private Integer currentPage;
-    private Integer totalPage;
+    private Integer totalPages;
     private Long totalBlogs;
     private Boolean isLastPage;
 

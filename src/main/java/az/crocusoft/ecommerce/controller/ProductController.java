@@ -57,7 +57,7 @@ public class ProductController {
             @RequestParam(name = "pageNumber", defaultValue = PaginationConstants.PAGE_NUMBER) Integer page,
             @RequestParam(name = "pageSize", defaultValue = PaginationConstants.DEFAULT_PAGE_SIZE) Integer size,
             @RequestParam(name = "sortBy", defaultValue = PaginationConstants.SORT_BY) String sortBy,
-            @RequestParam(name = "sortOrder", defaultValue = PaginationConstants.SORT_DIRECTION) String sortOrder) {
+            @RequestParam(name = "sortOrder", defaultValue = PaginationConstants.SORT_ORDER) String sortOrder) {
 
         return ResponseEntity.ok(productService.getAllPublishedProducts (
                 keyword, designationId, categoryIds,
