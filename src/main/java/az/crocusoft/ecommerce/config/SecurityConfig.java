@@ -27,7 +27,7 @@ public class SecurityConfig {
 
     private final AuthenticationProvider authenticationProvider;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
-    private  final LogoutHandler logoutHandler;
+    private final LogoutHandler logoutHandler;
     private final CorsConfig corsConfig;
 
     @Bean
@@ -38,11 +38,11 @@ public class SecurityConfig {
                 .authorizeHttpRequests(req ->
                         req.requestMatchers("/auth/**")
                                 .permitAll()
-                                .requestMatchers(GET,"/api/**").permitAll()
+                                .requestMatchers(GET, "/api/**").permitAll()
                                 .requestMatchers("/api/v1/contact/**").permitAll()
-                                .requestMatchers(PUT,"/user/{id}/**").permitAll()
+                                .requestMatchers(PUT, "/user/{id}/**").permitAll()
                                 .requestMatchers("/countries/**").permitAll()
-                                .requestMatchers(GET,"/images/**").permitAll()
+                                .requestMatchers(GET, "/images/**").permitAll()
                                 .requestMatchers(permitSwagger).permitAll()
                                 .anyRequest()
                                 .authenticated()
@@ -58,7 +58,6 @@ public class SecurityConfig {
                                 .logoutSuccessHandler((request, response, authentication) -> SecurityContextHolder.clearContext())
                 )
         ;
-
 
 
         return httpSecurity.build();

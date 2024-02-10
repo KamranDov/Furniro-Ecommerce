@@ -4,18 +4,18 @@ server:
 
 spring:
 
-#  #Telegram Bot Configuration
-#  bot:
-#    username: User_block_alert_bot
-#    token: 6934693814:AAHKnYZGmIfhTEoUxUiDiXZqDaelZMjTPLU
+  #Telegram Bot Configuration
+  bot:
+    username: User_block_alert_bot
+    token: 6934693814:AAHKnYZGmIfhTEoUxUiDiXZqDaelZMjTPLU
 
-  config:
-    import: classpath:env.properties
+  #  config:
+  #    import: classpath:env.properties
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://${DB_DATABASE}
-    username: ${DB_USER}
-    password: ${DB_PASSWORD}
+    url: jdbc:mysql://localhost:3306/ecommerce
+    username: root
+    password: 123456789root
   jpa:
     properties:
       hibernate:
@@ -25,18 +25,23 @@ spring:
     generate-ddl: true
     show-sql: true
 
+  #Mail Sender Configuration
   mail:
     host: smtp.gmail.com
     port: 587
     username: axmedovkamran127@gmail.com
-    password: dhqkefybanahnhvq
+    password: cckametdiknbavtw
     properties:
       mail:
+        transport:
+          protocol: smtp
         smtp:
           auth: true
           starttls:
-            enable: true
-
+          enable: true
+          debug: true
+  main:
+    allow-bean-definition-overriding: true
 
 file:
   upload-dir: 'uploads'
@@ -45,11 +50,8 @@ multipart:
   maxFileSize: 2Mb
   maxRequestSize: 15Mb
 
-
 app:
   base-url: https://furnirostore.up.railway.app
-
-
 
 application:
   security:
@@ -57,4 +59,4 @@ application:
       secret-key: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
       expiration: 63072000000 # iki yıl
       refresh-token:
-        expiration: 63072000000 # iki yıl 
+        expiration: 63072000000 # iki yıl

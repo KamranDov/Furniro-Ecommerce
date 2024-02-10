@@ -29,12 +29,10 @@ public class ContactService {
             sendMail(contactDto);
             contactRepository.save(contact);
             log.info("User saved successfully: {}", contactDto);
-
         }
 
     public void sendMail(ContactDto contactDto) {
         try {
-            System.out.println("kecdi");
             SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
             simpleMailMessage.setFrom(mailSenderUsername);
             simpleMailMessage.setTo(contactDto.getEmail());

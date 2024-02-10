@@ -151,8 +151,7 @@ public class AuthenticationService {
     public User getSignedInUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         System.out.println(authentication.getPrincipal());
-        return userRepository
-                .findByUsername(authentication.getName())
+        return userRepository.findByUsername(authentication.getName())
                 .orElseThrow(() -> new RuntimeException("User not found"));
     }
     public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {

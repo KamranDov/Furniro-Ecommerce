@@ -6,6 +6,7 @@ import az.crocusoft.ecommerce.service.ContactService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,7 +26,6 @@ public class ContactController {
 
     @PostMapping("/send-mail")
     public ResponseEntity<Map<String,String>> sendMail(@Valid @RequestBody ContactDto contactDto) {
-        System.out.println("kecdi");
         contactService.saveContact(contactDto);
         Map<String,String> messageObject = new HashMap<>();
         messageObject.put("message", "User saved successfully");

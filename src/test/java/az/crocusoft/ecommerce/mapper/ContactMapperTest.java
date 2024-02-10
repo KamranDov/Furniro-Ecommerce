@@ -34,6 +34,5 @@ class ContactMapperTest {
 
         //then or assert
         Assertions.assertThat(actualContact).isEqualTo(expectedContact);
-
     }
 }

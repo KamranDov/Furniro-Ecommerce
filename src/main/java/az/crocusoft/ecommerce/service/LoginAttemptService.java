@@ -1,12 +1,10 @@
 package az.crocusoft.ecommerce.service;
 
-//import az.crocusoft.ecommerce.bot.SampleBot;
 import az.crocusoft.ecommerce.model.FailedLoginAttempt;
 import az.crocusoft.ecommerce.model.User;
 import az.crocusoft.ecommerce.model.UserStatus;
 import az.crocusoft.ecommerce.repository.FailedLoginAttemptRepository;
 import az.crocusoft.ecommerce.repository.UserRepository;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -20,10 +18,8 @@ import java.util.Optional;
 public class LoginAttemptService {
     private final FailedLoginAttemptRepository failedLoginAttemptRepository;
     private final UserRepository userRepository;
-//    private final SampleBot sampleBot;
     private static final int MAX_FAILED_ATTEMPTS = 3;
     private static final int BLOCK_DURATION_HOURS = 1;
-
 
 
     public boolean isUserBlocked(String username) {
@@ -133,4 +129,4 @@ public class LoginAttemptService {
             resetFailedLoginAttempts(username);
         }
     }
-    }
+}
