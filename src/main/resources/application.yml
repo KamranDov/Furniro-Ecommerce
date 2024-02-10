@@ -7,15 +7,15 @@ spring:
   #Telegram Bot Configuration
   bot:
     username: User_block_alert_bot
-    token: 6934693814:AAHKnYZGmIfhTEoUxUiDiXZqDaelZMjTPLU
+    token: Include the token given to you for the bot you created here.
 
   #  config:
   #    import: classpath:env.properties
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/ecommerce
-    username: root
-    password: 123456789root
+    username: 
+    password: 
   jpa:
     properties:
       hibernate:
@@ -29,8 +29,8 @@ spring:
   mail:
     host: smtp.gmail.com
     port: 587
-    username: axmedovkamran127@gmail.com
-    password: cckametdiknbavtw
+    username: your gmail account
+    password: the password given via your e-mail
     properties:
       mail:
         transport:
